@@ -1,0 +1,7 @@
+Lua分发包
+--------------------------
+https://github.com/LuaDist
+
+其中的LuaDist/lua用cmake编译各种dynmic,static库
+https://github.com/LuaDist/lua
+
