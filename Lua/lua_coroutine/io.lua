@@ -1,0 +1,14 @@
+lines	function: 004F93D8
+write	function: 004F9538
+close	function: 004F9358
+flush	function: 004F9378
+open	function: 004F93F8
+output	function: 004F9438
+type	function: 004F9518
+read	function: 004F94B8
+stderr	file (5F7D1BB8)
+stdin	file (5F7D1B78)
+input	function: 004F9398
+stdout	file (5F7D1B98)
+popen	function: 004F9478
+tmpfile	function: 004F94D8

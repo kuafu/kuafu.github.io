@@ -1,0 +1,43 @@
+::: begin :::
+
+ - step 1
+[1 co-body]	1	10
+	foo	2
+==>	true	4
+
+ - step 2
+[2 co-body]	r
+==>	true	11	-9
+
+ - step 3
+[3 co-body]	x	y
+==>	true	10	end
+
+ - step 4
+==>	false	cannot resume dead coroutine
+
+end
+
+
+1 co-body 1 10
+	foo 2
+<yield 4>
+-- main1 true 4
+<r=4>
+
+- step 2
+-- r="r"
+[2 co-body] "r"
+-- a=1, b=10
+-- yield 11, -9
+true 11 -9
+
+- step 3
+-- r,s = "x", "y"
+[3 co-body]	"x", "y"
+
+-- return "y" "end"
+true 10 "end"
+
+- step 4
+false?
