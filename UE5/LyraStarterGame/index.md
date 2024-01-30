@@ -19,7 +19,7 @@ breadcrumb_name: "LyraStarterGame"
 
 
 
-# 2 Unofficial Lyra Dev Network Community Discord
+# 2 非官方 Lyra 社区
 
 <div style="float:left; margin-right: 1em; margin-bottom: 1em">
 <a href="https://discord.gg/RS99Jcur6q" target="_blank"><img

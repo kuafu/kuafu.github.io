@@ -5,27 +5,21 @@ breadcrumb_path: "UE5/LyraStarterGame"
 breadcrumb_name: "Shooter Mannequin"
 ---
 
-# Deep Dive: Lyra's Shooter Mannequin
+# 1 深入了解: Lyra's Shooter Mannequin
 
-Lyra defines a "Shooter Mannequin" (`B_Hero_ShooterMannequin`) to be the base
-character for the Lyra project.  This serves as both the player-controlled character
-and the AI-controlled character.
+Lyra定义了一个名为“Shooter Mannequin”（B_Hero_ShooterMannequin）的基础角色，作为Lyra项目的玩家控制角色和AI控制角色。
 
-This documentation is current as of Lyra 5.1.
+本文档截至Lyra 5.1版本。
 
-Note that I do not use `B_Hero_ShooterMannequin` in my game.  That would require me to declare
-`ShooterCore` as a GFP dependency, which I do not wish to do.  Instead, I have my own base
-character class that was constructed using `B_Hero_ShooterMannequin` as an example.
-Thus, even though I'm not using this, it is still very important to understand what Epic is
-doing with this class so I can pick and choose the pieces that are relevant to my game
-for my character.
+请注意，我在我的游戏中没有使用 B_Hero_ShooterMannequin。这将要求我将 ShooterCore 声明为一个GFP（可能指"Game Feature Plugin"）依赖项，而我并不希望这样做。相反，我有自己的基础角色类，是使用 B_Hero_ShooterMannequin 作为示例构建的。
+因此，即使我没有使用它，了解Epic对这个类的处理仍然非常重要，这样我就可以选择与我的游戏相关的部分来构建我的角色。
 
 Quick Links:
 
-- [Primary Blueprint Overview: `B_Hero_ShooterMannequin`](#ShooterMannequinOverview)
-- [Key Concept: Pawn Extension System](#PawnExtensionSystem)
+- [主要蓝图概览: `B_Hero_ShooterMannequin`](#ShooterMannequinOverview)
+- [关键概念: Pawn Extension System](#PawnExtensionSystem)
   - An implementation of the `ModularGameplay` Plugin
-- Deep Dive into specific Blueprints:
+- 深入研究特定蓝图:
   - [`B_Hero_ShooterMannequin`](#BP__B_Hero_ShooterMannequin)
   - [`B_Hero_Default`](#BP__B_Hero_Default)
   - [`B_Character_Default`](#BP__B_Character_Default)
@@ -34,19 +28,20 @@ Quick Links:
 --------------------------------------------------------------------------------
 
 <a id="ShooterMannequinOverview"></a>
-## Primary Blueprint Overview: `B_Hero_ShooterMannequin`
-
+## 2 主要蓝图概览: `B_Hero_ShooterMannequin`
+这是我们感兴趣的主要蓝图。然而，请注意，许多功能都是在基础类中实现的，包括基础蓝图和基础 C++。如果要完全理解 B_Hero_ShooterMannequin，您需要理解所有基础类和接口。  
+<hr/>
 This is the primary BP we are interested in.  However, note that A LOT of functionality is implemented
 in the base classes, both the base BPs and the base C++.  You need to understand ALL the base classes
 and interfaces if you are to fully understand `B_Hero_ShooterMannequin`.
 
-##### `B_Hero_ShooterMannequin` BP Inheritance
+##### `B_Hero_ShooterMannequin` BP Inheritance 继承结构
 
 - BP Base `B_Hero_Default`
   - BP Base `Character_Default`
     - C++ Base `ALyraCharacter`
 
-##### `ALyraCharacter` C++ Inheritance
+##### `ALyraCharacter` C++ Inheritance 继承结构
 
 - C++ Interface `IAbilitySystemInterface`
 - C++ Interface `IGameplayCueInterface`
@@ -61,8 +56,20 @@ and interfaces if you are to fully understand `B_Hero_ShooterMannequin`.
         - C++ Base `UObject`
 
 
-### Controller-Injected C++ Component: `B_PickRandomCharacter`
+### 2.1 Controller挂接的 C++ 组件(Controller-Injected C++ Component): `B_PickRandomCharacter`
+除了基础类之外，Lyra 在运行时还向每个 AController 注入了一个 B_PickRandomCharacter 组件。例如，可以查看 B_ShooterGame_Elimination 体验定义。
 
+因此，即使在代码中你看不到它明确地附加到控制器或 Pawn 上，但在运行时，该组件确实存在于默认 Pawn 控制器上。
+
+该组件基于 C++ 的 ULyraControllerComponent_CharacterParts。
+
+这个控制器组件与 Pawn 版本的组件（ULyraPawnComponent_CharacterParts）配合使用。如果你正在处理由不同部分组成的角色，就像 Lyra 一样，你需要阅读这两个组件的基础 C++ 代码。它们是同一系统的两个部分。
+
+在控制器的 BeginPlay 中，控制器组件会随机选择一个身体模型（Manny 或 Quinn）并分配给 Pawn。这就是使 Pawn 在外观和动画风格上随机呈现男性或女性的原因。 
+
+[简单来说似乎就是在APlayerController上挂Component]  
+
+<hr/>
 In addition to the base classes, Lyra also injects a `B_PickRandomCharacter`
 component into every `AController` at runtime.
 For example see the `B_ShooterGame_Elimination` Experience Definition.
@@ -87,26 +94,25 @@ in physical appearance and animation style.
 --------------------------------------------------------------------------------
 
 <a id="PawnExtensionSystem"></a>
-## Key Concept: Pawn Extension System
+## 3 关键概念: Pawn Extension System
+Lyra角色在运行时以模块化方式构建。因此，没有明确定义的初始化顺序。该角色可能有许多可选组件，它们以不同的方式相互依赖，并且这些依赖关系随时间变化。
 
-Lyra Characters are modularly constructed at runtime.  For this reason
-**there is no clearly defined initialization order**.
-The character may have many optional components that depend on each other in different ways
-that change over time.
+作为开发者，你无法知道在运行时会注入哪些组件，然而你仍然必须允许它们正确初始化，每个组件都有它们自己的依赖项，在运行时以任意的随机顺序发生。
 
-As a developer you don't have any way to know which components will be injected at
-runtime, yet you must still allow for them to initialize correctly,
-each with their own dependencies, in whatever random order happens by chance at runtime.
 
-Lyra solves this problem by implementing
-[The `ModularGameplay` Plugin](/UE5/ModularGameplay/)
-in the form of `ULyraPawnExtensionComponent`,
-which is a part of every `ALyraCharacter`.
+Lyra通过以 `ULyraPawnExtensionComponent` 的形式在每个 ALyraCharacter 中实现 [ `ModularGameplay Plugin`](/UE5/ModularGameplay/) 插件从而来解决这个问题。
 
 
 <a id="PawnExtensionComponent"></a>
-### Lyra Pawn Extension Component
+### 3.1 Lyra Pawn Extension Component
 
+`ULyraPawnExtensionComponent` 是在Pawn上实现[`ModularGameplay` Plugin](/UE5/ModularGameplay/)' 的 [`IGameFrameworkInitStateInterface`](/UE5/ModularGameplay/#GameFrameworkInitStateInterface)功能的组件。
+
+将这个组件分配给一个Actor允许该Actor上的其他组件共享Init State的更新，以满足运行时的依赖关系。如果/当它们有运行时依赖需要满足时，这些组件可以连接到由这个组件广播的 Actor Init State Changed 事件。
+
+请注意，尽管这是一个组件，但在 ALyraCharacter 中有一些深度集成，例如从 ALyraCharacter 的 PossessedBy 调用 ULyraPawnExtensionComponent🡒HandleControllerChanged。如果你想深入了解这个组件正在做什么，请确保阅读 ALyraCharacter。
+
+<hr/>
 `ULyraPawnExtensionComponent` is the implementation of the
 [`ModularGameplay` Plugin](/UE5/ModularGameplay/)'s
 [`IGameFrameworkInitStateInterface`](/UE5/ModularGameplay/#GameFrameworkInitStateInterface)
@@ -158,7 +164,7 @@ It logs to `LogModularGameplay` with a lot of `Verbose` log messages.  Make sure
 <a id="BP__B_Hero_ShooterMannequin"></a>
 # Blueprint: `B_Hero_ShooterMannequin`
 
-## Components:
+## 4 Components:
 
 ### » AimAssistTarget (`UAimAssistTargetComponent` via `ShooterCore` GFP)
 
@@ -180,7 +186,7 @@ Anywhere that you want to know if you have a masculine or feminine character, yo
 check the Pawn's Tags to, for example, animate a feminine character differently than a masculine one.
 
 
-## Event Graph:
+## 5 Event Graph:
 
 ### `BeginPlay`
 - (Async) Listen for Team Events:
@@ -222,9 +228,9 @@ Not sure what this is or what this does.  Seems to be part of the emote system. 
 --------------------------------------------------------------------------------
 
 <a id="BP__B_Hero_Default"></a>
-# Blueprint: `B_Hero_Default`
+# 6 Blueprint: `B_Hero_Default`
 
-## Components:
+## 6.1 Components:
 
 <a id="LyraHeroComponent"></a>
 ### » LyraHero (`ULyraHeroComponent`)
@@ -263,7 +269,7 @@ Not sure what this is or what this does.  Seems to be part of the emote system. 
     - `AnimEffect.Footstep.Walk`: Concrete, Glass, Default
     - `AnimEffect.Footstep.Land`:  Concrete, Glass, Default
 
-## Event Graph:
+## 6.2 Event Graph:
 
 ### `ULyraHealthComponent`.`OnDeathStarted`
 - Play random death animation montage
@@ -277,7 +283,7 @@ Not sure what this is or what this does.  Seems to be part of the emote system. 
 - Uses an external `B_FootStep` Actor to implement the `AninMotionEffect` event
 
 
-## Interesting Variables:
+## 6.3 Interesting Variables:
 
 - `Death Montages` = array of Anim Montages to play on character death
 

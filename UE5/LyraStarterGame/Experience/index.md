@@ -5,11 +5,11 @@ breadcrumb_path: "UE5/LyraStarterGame"
 breadcrumb_name: "Experience"
 ---
 
-# Lyra Experience
+# 1 Lyra Experience
 
-A Lyra Experience is a custom, configurable Game Mode/State.  Each level in a Lyra project
-can specify the `Default Lyra Experience` to load for that level via custom
-[World Settings](#LyraWorldSettings).
+Lyra Experience 是一种定制、可配置的游戏模式/状态。在Lyra项目中，每个关卡都可以通过自定义[World Settings](#LyraWorldSettings)以指定要加载的该关卡的默认Experience。
+
+
 
 [Loading a Lyra Experience](#ExperienceLoadingProcedure)
 is asynchronous.  Content is expected to be placed into
@@ -38,7 +38,7 @@ You can test delayed Experience loading (e.g. to simulate slow computers/network
 by setting some [console variables](#CVars).
 
 
-## Primary Data Assets Defining an Experience
+## 1.1 Primary Data Assets Defining an Experience
 
   - [Lyra Experience Definition](#LyraExperienceDefinition)
   - [Lyra Experience Action Set](#LyraExperienceActionSet)
@@ -46,7 +46,7 @@ by setting some [console variables](#CVars).
   - [Lyra Input Config](#LyraInputConfig)
   - [Game Feature Action](#GameFeatureAction)
 
-## Unreal Engine Setup
+## 1.2 Unreal Engine Setup
 
   - [Lyra Game Mode](#LyraGameMode)
   - [Lyra Game State](#LyraGameState)
@@ -57,7 +57,7 @@ by setting some [console variables](#CVars).
 - [Lyra Experience Manager](#LyraExperienceManager) Subsystem *(only relevant to PIE)*
 - [Console Variables](#CVars)
 
-## How to Initiate Gameplay in a Lyra Experience
+## 1.3 How to Initiate Gameplay in a Lyra Experience
 
 - [Event: `OnExperienceLoaded`](#OnExperienceLoaded)
   - [Usage Examples](#OnExperienceLoadedExamples)
@@ -67,7 +67,7 @@ by setting some [console variables](#CVars).
   - Example: [Lyra Frontend State Component](#LyraFrontendStateComponent)
 
 
-### Debugging Tips
+### 调试Tips
 
 Execute these console commands to enable Verbose logging for these modules:
 
@@ -81,14 +81,14 @@ See [Console Variables](#CVars), they are helpful for debugging.
 
 
 <a id='PrimaryDataAssets'></a>
-# Primary Data Assets
+# 2 Primary Data Assets
 
 This section describes the major Primary Data Assets that are required to define
 a Lyra Experience.
 
 
 <a id='LyraExperienceDefinition'></a>
-## Lyra Experience Definition
+## 2.1 Lyra Experience Definition
 
 « Primary Data Asset »
 
@@ -101,7 +101,7 @@ This is a Const Data Asset.  It literally defines a given Experience.
 
 
 <a id='LyraExperienceActionSet'></a>
-## Lyra Experience Action Set
+## 2.2 Lyra Experience Action Set
 
 « Primary Data Asset »
 
@@ -110,7 +110,7 @@ This is a Const Data Asset.  It literally defines a given Experience.
 
 
 <a id='LyraPawnData'></a>
-## Lyra Pawn Data
+## 2.3 Lyra Pawn Data
 
 « Primary Data Asset »
 
@@ -122,7 +122,7 @@ This is a Const Data Asset.  It literally defines a given Experience.
 
 
 <a id='LyraInputConfig'></a>
-## Lyra Input Config
+## 2.4 Lyra Input Config
 
 « Const Data Asset »
 
@@ -131,7 +131,7 @@ This is a Const Data Asset.  It literally defines a given Experience.
 
 
 <a id='GameFeatureAction'></a>
-## Game Feature Action
+## 2.5 Game Feature Action
 
 An Action to be taken when a Game Feature is activated.
 Part of the experimental `GameFeatures` plugin.
@@ -148,13 +148,13 @@ asset loading and unloading.  Events include:
 
 
 <a id='EngineSetup'></a>
-# Setting up Unreal Engine for Lyra Experience
+# 3 设置UE的Lyra Experience
 
 This section describes how Lyra sets up Unreal Engine to support a Lyra Experience.
 
 
 <a id='LyraGameMode'></a>
-## Lyra Game Mode
+## 3.1 Lyra Game Mode
 
 Lyra Game Mode is the required base Game Mode providing Lyra Experience support.
 
@@ -170,7 +170,7 @@ is discussed separately.
 
 
 <a id='LyraGameState'></a>
-## Lyra Game State
+## 3.2 Lyra Game State
 
 The Lyra Game State is key to the functionality of Lyra Experiences.
 
@@ -221,7 +221,7 @@ which begins this process:
 
 
 <a id='LyraWorldSettings'></a>
-## Lyra World Settings
+## 3.3 Lyra World Settings
 
 - Adds `Default Gameplay Experience` setting to `ULevel` assets
 - In PIE, load the default experience during `InitGame`
@@ -236,7 +236,7 @@ WorldSettingsClassName=/Script/LyraGame.LyraWorldSettings
 
 
 <a id='LyraAssetManager'></a>
-## Lyra Asset Manager
+## 3.4 Lyra Asset Manager
 
 - Game-specific implementation of Asset Manager to handle loading assets
   - Allows using Soft Object Pointers in configs to delay loading of assets until they are really needed
@@ -251,7 +251,7 @@ AssetManagerClassName=/Script/LyraGame.LyraAssetManager
 
 
 <a id='LyraExperienceManager'></a>
-## Lyra Experience Manager
+## 3.5 Lyra Experience Manager
 
 « Engine Subsystem »
 
@@ -259,7 +259,7 @@ AssetManagerClassName=/Script/LyraGame.LyraAssetManager
 
 
 <a id='CVars'></a>
-## Console Variables
+## 3.6 Console Variables
 
 For testing purposes, you can add a delay to the Lyra Experience Loading process
 to simulate slow computers and/or networks.
@@ -276,7 +276,7 @@ TLDR **do not** use `BeginPlay` to start gameplay, instead in `BeginPlay` you ne
 
 
 <a id='OnExperienceLoaded'></a>
-## On Experience Loaded
+## 3.7 On Experience Loaded
 
 The [Lyra Experience Manager Component](#LyraExperienceManagerComponent)
 will broadcast the `OnExperienceLoaded` event after the asynchronous experience loading
@@ -370,7 +370,7 @@ void AMyExampleActor::OnExperienceLoaded(const ULyraExperienceDefinition* Experi
 ```
 
 <a id='LoadingADefaultExperience'></a>
-# Loading a Default Experience
+# 4 加载默认的 Default Experience
 
 Lyra loads the Frontend Experience as the default by injecting the
 [Lyra Frontend State Component](#LyraFrontendStateComponent)
@@ -389,7 +389,7 @@ which causes the Lyra FrontEnd Experience to load on Game start.
 
 
 <a id='LyraFrontendStateComponent'></a>
-## Lyra Frontend State Component
+## 4.1 Lyra Frontend State Component
 
 The `B_LyraFrontendStateComponent` is a simple BP configuration of
 Lyra Frontend State Component,
