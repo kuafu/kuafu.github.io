@@ -13,7 +13,7 @@
     <a href="{{ site.url }}">Home</a>
 
 {%     if page.breadcrumb_path %}
-{%         assign breadcrumb_path = "/" %}
+{%         assign breadcrumb_path = "-/" %}
 {%         assign breadcrumb_dirs = page.breadcrumb_path | split: "/" %}
 {%         for d in breadcrumb_dirs %}
 {%             assign breadcrumb_path = breadcrumb_path | append: d | append: "/" %}

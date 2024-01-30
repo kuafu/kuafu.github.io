@@ -58,7 +58,7 @@ How to Initiate Gameplay in a Lyra Experience
   - Example: [Lyra Frontend State Component](#LyraFrontendStateComponent)
 
 
-### 调试Tips
+### 1.4 调试Tips
 
 Execute these console commands to enable Verbose logging for these modules:
 
