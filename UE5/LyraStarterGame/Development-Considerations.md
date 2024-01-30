@@ -6,15 +6,11 @@ breadcrumb_name: "Development Considerations"
 ---
 
 
-# Extending Lyra: Development Considerations
+# 1 扩展Lyra：开发考虑
 
-For my purposes, my goal is to **NEVER MODIFY** base Lyra code or
-assets unless it's strictly required (which is rare).
+我的目标是永远不修改基本的Lyra代码或资产，除非绝对必要（这种情况很少发生）。
 
-The more closely I achieve this goal, the easier it will be to merge Epic's
-future Lyra releases into my code.  If they make bug fixes to code I'm
-using, I want those.  If they add new features, I'd like to be able to
-implement them as easily as possible.
+我越接近实现这个目标，将来合并Epic的Lyra更新到我的代码中就会变得更容易。如果他们对我正在使用的代码进行错误修复，我希望能够获得这些修复。如果他们添加新功能，我希望能够尽可能轻松地实现这些新功能。
 
 - [Extend Lyra C++ Code](#ExtendCPP)
   - [Fill in Some Gaps in Lyra C++ Code](#FillInCPPGaps)
@@ -24,51 +20,28 @@ implement them as easily as possible.
 
 
 <a id='ExtendCPP'></a>
-## Extend Lyra C++ Code
+## 1.1 扩展 Lyra C++ Code
 
-My strategy in general is to derive from Lyra C++ code whenever possible,
-customizing the behavior of Lyra classes and extending it
-in typical C++ fashion.
+我的一般策略是尽可能从Lyra的C++代码派生，定制Lyra类的行为，并以典型的C++方式进行扩展。这需要在Lyra的C++源代码中强制导出许多带有LYRAGAME_API标签的Lyra类，但我预计Epic最终会自行完成这些工作。即使他们不这样做，在任何情况下合并也是非常容易的。
 
-This requires forcefully exporting many Lyra classes with `LYRAGAME_API` tags
-in the Lyra C++ source, but I expect Epic will eventually do that themselves,
-and if not, it's very easy to merge in any case.
+### 1.1.1 优先扩展而不是复制(Prefer Extension to Duplication)
 
-### Prefer Extension to Duplication
-
-Whenever possible, you should **extend** Lyra code rather than duplicate it.
-Only duplicate when it's not practical to extend Lyra
-(for example, prototype code).
-
-When you need to do so much work to the code
-that it becomes a challenge to merge, that's when you duplicate.
-
-If you're only making minor changes to Lyra, just modify Lyra itself and commit to
-merging future Lyra updates into your code when Lyra is updated
-(for example `LYRAGAME_API` exports).
+尽可能应该扩展Lyra代码，而不是复制它。只有在不实际扩展Lyra的情况下才复制（例如，原型代码）。当需要对代码进行大量工作以至于合并成为挑战时，这时才需要复制。如果只是对Lyra进行轻微更改，只需修改Lyra本身，并承诺在Lyra更新时将来的Lyra更新合并到您的代码中（例如LYRAGAME_API导出）。
 
 <a id='FillInCPPGaps'></a>
-### Fill in Some Gaps in Lyra C++ Code
+### 1.1.2 在Lyra的C++代码中填补一些空白
 
-There are some gaps in Lyra's C++ code coverage for game modes different from `ShooterCore`.
+There are some gaps in Lyra's C++ code coverage for game modes different from `ShooterCore`.  
+Lyra的C++代码覆盖在与ShooterCore不同的游戏模式方面存在一些空白。  
 
-You may need to fill in some of these yourself.  Some examples:
+您可能需要自行填补其中的一些。例如：
 
-#### Generic Modular AI Controller
 
-Lyra does not ship a generic Modular AI Controller.
-I copied the
-**Lyra Player Bot Controller** `ALyraPlayerBotController`
-to my own
-**XCL AI Controller** `AXCLAIController`
-and removed the player-specific code to make a nice generic base
-Modular AI Controller for all of my future Lyra projects.
+#### 1.1.2.1 Generic Modular AI Controller
 
-Hopefully Epic will add a generic AI Controller in the future,
-at which time I can either rebase my XCL AI Controller onto the new
-Lyra AI Controller, or not, depending on what they do with it.
+Lyra没有提供通用的模块化AI控制器。我复制了Lyra玩家机器人控制器ALyraPlayerBotController到我的XCL AI控制器``AXCLAIController，并移除了特定于玩家的代码，以创建一个通用的基础模块化AI控制器，用于我未来的所有Lyra项目。希望Epic将来会添加一个通用的AI控制器，在那时，我可以选择将我的XCL AI控制器重新基于新的Lyra AI控制器，或者不这样做，这取决于他们对其的处理。
 
-#### Generic Actor with Ability System
+#### 1.1.2.2 Generic Actor with Ability System
 
 Lyra also does not include a generic Actor with an Ability System.
 I created a generic base

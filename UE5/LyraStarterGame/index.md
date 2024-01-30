@@ -6,34 +6,20 @@ breadcrumb_name: "LyraStarterGame"
 ---
 
 
-# Build your Game on Lyra
+# 1 构建Lyra框架
 
-Don't start from scratch!  Start from Lyra.
+不要从头开始！从Lyra开始。这是Epic建议我们基于Lyra开始新游戏的意图。他们希望我们把Lyra当作引擎代码，也就是以它为基础，构建我们的新游戏。对我们来说，成本仅仅是学习他们如何配置游戏以及如何扩展他们构建的框架。
+优缺点讨论了为什么你可能想要或不想要使用Lyra。根据你的情况，使用或不使用Lyra都有正当的理由。
+如果你已经有现成的游戏，Lyra提供了一些插件和游戏系统，你可以将它们复制到你的游戏中，省去很多工作。
+如果你正在开始一个新游戏，最好是从Lyra开始，然后删除你不想要的内容，而不是将你想要的内容（可能很重要）从Lyra复制到一个空白的游戏中。有多种可行的方法可以以Lyra为基础开始你的新游戏。一些选项在这里进行了讨论。
 
-Epic suggests that you **start your new game based on Lyra**.
-They say the intent is for us to think of Lyra like engine code.
-That is, use it as a base and build our new games on top of it.
-
-The cost to us is simply to learn how they configured the game
-and how to extend the framework they have built.
-
-[Pros and Cons](./Pros-and-Cons) discusses why you may or may not want to use Lyra yourself.
-There are legitimate reasons both to use and to not use Lyra depending on your circumstances.
-
-If you already have an existing game, Lyra offers some plugins and game systems
-that you can copy into your game to save yourself a lot of work.
-
-If you are starting a new game, it's probably easier to start with Lyra and delete the
-stuff you don't want, rather than to copy the *(likely significant)* stuff you do want
-from Lyra into a blank game.
-There are multiple viable ways to base your new game on Lyra.
-Some options are discussed here:
+这些信息来自于discussed结果:
 
 [Extending Lyra: Development Considerations](./Development-Considerations)
 
 
 
-# Unofficial Lyra Dev Network Community Discord
+# 2 Unofficial Lyra Dev Network Community Discord
 
 <div style="float:left; margin-right: 1em; margin-bottom: 1em">
 <a href="https://discord.gg/RS99Jcur6q" target="_blank"><img
@@ -51,18 +37,24 @@ Dev talk only.  No politics, religion or hate.
 <div style="clear:both"></div>
 
 
-# Getting Started
+# 3 Getting Started
 
-Ready to create your own LyraStarterGame project?
+创建自己的 LyraStarterGame project?
 
 - [Epic official tutorial: How to create a new Game Feature Plugin and Experience in Lyra](https://dev.epicgames.com/community/learning/tutorials/rdW2/unreal-engine-how-to-create-a-new-game-feature-plugin-and-experience-in-lyra)
 
-I made this How-To before an official one was available, I leave it here for posterity: [Set Up a New LyraStarterGame Project](./Getting-Started-Setting-Up-a-New-LyraStarterGame-Project)
+我在官方指南发布之前制作了这个操作指南，我将其保留在这里以供后人参考: [Set Up a New LyraStarterGame Project](./Getting-Started-Setting-Up-a-New-LyraStarterGame-Project)
 
 
-# Lyra Concepts
+# 4 Lyra概念
 
-## Project Organization
+## 4.1 工程组织结构  
+在我看来，你应该尽量不修改基本的Lyra游戏，除非你确实必须。基本游戏的整个命名空间应被视为Lyra所保留。  
+- 内容放入GameFeature插件（GFP）
+- 核心C++可以放入常规插件
+  - 实际上这是理想的，尽管这是可选的
+
+至少你需要为你的内容创建一个GFP
 
 IMO you should try to not modify the base Lyra game unless you **really must**.
 The entire namespace of the base game should be considered to be reserved by Lyra.
@@ -73,7 +65,7 @@ The entire namespace of the base game should be considered to be reserved by Lyr
 
 At the very least you need to create one GFP for your Content.
 
-## Upgrading Lyra Core
+## 4.2 升级 Lyra Core
 
 Epic will sometimes upgrade the Engine and/or Lyra Core.
 
@@ -86,7 +78,7 @@ update the Engine version.  This is a UE requirement that significantly affects
 Editor startup time.
 
 
-## Player Input
+## 4.3 Player Input
 
 Common UI "owns" player input
 
@@ -96,24 +88,24 @@ Common UI "owns" player input
   - [How to take Control of the Mouse in Lyra](/UE5/LyraStarterGame/Tutorials/How-to-Take-Control-of-the-Mouse)
 
 
-## Lyra Game Mode
+## 4.4 Lyra Game Mode
 
 - [Lyra Experience](./Experience/)
-  - How & Why Lyra loads itself and your GFPs the way it does
+  - Lyra如何以及为何以目前的方式加载GFPs
 - [Lyra Game Initialization](./InitGame/)
-  - Debug Tracing to illustrate how a Lyra World starts up and initializes itself
+  - 调试追踪以说明Lyra World如何启动和初始化自身
 - [Lyra Game Phase Subsystem](./GamePhaseSubsystem/)
-  - Once a game is playing, how to manage different phases of game play
+  - 一旦游戏开始进行，如何管理游戏过程的不同阶段
 - [Lyra Plugins](./Plugins/)
-  - Overview of the Plugins Epic distributes via the Lyra project
+  - Epic通过Lyra项目分发的插件概述
 
 
-## Lyra Gameplay Systems
+## 4.5 Lyra Gameplay Systems
 
 - [Character Parts](./CharacterParts/)
-  - Modular Character Parts
+  - 模块化角色部件
 - [Equipment System](./Equipment/) *(prototype)*
-  - Inventory extension: Inventory Items that are pieces of Equipment usable by Pawns
+  - Inventory 扩展：Inventory Items that are pieces of Equipment usable by Pawns
 - [Health and Damage System](./Health-and-Damage/)
   - Based on Gameplay Ability System Attributes & Effects
 - [Interaction System](./Interactions/) *(prototype)*
@@ -126,22 +118,24 @@ Common UI "owns" player input
   - Equipment extension: Equipment Items that are Weapons usable by Pawns
 
 
-## Other Lyra Systems
+## 4.6 Lyra其他系统
 
 - [Game Settings](https://docs.unrealengine.com/5.3/en-US/lyra-sample-game-settings-in-unreal-engine/)
   - Comprehensive Game Settings *(this is a beast to try to copy out due to the extensive use of UI assets, but it can be done)*
 
 
-## Lyra Character
+## 4.7 Lyra Character
 
 - [Shooter Mannequin Character](./ShooterMannequin)
-  - `B_Hero_ShooterMannequin` is the base Character class in Lyra, you will definitely want to understand it well
-  - Demonstrates key concept: Asynchronous, inter-dependent `ModularGameplay` Initialization of Pawn components
+  - `B_Hero_ShooterMannequin` 是Lyra中的基础角色, 需要充分理解
+
+  - Demonstrates key concept: 异步、相互依赖的Pawn组件的ModularGameplay初始化（Asynchronous, inter-dependent `ModularGameplay` Initialization of Pawn components）
+
 - Lyra provides a great `Character` base, but *does not provide* a useful `Pawn`.
   - This seems to be typical in UE5; Characters are first class, Pawns are completely up to you.
+  （这在UE5中似乎很典型；角色（Characters）是first class，而Pawn则完全由你决定。）
 
-
-## Gameplay Ability System (GAS)
+## 4.8 Gameplay Ability System (GAS)
 
 #### Lyra-Specific GAS Resources
 
@@ -160,15 +154,17 @@ Common UI "owns" player input
     - [Attributes and Gameplay Effects](https://docs.unrealengine.com/5.0/en-US/gameplay-attributes-and-gameplay-effects-for-the-gameplay-ability-system-in-unreal-engine/) (Epic Documentation)
 
 
-# Misc Lyra Stuff
+# 5 各种Lyra相关的方面
 
 In an effort to understand the material Epic has provided us to start with, I am dissecting the GameFeature plugins they shipped to understand what they do, how they're similar and how they differ from one another.
 
+为了理解Epic提供给我们的起步材料，我正在分析他们提供的GameFeature插件，以了解它们的功能、相似之处以及它们之间的差异。
+
 | Module                        | Description                       |
 |-------------------------------|-----------------------------------|
-| [ShooterCore](./ShooterCore/) | Base framework for a shooter game |
-| [ShooterMaps](./ShooterMaps/) | Implementation of ShooterCore     |
-| TopDownArena                  | *(will probably skip this)*       |
+| [ShooterCore](./ShooterCore/) | 射击游戏基础框架 |
+| [ShooterMaps](./ShooterMaps/) | "ShooterCore" 的实现     |
+| TopDownArena                  | *跳过*       |
 
 Bug fixes:
 
@@ -182,8 +178,9 @@ Works in progress:
 
 # References
 
-As I learn more about LyraStarterGame I'm keeping a list of references.
+随着我对LyraStarterGame的了解越来越多，我正在整理一个参考列表。
 
 - [Lyra 5.3 Release Notes](https://docs.unrealengine.com/5.3/en-US/upgrading-the-lyra-starter-game-to-the-latest-engine-release-in-unreal-engine/#unrealengine5.3)
+
 - [Epic Games Developer Discussion References](./Epic-Games-Developer-Discussion-References)
 

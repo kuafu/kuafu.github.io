@@ -8,7 +8,7 @@ is_site_index: true
 集成了多个UE5系统，有些是UE5中新增的； 有些与 UE4 方法完全不同且不兼容（尤其是 CommonUI）。
 
 
-### Big Picture Starting Points
+### 整体视角 
 
 - [Common UI](/UE5/CommonUI/) + CommonGame
   - `CommonGame` is distributed in Lyra
@@ -18,11 +18,7 @@ is_site_index: true
 - [`ModularGameplay` Plugin](/UE5/ModularGameplay/)
 - [UE5 Overview](/UE5/)
 
-### Source Control Management
-
-- [Git SCM](/Git/) for a Lyra UProject *(for small teams where everyone compiles their own stuff)*
-- [Perforce SCM](/Perforce/) for a Lyra UProject *(for non-small teams, or teams with non-developer members)*
-  - Typically used with [UnrealGameSync](https://docs.unrealengine.com/4.26/en-US/ProductionPipelines/DeployingTheEngine/UnrealGameSync/)
+'Big-Picture Thinking: 大局思维\整体思维'
 
 ### 虚幻主题
 
