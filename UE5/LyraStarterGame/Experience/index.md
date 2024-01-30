@@ -10,7 +10,6 @@ breadcrumb_name: "Experience"
 Lyra Experience 是一种定制、可配置的游戏模式/状态。在Lyra项目中，每个关卡都可以通过自定义[World Settings](#LyraWorldSettings)以指定要加载的该关卡的默认Experience。
 
 
-
 [Loading a Lyra Experience](#ExperienceLoadingProcedure)
 is asynchronous.  Content is expected to be placed into
 Game Feature Plugins
@@ -103,6 +102,7 @@ This is a Const Data Asset.  It literally defines a given Experience.
 <a id='LyraExperienceActionSet'></a>
 ## 2.2 Lyra Experience Action Set
 
+
 « Primary Data Asset »
 
 - Array of [Game Feature Actions](#GameFeatureAction)
@@ -146,6 +146,15 @@ asset loading and unloading.  Events include:
 - Activating
 - Deactivating
 
+### CUGameFeatureAction	继承关系
+ - CUApplyFrontendPerfSettingsAction	
+ - CUGameFeatureAction_AddGameplayCuePath	
+ - CUGameFeatureAction_WorldActionBase	
+    - CUGameFeatureAction_AddAbilities	
+    - CUGameFeatureAction_AddInputBinding	
+    - CUGameFeatureAction_AddInputContextMapping
+    - CUGameFeatureAction_AddWidgets
+    - CUGameFeatureAction_SplitscreenConfig
 
 <a id='EngineSetup'></a>
 # 3 设置UE的Lyra Experience

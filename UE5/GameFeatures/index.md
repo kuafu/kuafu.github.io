@@ -6,8 +6,7 @@ breadcrumb_name: "Game Features"
 ---
 
 
-# GameFeature Plugins
-
+# 1 GameFeature Plugins 概述
 
 A `GameFeature` Plugin is more like a *Mod* than like a traditional plugin.
 Where a regular `Plugin` cannot access base game code,
@@ -18,16 +17,14 @@ pattern in your game allows you to ship a basic game
 that can choose **IF** and **WHEN**
 to load custom `GameFeature` components at runtime.
 
-Basing your `APlayerState`, `APlayerController`, `ACharacter`
-and other classes on their respective `Modular Gameplay` implementations
-is required to get this to work.
+要使其工作，需要基于各自的 Modular Gameplay 实现来构建 APlayerState、APlayerController、ACharacter 和其他类。
 
 (You can implement the [`Modular Gameplay`](/UE5/ModularGameplay/) patterns yourself
 into your existing code if you prefer to avoid a rebase onto
 the default `ModularGameplayActors` implementation.)
 
 
-## Debugging Tip
+## 1.1 调试 Tip
 
 Enable `LogGameFeatures` Verbose logging to gain visibility into when Game Feature Actions
 are being run and what they are doing to your game objects.
@@ -35,17 +32,13 @@ are being run and what they are doing to your game objects.
 Console Command: `Log LogGameFeatures Verbose`
 
 
-## LyraStarterGame Example
+## 1.2 LyraStarterGame Example
 
-In LyraStarterGame, `ALyraPlayerState`, `ALyraPlayerController`, `ALyraCharacter`
-and more are all based on the `ModularGameplayActors` plugin.
+在 LyraStarterGame 中，ALyraPlayerState、ALyraPlayerController、ALyraCharacter 等都基于`ModularGameplayActors 插件`。
 
-At runtime, the game knows all of the `GameFeature` plugins that are available, but
-**it does not load or activate these plugins unless/until the game explicitly chooses to do so**.
+在运行时，游戏知道所有可用的“GameFeature”插件，但除非游戏明确选择这样做，否则它不会加载或激活这些插件。
 
-In Lyra when you **Load an Experience** it will automatically load any `GameFeature` plugins
-that experience depends on and then will launch the game into that map with that experience
-and all of its runtime-loaded code/assets enabled.
+在Lyra中，当你加载一个`Experience`时，它将自动加载该体验依赖的任何`GameFeature`插件，然后将游戏启动到该地图，使用该experience以及所有已启用的运行时加载的代码/资源。
 
 
 ### There is a default "Runtime" suffix that you can remove
