@@ -1,0 +1,21 @@
+title: "Lyra Docs"
+description: One simulant attempts to share insight with others.
+url: "https://kuafu.github.io/nox.github.io/"
+theme: jekyll-theme-hacker
+markdown: kramdown
+timezone: "America/Los_Angeles"
+lang: "en-US"
+highlighter: rouge
+defaults:
+  -
+    scope:
+      path: "" # empty string here means all files in the project
+    values:
+      layout: "default"
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - README.md
+  - .idea
+plugins:
+  - jekyll-sitemap
