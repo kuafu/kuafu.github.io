@@ -9,35 +9,26 @@ breadcrumb_name: "Experience"
 
 Lyra Experience 是一种定制、可配置的游戏模式/状态。在Lyra项目中，每个关卡都可以通过自定义[World Settings](#LyraWorldSettings)以指定要加载的该关卡的默认Experience。
 
+[加载 Lyra Experience](#ExperienceLoadingProcedure)是一个异步过程。内容预期放置在游戏特性插件（GFPs）中，这些插件只有在实际需要时才会被动态加载。您的项目预期使用“On Experience Loaded”事件来启动游戏玩法，该事件在异步加载完成时触发。
 
-[Loading a Lyra Experience](#ExperienceLoadingProcedure)
-is asynchronous.  Content is expected to be placed into
-Game Feature Plugins
-([GFPs](/UE5/GameFeatures/))
-which are dynamically loaded only when actually needed.
-Your project is expected to use the
-[On Experience Loaded](#OnExperienceLoaded)
-event to initiate gameplay, it fires when the async loading completes.
+Lyra Experience 的定义配置了默认的 Lyra Pawn 数据和要加载并执行的体验动作集（运行时组件注入、HUD 小部件扩展等）。
 
-The [Experience Definition](#LyraExperienceDefinition)
-configures the default
-[Lyra Pawn Data](#LyraPawnData)
-and a list of [Experience Action Sets](#LyraExperienceActionSet)
-to load and execute.
+需要注意的是，在 Lyra 中，“BeginPlay”具有不同的含义。在其他游戏中，“BeginPlay”可能字面上意味着“游戏已经开始”，但在 Lyra 中，它只表示关卡已经加载并且（可能相当缓慢的）异步加载过程已经开始。在 Lyra 中，游戏实际上不应该开始进行直到“On Experience Loaded”事件触发，这通常发生在“BeginPlay”之后的某个时间点。您可以通过设置一些控制台变量来测试延迟的体验加载，例如模拟计算机性能较差或网络延迟。这些信息可以在 LyraStarterGame 的官方文档中找到。
+
+![ULyraExperienceDefinition](./screenshots/ULyraExperienceDefinition.png)
+
+
+<hr/>
+[Loading a Lyra Experience](#ExperienceLoadingProcedure) is asynchronous.  Content is expected to be placed into Game Feature Plugins([GFPs](/UE5/GameFeatures/)) which are dynamically loaded only when actually needed. Your project is expected to use the [On Experience Loaded](#OnExperienceLoaded) event to initiate gameplay, it fires when the async loading completes.
+
+The [Experience Definition](#LyraExperienceDefinition) configures the default [Lyra Pawn Data](#LyraPawnData) and a list of [Experience Action Sets](#LyraExperienceActionSet) to load and execute.
 *(Runtime component injection, HUD widget extension, etc.)*
 
-Note that `BeginPlay` has a different meaning in Lyra.  Whereas in other games Begin Play
-might literally mean in some cases "game play has begun", in Lyra it just means the
-Level has been loaded and the (perhaps quite slow) async loading process has begun.
-In Lyra, the game shouldn't actually start playing until the
-[On Experience Loaded](#OnExperienceLoaded)
-event fires, sometime **well after** `BeginPlay`.
-
-You can test delayed Experience loading (e.g. to simulate slow computers/networks)
-by setting some [console variables](#CVars).
+Note that `BeginPlay` has a different meaning in Lyra.  Whereas in other games Begin Play might literally mean in some cases "game play has begun", in Lyra it just means the Level has been loaded and the (perhaps quite slow) async loading process has begun. In Lyra, the game shouldn't actually start playing until the [On Experience Loaded](#OnExperienceLoaded) event fires, sometime **well after** `BeginPlay`. You can test delayed Experience loading (e.g. to simulate slow computers/networks) by setting some [console variables](#CVars).
 
 
-## 1.1 Primary Data Assets Defining an Experience
+## 1.1 定义Experience的资源
+`Primary Data Assets Defining an Experience`
 
   - [Lyra Experience Definition](#LyraExperienceDefinition)
   - [Lyra Experience Action Set](#LyraExperienceActionSet)
@@ -45,7 +36,7 @@ by setting some [console variables](#CVars).
   - [Lyra Input Config](#LyraInputConfig)
   - [Game Feature Action](#GameFeatureAction)
 
-## 1.2 Unreal Engine Setup
+## 1.2  虚幻设置
 
   - [Lyra Game Mode](#LyraGameMode)
   - [Lyra Game State](#LyraGameState)
@@ -56,7 +47,8 @@ by setting some [console variables](#CVars).
 - [Lyra Experience Manager](#LyraExperienceManager) Subsystem *(only relevant to PIE)*
 - [Console Variables](#CVars)
 
-## 1.3 How to Initiate Gameplay in a Lyra Experience
+## 1.3 如何初始化Experience的Gameplay
+How to Initiate Gameplay in a Lyra Experience
 
 - [Event: `OnExperienceLoaded`](#OnExperienceLoaded)
   - [Usage Examples](#OnExperienceLoadedExamples)
@@ -80,18 +72,20 @@ See [Console Variables](#CVars), they are helpful for debugging.
 
 
 <a id='PrimaryDataAssets'></a>
-# 2 Primary Data Assets
+
+# 2 主要数据资产
+`Primary Data Assets`
 
 This section describes the major Primary Data Assets that are required to define
 a Lyra Experience.
 
 
 <a id='LyraExperienceDefinition'></a>
+
 ## 2.1 Lyra Experience Definition
 
 « Primary Data Asset »
-
-This is a Const Data Asset.  It literally defines a given Experience.
+这是一个 Const 数据资产。它明确的地定义了一个Experience。
 
 - Default [Lyra Pawn Data](#LyraPawnData)
 - List of Instanced [Game Feature Actions](#GameFeatureAction)
@@ -101,7 +95,6 @@ This is a Const Data Asset.  It literally defines a given Experience.
 
 <a id='LyraExperienceActionSet'></a>
 ## 2.2 Lyra Experience Action Set
-
 
 « Primary Data Asset »
 
