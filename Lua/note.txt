@@ -1,7 +1,7 @@
-Lua·Ö·¢°ü
+Luaåˆ†å‘åŒ…
 --------------------------
 https://github.com/LuaDist
 
-ÆäÖĞµÄLuaDist/luaÓÃcmake±àÒë¸÷ÖÖdynmic,static¿â
+å…¶ä¸­çš„LuaDist/luaç”¨cmakeç¼–è¯‘å„ç§dynmic,staticåº“
 https://github.com/LuaDist/lua
 
