@@ -162,9 +162,9 @@ In an effort to understand the material Epic has provided us to start with, I am
 
 | Module                        | Description                       |
 |-------------------------------|-----------------------------------|
-| [ShooterCore](./ShooterCore/) | 射击游戏基础框架 |
-| [ShooterMaps](./ShooterMaps/) | "ShooterCore" 的实现     |
-| TopDownArena                  | *跳过*       |
+| [ShooterCore](./ShooterCore/) |  射击游戏基础框架 |
+| [ShooterMaps](./ShooterMaps/) |  "ShooterCore" 的实现     |
+| TopDownArena                  |  *跳过*       |
 
 Bug fixes:
 
