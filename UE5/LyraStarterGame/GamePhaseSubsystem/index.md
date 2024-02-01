@@ -5,63 +5,39 @@ breadcrumb_path: "UE5/LyraStarterGame"
 breadcrumb_name: "Game Phase Subsystem"
 ---
 
-# Lyra Game Phase Subsystem
+# 1 Lyra 游戏阶段(Phase)子系统 
 
-The Lyra Game Phase Subsystem manages
-Lyra's game phases using Gameplay Tags in a nested manner, which allows parent and child
-phases to be active at the same time, but not sibling phases.
+Lyra 游戏阶段子系统使用游戏标签以嵌套方式管理 Lyra 的游戏阶段，这允许父阶段和子阶段同时处于活动状态，但兄弟阶段不能同时处于活动状态。
+例如: `Game.Playing` 和 `Game.Playing.WarmUp` 可以共存,但是 `Game.Playing` 和 `Game.ShowingScore` 不能共存。
 
-Example: `Game.Playing` and `Game.Playing.WarmUp` can coexist,
-but `Game.Playing` and `Game.ShowingScore` cannot.
-
-When a new phase is started, any active phases that are not ancestors will be ended.
-
-Example: if `Game.Playing` and `Game.Playing.CaptureTheFlag` are active when `Game.Playing.PostGame` is started,
-`Game.Playing` will remain active, while `Game.Playing.CaptureTheFlag` will end.
-
-*Above description courtesy of excellent C++ comments.*
+当新阶段开始时，所有非祖先phases都将结束。
+例如: 当 `Game.Playing` 和 `Game.Playing.CaptureTheFlag` 处于激活， 这时候如果开始激活 `Game.Playing.PostGame` , 则 `Game.Playing` 仍将保留激活, 然而 `Game.Playing.CaptureTheFlag` 将被结束。
 
 
-### Debugging Tips
+### 调试Tips
 
 - Enable `LogLyraGamePhase` logging
 
 
-# Lyra Game Phase Ability
+# 2 Lyra 阶段(Phase) Ability
 
-Each Game Phase is represented by a Gameplay Ability.  The base C++ class is `ULyraGamePhaseAbility`.
+每个游戏阶段都由游戏能力表示。C++ 基类是 `ULyraGamePhaseAbility`。
 
-You must assign a Game Phase Tag, which is a Gameplay Tag that represents this phase, for example `Game.Playing`.
-This tag determines which other abilities get cancelled when this phase begins.
+您必须分配一个游戏阶段标签(Phase Tag)，它是代表此阶段的游戏玩法标签，例如`Game.Playing`。这个标签决定了当这个阶段开始时哪些其他能力被取消。
 
-When the ability is activated, it executes `ULyraGamePhaseSubsystem`🡒`OnBeginPhase` just before it
-actually activates.  This causes previous phases to end as needed just before the new phase activates,
-based on their Game Phase Tag.
+当该能力被激活时，它会在实际激活之前执行 `ULyraGamePhaseSubsystem`🡒`OnBeginPhase` 。这会导致旧的阶段根据新的阶段激活时的需要被结束，这取决于他们的游戏标签。
 
-When the ability is ended, it executes `ULyraGamePhaseSubsystem`🡒`OnEndPhase` just before ending.
+当该能力结束时，它会在结束前执行`ULyraGamePhaseSubsystem`🡒`OnEndPhase` OnEndPhase
 
+# 3 阶段转换(Phase Transitions) 
 
-# Phase Transitions
+要过渡到特定的游戏阶段，请调用`ULyraGamePhaseSubsystem`🡒`StartPhase`，并向其传递代表您希望开始的游戏阶段的游戏阶段能力。`StartPhase`会将游戏阶段能力授予GameState的GAS并激活它。
 
-To transition to a particular game phase, call `ULyraGamePhaseSubsystem`🡒`StartPhase` and pass it
-the Lyra Game Phase Ability representing the game phase you wish to start.
-
-`StartPhase` will grant the game phase ability to the Game State's Ability System Component and activate it.
-
-For example in Lyra's `ShooterCore`, the `B_ShooterGame_Elimination` Experience Definition
-injects a `B_TeamDeathMatchScoring` component into the Game State.
-Amongst other things, that game state component hooks into `BeginPlay`,
-then waits for the Experience to load and finally starts the `Phase_Warmup` game phase.
+例如，在 Lyra 中`ShooterCore`，`B_ShooterGame_Elimination`体验定义将一个`B_TeamDeathMatchScoring`组件注入到游GameState中。除此之外，该GameState组件hook到BeginPlay，然后等待体验加载，最后开始`Phase_Warmup`游戏阶段。
 
 ![StartPhase](./screenshots/StartPhase.png)
 
-You can optionally specify a callback to be executed when the phase ends.
-
-When the `Phase_Warmup` phase is activated, it does the necessary stuff to begin the period of waiting
-for other players to join, etc.  It then transitions to `Phase_Playing` when needed.
-
+您可以选择指定阶段结束时要执行的回调。当该`Phase_Warmup`阶段被激活时，它会执行必要的操作以开始等待其他玩家加入的时期，等等。然后它会在`Phase_Playing`需要时转换。
 ![PhaseWarmup](./screenshots/PhaseWarmup.png)
 
-The general idea is that each Game Phase Ability handles transitioning from one
-phase to the next as appropriate.  The Game State itself determines which phase is started
-when the game starts (as configured by the Lyra Experience via component injection).
+总体思路是，每个游戏阶段能力都会适当处理从一个阶段到下一阶段的转换。GameState本身决定游戏开始时启动哪个阶段（由 Lyra Experience 通过组件注入进行配置）。
