@@ -6,18 +6,15 @@ breadcrumb_name: Default UI Policy
 ---
 
 
-# Lyra Default UI Policy Details
+# 1 Lyra 默认 UI 策略详细信息
 
-This is part of [How Common UI is Setup in LyraStarterGame](./).
-Read that as well for more info.
+更多信息见 [How Common UI is Setup in LyraStarterGame](./)
 
 
-## Default UI Policy
+## 1.1 默认 UI 策略
 
-The Lyra UI Manager Subsystem implements a single global "UI Policy",
-which ultimately is just a widget that defines prioritized widget container "layers".
-
-Which widget to use is defined via a Blueprint class, as configured in the INI:
+Lyra UI 管理子系统实现了一个全局的 "UI 策略"，最终只是一个定义了prioritized widget 容器 "层" 的widget。（a widget that defines prioritized widget container "layers"）
+使用哪个小部件是通过蓝图类定义的，在INI中进行配置：
 
 - In `DefaultGame.ini`:
     - Set Default UI Policy = `Content/UI/B_LyraUIPolicy`
@@ -33,13 +30,9 @@ DefaultUIPolicyClass=/Game/UI/B_LyraUIPolicy.B_LyraUIPolicy_C
 
 #### `LyraUIManagerSubsystem` : public `GameUIManagerSubsystem` from `CommonGame`
 
-This subsystem manages the creation of the UI Layout widget and
-adding it to the local player's viewport.
-It also supports changing the UI Policy at runtime.
-See its C++ code if you need to do that.
+该子系统管理创建 UI Layout widget并将其添加到本地玩家的视口。它还支持在运行时更改 UI 策略。如果需要执行此操作，请查看其 C++ 代码。
 
-
-## Lyra UI Policy
+## 1.2 Lyra UI Policy
 ### `B_LyraUIPolicy` : public `GameUIPolicy` from `CommonGame`
 
 ```c++
@@ -55,7 +48,7 @@ This BP specifies a single global UI Layout Widget:
 ###### Set Overall UI Layout = `W_OverallUILayout`
 
 
-## Overall UI Layout
+## 1.3 Overall UI Layout
 ### `W_OverallUILayout` : public `PrimaryGameLayout` from `CommonGame`
 
 ```c++
@@ -76,14 +69,11 @@ The `W_OverallUILayout` widget defines 4 widget layer stacks:
 - `UI.Layer.Menu` - Things like the settings screen.
 - `UI.Layer.Modal` - Confirmation dialogs, error dialogs.
 
-## Common Activatable Widget Containers
+## 1.4 Common Activatable Widget Containers
 
-`CommonUI` ships with both `Stack` and `Queue` containers,
-and Lyra only uses `Stack` by default.
+`CommonUI` ships with both `Stack` and `Queue` containers, and Lyra only uses `Stack` by default.
 
-If you need something more complex than a `Stack` or `Queue`, you can derive
-your own layer type by deriving from
-`CommonUI` `UCommonActivatableWidgetContainerBase`.
+If you need something more complex than a `Stack` or `Queue`, you can derive your own layer type by deriving from `CommonUI` `UCommonActivatableWidgetContainerBase`.
 
 ### Common Activatable Widget Stack
 #### `CommonActivatableWidgetStack` : public `UCommonActivatableWidgetContainerBase` from `CommonUI`

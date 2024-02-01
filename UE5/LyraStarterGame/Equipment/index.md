@@ -6,52 +6,47 @@ breadcrumb_name: "Equipment System"
 ---
 
 
-# LyraStarterGame Equipment System
+# 1 LyraStarterGame Equipment System
+这是 [LyraStarterGame](/UE5/LyraStarterGame/) 中装备系统的概述。
 
-This is an overview of the Equipment System in [LyraStarterGame](/UE5/LyraStarterGame/).
+一个 Lyra 中的装备是一个具有特定 Item Definition Fragment 的库存项目，该片段将其标识为装备。因此，该系统基于 Lyra 库存系统 [Lyra Inventory System](/UE5/LyraStarterGame/Inventory/)，请确保您也熟悉该系统。
 
-A piece of Equipment in Lyra is an Inventory Item
-that has a particular Item Definition Fragment that identifies it as
-being Equipment. Thus, this system is based on the
-[Lyra Inventory System](/UE5/LyraStarterGame/Inventory/),
-so make sure you're familiar with that as well.
+Lyra 装备系统是 Lyra 武器系统[Lyra Weapon System](/UE5/LyraStarterGame/Weapons/)的基础。
 
-The Lyra Equipment System is the base for the [Lyra Weapon System](/UE5/LyraStarterGame/Weapons/).
-
-Note that although the Equipment Definition and Equipment Instance share a naming
-convention with the Inventory Definition and Inventory Instance,
-**the relationship between the objects is different**.
-This is potentially confusing, so be aware of it.
+请注意，尽管装备定义和装备实例与库存定义和库存实例共享命名约定，**但对象之间的关系是不同的**。这可能会引起混淆，因此请注意。
 
 
-## Equipment Concepts
+## 1.1 Equipment Concepts
 
 - [Equipment Definition](#EquipmentDefinition) (constant)
-  - Correlates an Equipment Instance with the abilities it grants
-  - Determines how and where the equipment attaches to a Pawn
-- [Equipment Instance](#EquipmentInstance)
-  - A piece of equipment spawned and applied to a Pawn
-  - The specific subclass is part of the Equipment Definition
-- [Equipment Manager](#EquipmentManager) (Pawn Component)
-  - Allows equipping/unequipping items
-  - Keeps track of equipment in use
-- [Pickup Definition](#PickupDefinition) (constant)
-  - Defines a Weapon/Item in the world that can be picked up
-- [QuickBar Component](#QuickBarComponent) (Controller Component)
-  - The player's only interface to the Equipment Manager
-  - Controls which piece of Equipment the Pawn has equipped at any given time
+  - 将一个装备实例与其赋予的能力相关联
+  - 确定装备如何以及在何处附着到 Pawn
 
-## Related Gameplay Abilities
+- [Equipment Instance](#EquipmentInstance)
+  - 生成并应用于 Pawn 的一件装备
+  - 具体的子类是 Equipment Definition 的一部分
+
+- [Equipment Manager](#EquipmentManager) (Pawn Component)
+  - 允许装备/卸下物品
+  - 跟踪正在使用的装备
+
+- [Pickup Definition](#PickupDefinition) (constant)
+  - 定义世界中可以拾取的武器/物品
+  
+- [QuickBar Component](#QuickBarComponent) (Controller Component)
+  - 玩家与 Equipment Manager 的唯一接口
+  - 控制 Pawn 在任何给定时间内装备的装备是哪一件
+
+## 1.2 相关的游戏玩法能力（Gameplay Abilities）
 
 - [Equipment Ability](#EquipmentAbility)
-  - The base Gameplay Ability for Equipment-related abilities
+  - 装备相关的游戏能力
 
 
 <a id="EquipmentDefinition"></a>
-## Equipment Definition
+## 1.3 Equipment Definition
 
-This is a simple constant config.  There is no functionality associated with
-a `ULyraEquipmentDefinition`, it's just data.
+This is a simple constant config.  There is no functionality associated with a `ULyraEquipmentDefinition`, it's just data.
 
 An Equipment Definition consists of:
 
@@ -64,105 +59,73 @@ An Equipment Definition consists of:
 
 
 <a id="EquipmentInstance"></a>
-## Equipment Instance
+## 1.4 装备实例
 
-`ULyraEquipmentInstance` handles spawning and destroying the equipment actors as needed
-for a given piece of equipment.
+`ULyraEquipmentInstance` handles spawning and destroying the equipment actors as needed for a given piece of equipment.
 
-Note that unlike the Item Instance, an Equipment Instance subclass is actually a required
-part of the Equipment Definition.  Thus it is not only an instance of the Equipment
-Definition, but it is also a dependency of it, which is kind of weird.
-
+请注意，与物品实例不同，装备实例子类实际上是装备定义的一个必需部分。因此，它不仅是装备定义的实例，而且还是它的一个依赖项，这有点奇怪。
 
 <a id="EquipmentManager"></a>
-## Equipment Manager
+## 1.5 装备管理器
 
-`ULyraEquipmentManagerComponent` is a Pawn Component.  It must be attached to a Pawn.
+`ULyraEquipmentManagerComponent` 是一个 Pawn 组件。它必须附加到一个 Pawn 上。
 
-The Equipment Manager keeps track of the equipment this Pawn currently has
-available and allows for the Pawn to equip or unequip any given piece of equipment.
-It uses `FLyraEquipmentList` to achieve this.  The owner of the `FLyraEquipmentList`
-is the Equipment Manager itself.
+装备管理器跟踪此 Pawn 当前可用的装备，并允许 Pawn 装备或卸下任何给定的装备。它使用 `FLyraEquipmentList` 来实现这一点。`FLyraEquipmentList` 的所有者是装备管理器本身。
 
-It invokes Equipment Instance -> `OnEquipped()` and `OnUnequipped()` as appropriate.
+它根据需要调用装备实例的 `OnEquipped()` 和 `OnUnequipped()`。
 
-The core functionality is implemented in the [`EquipItem`](#EquipmentManagerComponent) method.
+核心功能是在 [`EquipItem`](#EquipmentManagerComponent) 方法中实现的。
 
 
 <a id="PickupDefinition"></a>
-## Pickup Definition
+## 1.6 拾取定义
 
-This is kind of weird because they implemented base Inventory Item Pickup in the
-same place as Weapon Pickup.
+这有点奇怪，因为他们在相同的地方实现了基础的库存项目拾取和武器拾取。
 
-In any case, the Pickup Definitions define things like:
-
-- Inventory Item Definition to spawn on pickup
-- Display Mesh
-- Pickup cooldowns, effects, etc
+无论如何，拾取定义定义了以下内容：
+- 在拾取时生成的库存项目定义
+- 显示网格
+- 拾取冷却时间、效果等
 
 
 <a id="QuickBarComponent"></a>
-## QuickBar Component
+## 1.7 QuickBar Component
 
-Controls which item the Pawn has equipped.
+控制 Pawn 装备了哪个物品。
+- 根据插槽数量限制库存中可用的可装备物品数量
+- 通过 Equipment Manager 管理装备了哪个物品
 
-- Limits the number of usable Equippable Items in inventory based on the number of slots
-- Manages which item is equipped via Equipment Manager
+请注意，在 Lyra 中，为了能够使用装备，QuickBar Component 是 必需的。尽管在 Lyra 的简单射击游戏概念中这样做效果很好，但我不能说我对这个设计选择非常喜欢。
 
-Note that in Lyra the QuickBar Component is **required** to be able to use equipment.
-While this works fine in Lyra's simple ShooterGame concept,
-I can't say I'm a huge fan of this design choice.
+Lyra 基于 QuickBar 的装备系统的关键是 `ULyraQuickBarComponent::SetActiveSlotIndex_Implementation`，这是 Lyra 中唯一导致装备被装备或卸下的代码片段。
 
-The key to Lyra's QuickBar-based Equipment System is
-`ULyraQuickBarComponent`::`SetActiveSlotIndex_Implementation`,
-which is the only piece of code in Lyra that causes equipment to be equipped or unequipped.
+`SetActiveSlotIndex_Implementation`` 调用 `UnequipItemInSlot`（卸下旧槽中的物品，如果有的话），然后是 `EquipItemInSlot`（在新槽中装备物品，如果有的话）。在这两种情况下，底层的工作由 [Equipment Manager](#EquipmentManager) 完成。
 
-`SetActiveSlotIndex_Implementation` calls `UnequipItemInSlot` (unequip item in old slot, if any)
-followed by `EquipItemInSlot` (equip item in new slot, if any).
-In both cases the under-the-hood work is performed by the
-[Equipment Manager](#EquipmentManager).
-
-The QuickBar Component has virtually no utility for AI Bots and yet every Bot is forced
-to have one.  In my game, there are WAAAAAY more Bots than there are players, and so
-having to put components that are only useful for players on every Bot is fairly
-inefficient in my case.
-It seems rather easy to remove this dependency, and so in my own Equipment System
-implementation, that is what I plan to do.
+QuickBar Component 对于 AI Bot 几乎没有用途，但每个 Bot 都被强制拥有一个。在我的游戏中，Bot 的数量比玩家多得多，因此在每个 Bot 上放置仅对玩家有用的组件在我这种情况下效率相当低。移除这种依赖似乎相当容易，因此在我自己的装备系统实现中，这是我的计划。
 
 
 <a id="EquipmentAbility"></a>
-## Equipment Ability
+## 1.3 Equipment Ability
 
-`ULyraGameplayAbility_FromEquipment` is provided as a new Base Ability class for
-Equipment-related abilities.
-
-The key functionality provided here includes:
+`ULyraGameplayAbility_FromEquipment`作为与装备相关的能力的基础能力类，提供的关键功能包括：
 
 - Get **Associated Equipment**
   - Current Ability Spec `SourceObject` cast to Equipment Instance (`ULyraEquipmentInstance`)
 - Get **Associated Item**
   - Associated Equipment Instigator cast to Item Instance (`ULyraInventoryItemInstance`)
 
-The Associated Equipment `SourceObject` value is assigned by
-[`FLyraEquipmentList`::`AddEntry`](#EquipmentList_AddEntry)
-during the construction of the Equipment Instance.
+The Associated Equipment `SourceObject` value is assigned by [`FLyraEquipmentList`::`AddEntry`](#EquipmentList_AddEntry) during the construction of the Equipment Instance.
 
-Thus any Ability deriving from this base (or implementing similar functionality)
-can easily access the underlying Weapon Instance and its base Item Instance.
+Thus any Ability deriving from this base (or implementing similar functionality) can easily access the underlying Weapon Instance and its base Item Instance.
 
-The Associated Equipment `Instigator` value is assigned by
-`ULyraQuickBarComponent`::`EquipItemInSlot` whenever a piece of equipment is chosen
-to be equipped by the Pawn to be the underlying Inventory Item Instance.
+The Associated Equipment `Instigator` value is assigned by `ULyraQuickBarComponent`::`EquipItemInSlot` whenever a piece of equipment is chosen to be equipped by the Pawn to be the underlying Inventory Item Instance.
 
 
-# Important Code to Consider
+# 2 重点考虑的代码
 
-Particularly if you are going to be implementing a system similar to this yourself, the following
-is some important code that helps to support the equipment/weapon abilities.
+特别是如果您打算自己实现类似的系统，以下是一些重要的代码，有助于支持装备/武器能力。
 
-You should consider this to understand how it helps support the system overall.
-
+您应该考虑阅读这些代码，以了解它是如何在整个系统中提供支持的。
 
 <a id="EquipmentManagerComponent"></a>
 ### `ULyraEquipmentManagerComponent`::`EquipItem`
@@ -171,10 +134,7 @@ You should consider this to understand how it helps support the system overall.
 ULyraEquipmentInstance* EquipItem (TSubclassOf<ULyraEquipmentDefinition> EquipmentDefinition);
 ```
 
-Called whenever a new piece of equipment should be equipped.
-An Equipment Instance is spawned based on the Equipment Definition.
-
-The Equipment Instance is created via a call to:
+每当应该装备新的装备时调用。根据装备定义生成一个装备实例。通过调用以下方法创建装备实例：
 
 <a id="EquipmentList_AddEntry"></a>
 ### `FLyraEquipmentList`::`AddEntry`

@@ -9,72 +9,45 @@ back_links:
 back_link_title: Interactions
 ---
 
-# LyraStarterGame Interaction System
+# LyraStarterGame 交互系统
 
-If you prefer video, check out my
-[YouTube Video: UE5 LyraStarterGame Prototype Interaction System](https://youtu.be/jm0qX5KkLQs)
-which covers this topic.
+参考视频 [YouTube Video: UE5 LyraStarterGame Prototype Interaction System](https://youtu.be/jm0qX5KkLQs) which covers this topic.
 
-The [Official UE5 Lyra Interaction Docs](https://docs.unrealengine.com/5.0/en-US/lyra-sample-game-interaction-system-in-unreal-engine/)
-are definitely worth reading.  However, IMO they were clearly written by someone
-who has far more knowledge about Lyra and Unreal Engine than I have,
-and thus they omitted a ton of information that I had to figure out
-myself to truly understand how the Lyra Interaction System works.
+官方文档[Official UE5 Lyra Interaction Docs](https://docs.unrealengine.com/5.0/en-US/lyra-sample-game-interaction-system-in-unreal-engine/) 绝对值得一读。然而，在我看来，这些文档显然是由一个对 Lyra 和 Unreal Engine 了解比我多得多的人编写的，因此他们省略了我必须自己找出的大量信息，以真正理解 Lyra 交互系统的工作原理。
 
-Lyra ships with a partially implemented, prototype inventory system.
-This inventory system is based on the Lyra Interaction System and is
-presented in a `PROTO` directory to highlight the fact it is not
-ready to use without some work from you.
+Lyra 自带了一个部分实现的原型库存系统。这个库存系统基于 Lyra 交互系统，并在一个 PROTO 目录中展示，以突显它需要一些工作才能使用。
 
-This seemed like a good place to do a deep dive into Lyra Interactions
-to see how they put it together.  My findings from this exercise
-are presented below.
+这似乎是深入研究 Lyra 交互的好地方，以了解它们是如何组合在一起的。我从这个练习中的发现如下。
 
-To skip ahead and play with Epic's inventory prototype yourself,
-check out the section
-[How to Experience Epic's Inventory Prototype](#How_to_Experience_Epics_Inventory_Prototype).
+如果您想跳到前面并自己体验 Epic 的库存原型，请查看 如何体验 Epic 的库存原型[How to Experience Epic's Inventory Prototype](#How_to_Experience_Epics_Inventory_Prototype) 部分。
 
+### 完全实现：自动邻近交互(utomatic Proximity Interaction)
 
-### Fully Implemented: Automatic Proximity Interaction
+截至 UE 5.0.2，Epic 完全实现的唯一类型的交互是，玩家和对象之间只有一种可能的交互，并且该交互是基于玩家与对象的邻近触发的。
 
-As of UE 5.0.2 the only type of interaction that Epic has fully implemented
-is such that there is only one possible interaction between the player
-and an object, and that interaction is automatically triggered based on the player's
-proximity to the object.
+例如，对象可能会给您一个武器，或者将您传送到地图的另一部分，或者在您靠近时对您造成伤害或治疗。
 
-For example, the object gives you a weapon, or teleports you to another
-part of the map, or damages or heals you while you stand near it.
+如果您不需要以其他方式与对象交互的能力，那么对您而言，Lyra 是完全功能的。
 
-If you do not require the ability to interact in other ways with your
-objects then Lyra is fully functional as far as you are concerned.
+### 部分实现：由玩家启动的单一交互
 
+这是我们在这里讨论的库存原型的主题。
 
-### Partially Implemented: Player-Initiated Single Interaction
+与自动交互的区别在于，在这种情况下，能力不会自动激活，而是等待玩家选择性地激活它。
 
-This is the subject of the inventory prototype that we're discussing here.
-
-The difference between this and the automatic interaction is that in
-this case the ability isn't activated automatically, but instead waits
-for the player to optionally activate it.
-
-For example, the player could selectively toggle a switch, or as in
-the case Epic shipped for us to examine, pick up a rock.
+例如，玩家可以选择切换一个开关，或者就像 Epic 为我们提供的案例中那样，拾起一个石头。
 
 
 ### NOT Implemented: Multiple Interaction Options
 
-If you want to give your player options, like *either* opening
-a door *or* locking it *or* booby-trapping it *or* insert-your-idea-here,
-then you will need to extend Lyra to add this functionality.
+If you want to give your player options, like *either* opening a door *or* locking it *or* booby-trapping it *or* insert-your-idea-here, then you will need to extend Lyra to add this functionality.
 
-There is currently no code in Lyra that will allow you to do this, but there
-is a good starting point that should hopefully not be too difficult to extend.
+There is currently no code in Lyra that will allow you to do this, but there is a good starting point that should hopefully not be too difficult to extend.
 
 
 # Key Concepts
 
-The key concepts you must understand to implement an interaction system
-that your player chooses when to activate:
+The key concepts you must understand to implement an interaction system that your player chooses when to activate:
 
 - [Gameplay Ability: `GA_Interact`](#GA_Interact)
   - Constantly scans the area around the player for Interactable objects
