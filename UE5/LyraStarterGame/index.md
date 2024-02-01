@@ -156,6 +156,15 @@ Works in progress:
 - [How to: Customize the Lyra FrontEnd](./How-To-Customize-Lyra-FrontEnd) *(incomplete; coming eventually)*
 
 
+# 5 Lyra相关开源项目
+[XistGG DiscordGameSampleDiscordGameSample](https://github.com/XistGG/DiscordGameSample)  
+This is a sample game that integrates UE 5.3 with Discord GameSDK v3.2.1.
+
+
+[Xist CommonGame Sample](https://github.com/XistGG/XistCommonGameSample)  
+UE 5.3+ Lyra-like HUD & Input Setup
+
+
 # References
 
 随着我对LyraStarterGame的了解越来越多，我正在整理一个参考列表。
