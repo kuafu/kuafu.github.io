@@ -13,31 +13,11 @@ breadcrumb_name: "LyraStarterGame"
 如果你已经有现成的游戏，Lyra提供了一些插件和游戏系统，你可以将它们复制到你的游戏中，省去很多工作。
 如果你正在开始一个新游戏，最好是从Lyra开始，然后删除你不想要的内容，而不是将你想要的内容（可能很重要）从Lyra复制到一个空白的游戏中。有多种可行的方法可以以Lyra为基础开始你的新游戏。一些选项在这里进行了讨论。
 
-这些信息来自于discussed结果:
-
+这些信息来自于discussed:
 [Extending Lyra: Development Considerations](./Development-Considerations)
 
 
-
-# 2 非官方 Lyra 社区
-
-<div style="float:left; margin-right: 1em; margin-bottom: 1em">
-<a href="https://discord.gg/RS99Jcur6q" target="_blank"><img
-  src="https://discord.com/api/guilds/911050282996228217/embed.png?style=banner3"/></a>
-</div>
-
-We have a community Discord for discussing Lyra game development.
-
-Open to C++ devs, BP devs and enthusiasts.
-
-Please be respectful of others.
-
-Dev talk only.  No politics, religion or hate.
-
-<div style="clear:both"></div>
-
-
-# 3 Getting Started
+# 2 Getting Started
 
 创建自己的 LyraStarterGame project?
 
@@ -46,9 +26,9 @@ Dev talk only.  No politics, religion or hate.
 我在官方指南发布之前制作了这个操作指南，我将其保留在这里以供后人参考: [Set Up a New LyraStarterGame Project](./Getting-Started-Setting-Up-a-New-LyraStarterGame-Project)
 
 
-# 4 Lyra概念
+# 3 Lyra概念
 
-## 4.1 工程组织结构  
+## 3.1 工程组织结构  
 在我看来，你应该尽量不修改基本的Lyra游戏，除非你确实必须。基本游戏的整个命名空间应被视为Lyra所保留。  
 - 内容放入GameFeature插件（GFP）
 - 核心C++可以放入常规插件
@@ -65,7 +45,7 @@ The entire namespace of the base game should be considered to be reserved by Lyr
 
 At the very least you need to create one GFP for your Content.
 
-## 4.2 升级 Lyra Core
+## 3.2 升级 Lyra Core
 
 Epic will sometimes upgrade the Engine and/or Lyra Core.
 
@@ -78,7 +58,7 @@ update the Engine version.  This is a UE requirement that significantly affects
 Editor startup time.
 
 
-## 4.3 Player Input
+## 3.3 Player Input
 
 Common UI "owns" player input
 
@@ -88,7 +68,7 @@ Common UI "owns" player input
   - [How to take Control of the Mouse in Lyra](/UE5/LyraStarterGame/Tutorials/How-to-Take-Control-of-the-Mouse)
 
 
-## 4.4 Lyra Game Mode
+## 3.4 Lyra Game Mode
 
 - [Lyra Experience](./Experience/)
   - Lyra如何以及为何以目前的方式加载GFPs
@@ -100,7 +80,7 @@ Common UI "owns" player input
   - Epic通过Lyra项目分发的插件概述
 
 
-## 4.5 Lyra Gameplay Systems
+## 3.5 Lyra Gameplay Systems
 
 - [Character Parts](./CharacterParts/)
   - 模块化角色部件
@@ -118,13 +98,13 @@ Common UI "owns" player input
   - Equipment extension: Equipment Items that are Weapons usable by Pawns
 
 
-## 4.6 Lyra其他系统
+## 3.6 Lyra其他系统
 
 - [Game Settings](https://docs.unrealengine.com/5.3/en-US/lyra-sample-game-settings-in-unreal-engine/)
   - Comprehensive Game Settings *(this is a beast to try to copy out due to the extensive use of UI assets, but it can be done)*
 
 
-## 4.7 Lyra Character
+## 3.7 Lyra Character
 
 - [Shooter Mannequin Character](./ShooterMannequin)
   - `B_Hero_ShooterMannequin` 是Lyra中的基础角色, 需要充分理解
@@ -135,7 +115,7 @@ Common UI "owns" player input
   - This seems to be typical in UE5; Characters are first class, Pawns are completely up to you.
   （这在UE5中似乎很典型；角色（Characters）是first class，而Pawn则完全由你决定。）
 
-## 4.8 Gameplay Ability System (GAS)
+## 3.8 Gameplay Ability System (GAS)
 
 #### Lyra-Specific GAS Resources
 
@@ -154,7 +134,7 @@ Common UI "owns" player input
     - [Attributes and Gameplay Effects](https://docs.unrealengine.com/5.0/en-US/gameplay-attributes-and-gameplay-effects-for-the-gameplay-ability-system-in-unreal-engine/) (Epic Documentation)
 
 
-# 5 各种Lyra相关的方面
+# 4 各种Lyra相关的方面
 
 In an effort to understand the material Epic has provided us to start with, I am dissecting the GameFeature plugins they shipped to understand what they do, how they're similar and how they differ from one another.
 
