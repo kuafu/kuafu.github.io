@@ -43,71 +43,50 @@ Epic 还提供了一个 C++ 类`ALyraCharacterWithAbilities`，该类未在任�
 
 # 2 XCL Actor with Abilities
 
-In my `XCL` plugin I've made a class `AXCLActorWithAbilities`.  This was inspired by Lyra's `ALyraCharacterWithAbilities`.
+在X157©的 XCL 插件中，他制作了一个 AXCLActorWithAbilities 类。这个类的灵感来自 Lyra 的 ALyraCharacterWithAbilities。XCL Actor with Abilities 是可以参与 GAS 的角色的最简单示例。它没有任何健康信息。它不能被伤害或治疗。但它有一个 ASC，因此您可以根据需要赋予它能力或属性。
 
-The XCL Actor with Abilities is the simplest possible example of an actor that can participate in GAS.
-
-It does not have any health information.  It cannot be damaged or healed.  It does have
-an ASC, so you can give it abilities or attributes as needed.
-
-Why would you want this?  Maybe you want some actor in the world that doesn't have any health, but it still has abilities.  Maybe this is an in-game interactive computer terminal.  You want to be able to use it, but not kill it.  This would be your base for such an actor.
-
+为什么要这样做？也许你想让世界中的某个角色没有任何生命信息，但它仍然拥有能力。也许这是一个游戏中的交互式电脑终端。您希望能够使用它，但不能杀死它。这就是这样一个角色的基础。
 
 # 3 XCL Actor with Abilities and Health
 
-The next step then is to take an XCL Actor with Abilities and add a Health Set, a Combat Set
-and an optional but useful `ULyraHealthComponent` to it.
+下一步是采用具有能力的 XCL Actor 并向其添加生命值集、战斗集和可选但有用的“ULyraHealthComponent”。
 
-We derive from XCL Actor with Abilities, and we add these components, and the result is
-`AXCLActorWithAbilitiesAndHealth`.
+我们从带有 Abilities 的 XCL Actor 派生，然后添加这些组件，结果是“AXCLActorWithAbilitiesAndHealth”。
 
-Now this actor has health and combat capabilities.  You can heal it or damage it by applying
-GAS Gameplay Effects.  If you damage it enough, it will die.
+现在该演员拥有生命值和战斗能力。 您可以通过应用GAS的游戏效果来治愈它或伤害它。 如果你伤害它足够多，它就会死。
 
 
 ## 3.1 How do I Damage it !?
 
-To damage the actor, apply a Gameplay Effect that increases the `Damage` attribute
-of the actor's `HealthSet`.  When it executes, it will decrease the `Health` by the `Damage`
-amount (down to a minimum of zero).
+要对角色造成伤害，请应用游戏效果来增加角色`HealthSet`的`Damage`属性。 当它执行时，它会将`Health`减少`Damage`数量（最小到零）。
 
-An example Gameplay Effect that damages an actor is `GE_Damage_Basic_Instant`.
+损害角色的示例游戏效果是`GE_Damage_Basic_Instant`。
 
-For more details, see `GE_Damage_Basic_Instant` and read the code for `ULyraDamageExecution`
-which is what actually applies the damage effect in Lyra.
-
+有关更多详细信息，请参阅`GE_Damage_Basic_Instant`并阅读`ULyraDamageExecution`的代码，这实际上是在 Lyra 中应用伤害效果。
 
 ## 3.2 How do I Kill it !?
 
-At zero health, the Health Set will fire off its `OnOutOfHealth` event.
+在生命值为零时，生命集将触发其“OnOutOfHealth”事件。
 
-**It is your responsibility to listen for this event and kill off your actor.**
+**你有责任监听这个事件并杀死你的角色。**
 
-Because we added the optional but useful `ULyraHealthComponent` to our actor,
-it hooks into the `OnOutOfHealth` event and translates it into a series of related,
-derivative events:
+因为我们向我们的 actor 添加了可选但有用的“ULyraHealthComponent”，它挂钩“OnOutOfHealth”事件并将其转换为一系列相关的，
+衍生事件：
 
-- A `GameplayEvent.Death` Gameplay Event is sent to the now-pending-death Actor's ASC
-- A `Lyra.Elimination.Message` message is broadcast to the Gameplay Message Subsystem
-  - This includes info like which actor died and who killed them
+- `GameplayEvent.Death`游戏事件被发送到现在待死亡的 Actor 的 ASC
+- `Lyra.Elimination.Message`消息被广播到游戏消息子系统
+   - 这包括诸如哪位演员死亡以及谁杀了他们之类的信息
 
-Note that there are some TODO notes in the `ULyraHealthComponent` with some ideas for how
-those events could be improved.  You may be interested to do some of that, or add your
-own logic there instead.
+请注意，“ULyraHealthComponent”中有一些 TODO 注释，其中包含一些有关如何进行操作的想法，这些活动可以得到改善。 您可能有兴趣执行其中一些操作，或者添加您的而是有自己的逻辑。
 
-In Lyra, player and AI characters are injected with the `GA_Hero_Death` ability on spawn.
-This ability triggers on `GameplayEvent.Death` events related to its owning actor, and
-calls `HealthComponent`🡒`StartDeath`, which initiates the procedure of killing the actor.
+在 Lyra 中，玩家和 AI 角色在生成时会被注入“GA_Hero_Death”能力。此能力会在与其所属 Actor 相关的“GameplayEvent.Death”事件上触发，并且
+调用 `HealthComponent`🡒`StartDeath`，它启动杀死 actor 的过程。
 
-Listen for the Health Component's `OnDeathStarted` event, and start to kill your actor/pawn/character
-when that event fires.  By the time `OnDeathFinished` fires, the actor should be dead, as it is
-being forcefully removed from the world probably on the next tick.
+监听 Health 组件的 `OnDeathStarted` 事件，并开始杀死你的 actor/pawn/character 当该事件触发时。 当“OnDeathFinished”触发时，演员应该已经死了，因为它是可能在下一个蜱虫被强行从世界上移除。
 
-Lyra listens for this component's event in its `B_Hero_Default` (one of the Lyra Character
-base BPs) event graph.
+Lyra 在其“B_Hero_Default”（Lyra 角色之一）中侦听此组件的事件基本 BP）事件图。
 
-For more info RE `B_Hero_Default`'s handling of the Health Component's `OnDeathStarted`
-event, and Lyra's base characters in general, see
+更多信息参考 Health Component `B_Hero_Default`的 `OnDeathStarted` 事件, 以及Lyra的基础角色, 见
 [Deep Dive: Lyra’s Shooter Mannequin](/UE5/LyraStarterGame/ShooterMannequin).
 
 ###### Lyra's `B_Hero_Default` Event Graph
@@ -115,7 +94,7 @@ event, and Lyra's base characters in general, see
 ![OnDeathStarted.png](./screenshots/B_Hero_Default__EventGraph__OnDeathStarted.png)
 
 
-## 3.3 How do I Heal it !?
+## 3.3 如何进行治疗?
 
 To heal the actor, apply a Gameplay Effect that increases the `Healing` attribute
 of the actor's `HealthSet`.  When it executes, it will increase the `Health` by the `Healing`
@@ -127,11 +106,9 @@ For more details, see `GE_Heal_Instant` and read the code for `ULyraHealExecutio
 is what actually applies the healing effect in Lyra.
 
 
-# 4 Example Code
+# 4 示例代码
 
-I've published some example code to help with this.  This code WILL NOT COMPILE.
-The point is not for this to be plug and play for you.  The point is to be an example
-of how you can do this yourself.
+该代码将无法编译，重点是举例如何做。
 
 - [
 [h](https://github.com/x157/Lyra-ActorWithAbilities/blob/main/Source/XCL/XCLActorWithAbilities.h)
@@ -193,17 +170,13 @@ is a Gameplay Effect that is a periodic +20 Health/second heal.  That way when I
 down to `1` HP, it fully regenerates in 5 seconds.
 
 
-# 6 Summary
+# 6 概括
 
-You have a HUGE amount of control over how these calculations are done and what the resulting
-values are.  To exercise this control, you must learn GAS, in particular:
-
-Gameplay Attributes are what defines the actor's health (or shields, or mana, or whatever),
-and Gameplay Effects are how you modify those values during game play.
+您对如何完成这些计算以及结果有很大的控制权值是。 要行使这种控制权，您必须学习 GAS，特别是：游戏属性定义了角色的生命状况（或护盾、法力或其他），以及游戏效果是您在游戏过程中修改这些值的方式。
 
 - [Attributes and Attribute Sets](https://docs.unrealengine.com/5.0/en-US/gameplay-attributes-and-attribute-sets-for-the-gameplay-ability-system-in-unreal-engine/) (Epic Documentation)
 - [Attributes and Gameplay Effects](https://docs.unrealengine.com/5.0/en-US/gameplay-attributes-and-gameplay-effects-for-the-gameplay-ability-system-in-unreal-engine/) (Epic Documentation)
 
 Attributes can contain **way more info** than just the health.
 
-Making something "be alive" is only the beginning.  `:-)`
+让某些东西是“活的”只是一个开始。`:-)`
