@@ -5,7 +5,7 @@ breadcrumb_path: "UE5/LyraStarterGame"
 breadcrumb_name: "Game Initialization"
 ---
 
-# Game Initialization
+# 1 游戏初始化
 
 The GameMode initializes when a World is loaded.
 The [World Settings](/UE5/LyraStarterGame/Experience/#LyraWorldSettings)
@@ -14,19 +14,14 @@ and (in [Lyra](/UE5/LyraStarterGame/))
 which [Lyra Experience](/UE5/LyraStarterGame/Experience/)
 to load by default.
 
-There are different ways a World can come to be loaded,
-including clicking the "Play In Editor" (PIE) button.
+加载世界的方式有多种，包括单击“在编辑器中播放”(PIE) 按钮。
 
-As discussed in more detail in
-[Lyra Experience](/UE5/LyraStarterGame/Experience/),
-unlike other Games, in Lyra you must ensure to
-**delay all game play** until
-`OnExperienceLoaded`, perhaps long after `BeginPlay`.
+更多细节讨论见[Lyra Experience](/UE5/LyraStarterGame/Experience/)，不同于其他游戏，在Lyra中你必须`延迟所有Game play`直到`OnExperienceLoaded`开始,这可能在 `BeginPlay`后很久。
 
 
-# World Load Procedure
+# 2 世界加载流程
 
-World Loading follows this procedure:
+世界加载遵循以下流程：
 
 - [Initialize Components of all World Actors](#InitializeActorsForPlay)
   - [Init Game Mode](#InitGame)
@@ -41,19 +36,19 @@ World Loading follows this procedure:
 
 
 <a id='InitializeActorsForPlay'></a>
-## Initialize Components of all World Actors
+## 2.1 初始化世界中的所有Actor组件
 
-This is implemented by World🡒InitializeActorsForPlay
+实现见 World🡒InitializeActorsForPlay
 
 
 <a id='InitGame'></a>
-### Init Game Mode
+### 2.1.1 初始化 GameMode
 
 - GameMode🡒InitGame
 
 
 <a id='InitializeComponents'></a>
-### Initialize Components
+### 2.1.2 初始化组件
 
 Initialization of World Actors is in **RANDOM ORDER**.
 
@@ -67,7 +62,7 @@ When the GameMode is initialized, it does:
 
 
 <a id='PlayerLogin'></a>
-### Player Login
+### 2.1.3 玩家登录(Player Login)
 
 - GameMode🡒Login
   - GameMode🡒SpawnPlayerController
@@ -88,7 +83,7 @@ When the GameMode is initialized, it does:
 
 
 <a id='BeginPlay'></a>
-## World BeginPlay
+## 2.2 World BeginPlay
 
 - All World Subsystems `OnWorldBeginPlay`
 - GameMode🡒StartPlay
@@ -103,7 +98,7 @@ When the GameMode is initialized, it does:
 
 
 <a id='LoadLyraExperience'></a>
-## Load Lyra Experience
+## 2.3 加载 Lyra Experience
 
 In PIE, the World's Default Lyra Experience gets loaded on the tick after GameMode🡒InitGame.
 
@@ -111,7 +106,7 @@ In Game, the appropriate Lyra Experience is loaded by
 the Frontend State Component (or your similar Game State Component).
 
 
-### Experience Load Procedure
+### 2.3.1 Experience 加载流程
 
 - Load Experience Asset and its References
 - Load all GameFeature Plugin (GFP) dependencies
