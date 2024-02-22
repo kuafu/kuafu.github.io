@@ -6,33 +6,32 @@ breadcrumb_name: "Weapon System"
 ---
 
 
-# LyraStarterGame Weapon System
+# 1. LyraStarterGame 武器系统
 
-This is an overview of the Weapon System in [LyraStarterGame](/UE5/LyraStarterGame/).
+Lyra武器是一种基于[Lyra装备系统](/UE5/LyraStarterGame/Equipment/)的特殊装备 ，而Lyra装备系统本身又基于[Lyra库存系统](/UE5/LyraStarterGame/Inventory/)。 
 
-A Lyra weapon is a specialized piece of equipment based on the
-[Lyra Equipment System](/UE5/LyraStarterGame/Equipment/),
-which itself is based on the
-[Lyra Inventory System](/UE5/LyraStarterGame/Inventory/).
-Make sure you are familiar with those concepts as well.
+'武器 --> 装备 --> 库存'
 
+## 1.1 武器概念
 
-## Weapon Concepts
+- [武器实例](#WeaponInstance)
+  - 继承自装备实例 [Equipment Instance](/UE5/LyraStarterGame/Equipment/#EquipmentInstance)
+  - 添加装备/未装备的动画集
 
-- [Weapon Instance](#WeaponInstance)
-  - Derived from [Equipment Instance](/UE5/LyraStarterGame/Equipment/#EquipmentInstance)
-  - Adds Equipped/Unequipped Anim Sets
-- [Ranged Weapon Instance](#RangedWeaponInstance)
+- [远程武器实例](#RangedWeaponInstance)
   - Derived from [Weapon Instance](#WeaponInstance)
   - Adds logic RE shooting a projectile at range, ammunition capacity and use, etc
-- [Weapon State Component](#WeaponStateComponent) (Controller Component)
-  - Manages equipped weapon ticking and player feedback (hit result visualization)
-- [Weapon Debug Settings](#WeaponDebugSettings)
+
+- [武器状态组件](#WeaponStateComponent) (Controller Component)
+  - 管理装备的武器Tick和玩家反馈（命中结果可视化）
+
+- [武器调试设置](#WeaponDebugSettings)
   - Developer debug helper
-- [Weapon Spawner](#WeaponSpawner) (Actor)
+
+- [武器生成器 Weapon Spawner](#WeaponSpawner) (Actor)
   - Spawn Weapons at dedicated spawning pads in the world
 
-## Related Gameplay Abilities
+## 1.2 相关 Gameplay Abilities
 
 - [Melee Attack Ability](#MeleeAttackAbility)
   - Used for all melee attacks regardless of the weapon type
@@ -41,29 +40,24 @@ Make sure you are familiar with those concepts as well.
 
 
 <a id="WeaponInstance"></a>
-## Weapon Instance
+## 1.3 武器实例(Weapon Instance)
 
-A Weapon Instance (`ULyraWeaponInstance`) is an
-[Equipment Instance](/UE5/LyraStarterGame/Equipment/#EquipmentInstance)
-that also has equipped and unequipped animation sets associated with it.
+A Weapon Instance (`ULyraWeaponInstance`) is an [Equipment Instance](/UE5/LyraStarterGame/Equipment/#EquipmentInstance) that also has equipped and unequipped animation sets associated with it.
 
 It also keeps track of how long it has been since the player last interacted with it.
 
-Most of the implementation is in the BP `B_WeaponInstance_Base`, from which all other Lyra
-Weapon Instances are derived:
+Most of the implementation is in the BP `B_WeaponInstance_Base`, from which all other Lyra Weapon Instances are derived:
 
 - `B_WeaponInstance_Pistol`
 - `B_WeaponInstance_Rifle`
 - `B_WeaponInstance_Shotgun`
 - `B_WeaponInstance_NetShooter` (prototype)
 
-The Weapon Instance has a `Tick()` method, which is executed every tick **if/when** the weapon
-is equipped by the Pawn.  This ticking is managed by the
-Pawn Controller's [Weapon State Component](#WeaponStateComponent).
+The Weapon Instance has a `Tick()` method, which is executed every tick **if/when** the weapon is equipped by the Pawn.  This ticking is managed by the Pawn Controller's [Weapon State Component](#WeaponStateComponent).
 
 
 <a id="RangedWeaponInstance"></a>
-## Ranged Weapon Instance
+## 1.4 远程武器实例
 
 A Ranged Weapon Instance is derived from Weapon Instance and implements `ILyraAbilitySourceInterface`.
 
@@ -71,7 +65,7 @@ It adds the concept of bullets, shot accuracy and spread, etc.
 
 
 <a id="WeaponStateComponent"></a>
-## Weapon State Component
+## 1.5 Weapon State Component
 
 `ULyraWeaponStateComponent` goes on the Pawn Controller.
 
@@ -87,28 +81,29 @@ This component:
 
 
 <a id="WeaponDebugSettings"></a>
-## Weapon Debug Settings
+## 1.6 武器调试设置
 
+ULyraWeaponDebugSettings是 UE5 新功能的实现UDeveloperSettingsBackedByCVars。
+
+如果您想在游戏中拥有类似的功能，请务必阅读此类，我建议您这样做，因为这使游戏调试变得更加容易。
+
+Lyra 支持编译武器调试的选项，有利于生产。在开发远程武器时，您绝对应该打开这些调试功能，除非您想不必要地浪费自己的时间。
+
+------
 `ULyraWeaponDebugSettings` is an implementation of a new UE5 feature, `UDeveloperSettingsBackedByCVars`.
 
 Definitely read this class if you want to have similar functionality in your game, which I recommend
 since this makes gameplay debugging significantly easier.
 
-Lyra supports the option to compile out weapon debugging, good for production.  When developing
-a ranged weapon you should absolutely turn these debugging features on
-unless you like to needlessly waste your own time.
+Lyra supports the option to compile out weapon debugging, good for production.  When developing a ranged weapon you should absolutely turn these debugging features on unless you like to needlessly waste your own time.
 
 
 <a id="WeaponSpawner"></a>
-## Weapon Spawner
+## 1.7 武器生成器(WeaponSpawner)
 
-This is a pad with a fixed position that spawns weapons based on the Weapon Definition
-you configure it for.  You can set Cooldown time, the mesh of the weapon to show
-that will be picked up, etc.
+This is a pad with a fixed position that spawns weapons based on the Weapon Definition you configure it for.  You can set Cooldown time, the mesh of the weapon to show that will be picked up, etc.
 
-This C++ class is implemented such that the core functionality of actually giving
-the weapon to the pawn **MUST** be implemented in Blueprints.  There are 2 BP
-implementations:
+This C++ class is implemented such that the core functionality of actually giving the weapon to the pawn **MUST** be implemented in Blueprints.  There are 2 BP implementations:
 
 - `B_WeaponSpawner`
   - ShooterCore pads that give weapons and health pickups
@@ -118,21 +113,21 @@ implementations:
 
 
 <a id="MeleeAttackAbility"></a>
-## Melee Attack Ability
+## 1.8  近战攻击 Ability
 
-`GA_Melee` is the Melee Attack Ability, derived from `GA_AbilityWithWidget`, which itself is
-based on `ULyraGameplayAbility`.
+`GA_Melee`是近战攻击能力，继承自 `GA_AbilityWithWidget`，其本身基于 `ULyraGameplayAbility`。
 
-It is implemented such that it can be executed regardless
-of the type of weapon equipped, provided that weapon derives from `B_WeaponInstance_Base`
-*(BP constraint)*.
+它的实现使得无论装备的武器类型如何都可以执行，只要该武器源自`B_WeaponInstance_Base` （BP约束）。
+
+请注意，此ability**不是**继承自基础装备ability ( `ULyraGameplayAbility_FromEquipment`)。虽然这是有道理的，因为近战不一定需要装备（Pawn 有拳头、脚、头等），但这也意味着在当前的实现中，没有办法让武士刀近战超过拳头。这似乎是一个重大的实施缺陷。如果你想要有趣的近战游戏，你绝对应该改变这一点。
+
+------
+`GA_Melee` is the Melee Attack Ability, derived from `GA_AbilityWithWidget`, which itself is based on `ULyraGameplayAbility`.
+
+It is implemented such that it can be executed regardless of the type of weapon equipped, provided that weapon derives from `B_WeaponInstance_Base` *(BP constraint)*.
 
 Note that this ability is **not derived** from
-the base Equipment Ability (`ULyraGameplayAbility_FromEquipment`).  While this makes sense
-in that equipment isn't necessarily required to melee (Pawns have fists, feet, heads, etc),
-it also means that in the current implementation there is no way to make a Katana melee
-for more than a fist.  This seems like a significant implementation flaw.  You should absolutely
-change this if you want interesting melee gameplay.
+the base Equipment Ability (`ULyraGameplayAbility_FromEquipment`).  While this makes sense in that equipment isn't necessarily required to melee (Pawns have fists, feet, heads, etc), it also means that in the current implementation there is no way to make a Katana melee for more than a fist.  This seems like a significant implementation flaw.  You should absolutely change this if you want interesting melee gameplay.
 
 On Melee Attack:
 
@@ -150,7 +145,7 @@ On Melee Attack:
 
 
 <a id="RangedWeaponBaseAbility"></a>
-## Ranged Weapon Base Ability
+## 1.9 远程武器 Ability
 
 `ULyraGameplayAbility_RangedWeapon` derives from the Equipment System's
 [Equipment Ability](/UE5/LyraStarterGame/Equipment/#EquipmentAbility)
