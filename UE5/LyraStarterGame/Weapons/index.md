@@ -187,3 +187,12 @@ Additionally, ranged weapons will listen for "failed to fire weapon" Gameplay Ev
 (`Ability.PlayMontageOnActivateFail.Message`)
 and play an animation montage to help the player visualize the failed ability activation.
 That Gameplay Message is broadcast by the base `ULyraGameplayAbility`::`NativeOnAbilityFailedToActivate`.
+
+
+<br/>
+<hr/>
+<div class="container">
+    <p> 感谢原作者 X157 &copy; 的杰出贡献！Thanks to the original author X157&copy; for his outstanding contribution!</p>
+        原始文档地址：<a href="https://x157.github.io">source</a> | <a href="https://github.com/x157/x157.github.io/issues">issues</a>
+    </p>
+</div>

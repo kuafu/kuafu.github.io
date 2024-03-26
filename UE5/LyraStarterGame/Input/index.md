@@ -84,3 +84,12 @@ The Lyra Hero Component activates the Native & Ability Input Actions for the Pla
 - [Official Epic Lyra Input Docs](https://docs.unrealengine.com/5.1/en-US/lyra-input-settings-in-unreal-engine/)
 - [ULyraSettingsLocal](/UE5/LyraStarterGame/ULyraSettingsLocal)
 
+
+
+<br/>
+<hr/>
+<div class="container">
+    <p> 感谢原作者 X157 &copy; 的杰出贡献！Thanks to the original author X157&copy; for his outstanding contribution!</p>
+        原始文档地址：<a href="https://x157.github.io">source</a> | <a href="https://github.com/x157/x157.github.io/issues">issues</a>
+    </p>
+</div>

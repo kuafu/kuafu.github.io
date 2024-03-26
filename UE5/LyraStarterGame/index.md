@@ -13,7 +13,7 @@ breadcrumb_name: "LyraStarterGame"
 如果你已经有现成的游戏，Lyra提供了一些插件和游戏系统，你可以将它们复制到你的游戏中，省去很多工作。
 如果你正在开始一个新游戏，最好是从Lyra开始，然后删除你不想要的内容，而不是将你想要的内容（可能很重要）从Lyra复制到一个空白的游戏中。有多种可行的方法可以以Lyra为基础开始你的新游戏。一些选项在这里进行了讨论。
 
-这些信息来自于discussed:
+这些信息来自于Lyra开发思考:
 [Extending Lyra: Development Considerations](./Development-Considerations)
 
 
@@ -115,6 +115,9 @@ Common UI "owns" player input
   - This seems to be typical in UE5; Characters are first class, Pawns are completely up to you.
   （这在UE5中似乎很典型；角色（Characters）是first class，而Pawn则完全由你决定。）
 
+
+  **[生命值于伤害Lyra Health and Damage](./Health-and-Damage)**
+
 ## 3.8 Gameplay Ability System (GAS)
 
 #### Lyra-Specific GAS Resources
@@ -175,12 +178,9 @@ UE 5.3+ Lyra-like HUD & Input Setup
 
 
 <br/>
-<br/>
 <hr/>
-<footer>
-    <div class="container">
-        <p> 感谢原作者 X157 &copy; 的杰出贡献！Thanks to the original author X157&copy; for his outstanding contribution!</p>
-            原始文档地址：<a href="https://x157.github.io">source</a> | <a href="https://github.com/x157/x157.github.io/issues">issues</a>
-        </p>
-    </div>
-</footer>
+<div class="container">
+    <p> 感谢原作者 X157 &copy; 的杰出贡献！Thanks to the original author X157&copy; for his outstanding contribution!</p>
+        原始文档地址：<a href="https://x157.github.io">source</a> | <a href="https://github.com/x157/x157.github.io/issues">issues</a>
+    </p>
+</div>

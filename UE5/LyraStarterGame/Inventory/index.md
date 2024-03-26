@@ -300,3 +300,12 @@ How to experience it:
 
 In Lyra 5.1+, open the map in the `ShooterExplorer` GFP to experience Lyra's prototype inventory system.
 
+
+
+<br/>
+<hr/>
+<div class="container">
+    <p> 感谢原作者 X157 &copy; 的杰出贡献！Thanks to the original author X157&copy; for his outstanding contribution!</p>
+        原始文档地址：<a href="https://x157.github.io">source</a> | <a href="https://github.com/x157/x157.github.io/issues">issues</a>
+    </p>
+</div>

@@ -180,3 +180,13 @@ down to `1` HP, it fully regenerates in 5 seconds.
 Attributes can contain **way more info** than just the health.
 
 让某些东西是“活的”只是一个开始。`:-)`
+
+
+
+<br/>
+<hr/>
+<div class="container">
+    <p> 感谢原作者 X157 &copy; 的杰出贡献！Thanks to the original author X157&copy; for his outstanding contribution!</p>
+        原始文档地址：<a href="https://x157.github.io">source</a> | <a href="https://github.com/x157/x157.github.io/issues">issues</a>
+    </p>
+</div>

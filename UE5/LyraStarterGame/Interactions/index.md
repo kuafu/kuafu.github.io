@@ -231,3 +231,12 @@ UE Forum user
 If you follow that blog you should be able to get the inventory system into a functional state so you can play with it to see how Epic intended for it to be used.
 
 Note that the prototype is nowhere near ready for you to extend and build upon, so you will absolutely want to make your own system and NOT try to use this at all.  It is quite clear that Epic does not intend for anyone to actually use this part of Lyra in its current state. It is only an example.
+
+
+<br/>
+<hr/>
+<div class="container">
+    <p> 感谢原作者 X157 &copy; 的杰出贡献！Thanks to the original author X157&copy; for his outstanding contribution!</p>
+        原始文档地址：<a href="https://x157.github.io">source</a> | <a href="https://github.com/x157/x157.github.io/issues">issues</a>
+    </p>
+</div>

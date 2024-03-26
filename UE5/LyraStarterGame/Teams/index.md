@@ -91,3 +91,12 @@ In the `GA_Melee` ability, damage is only applied to hit pawns if they're on
 a different team from the one executing the melee ability:
 
 [![GA_Melee CompareTeams](./screenshots/GA_Melee_CompareTeams.png)](./screenshots/GA_Melee_CompareTeams.png)
+
+
+<br/>
+<hr/>
+<div class="container">
+    <p> 感谢原作者 X157 &copy; 的杰出贡献！Thanks to the original author X157&copy; for his outstanding contribution!</p>
+        原始文档地址：<a href="https://x157.github.io">source</a> | <a href="https://github.com/x157/x157.github.io/issues">issues</a>
+    </p>
+</div>

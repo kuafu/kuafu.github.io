@@ -41,3 +41,12 @@ Lyra 游戏阶段子系统使用游戏标签以嵌套方式管理 Lyra 的游戏
 ![PhaseWarmup](./screenshots/PhaseWarmup.png)
 
 总体思路是，每个游戏阶段能力都会适当处理从一个阶段到下一阶段的转换。GameState本身决定游戏开始时启动哪个阶段（由 Lyra Experience 通过组件注入进行配置）。
+
+
+<br/>
+<hr/>
+<div class="container">
+    <p> 感谢原作者 X157 &copy; 的杰出贡献！Thanks to the original author X157&copy; for his outstanding contribution!</p>
+        原始文档地址：<a href="https://x157.github.io">source</a> | <a href="https://github.com/x157/x157.github.io/issues">issues</a>
+    </p>
+</div>

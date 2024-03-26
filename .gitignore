@@ -8,3 +8,4 @@ Gemfile.lock
 *Zone.Identifier
 # IntelliJ Idea
 .idea
+.vscode
