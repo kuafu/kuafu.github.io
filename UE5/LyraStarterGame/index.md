@@ -116,7 +116,7 @@ Common UI "owns" player input
   （这在UE5中似乎很典型；角色（Characters）是first class，而Pawn则完全由你决定。）
 
 
-  **[生命值于伤害Lyra Health and Damage](./Health-and-Damage)**
+  **[生命值与伤害Lyra Health and Damage](./Health-and-Damage)**
 
 ## 3.8 Gameplay Ability System (GAS)
 

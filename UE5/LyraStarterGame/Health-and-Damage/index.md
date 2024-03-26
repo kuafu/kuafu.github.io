@@ -8,7 +8,7 @@ breadcrumb_name: "Health and Damage"
 # 1 Lyra 生命值和伤害(Health and Damage)
 
 有关此信息的overview视频 [Lyra Health and Damage System](https://youtu.be/HwQ7BrLVfJI)
-: [XistGG](https://www.youtube.com/c/XistGG).
+, [XistGG](https://www.youtube.com/c/XistGG).
 
 从本质上讲，Lyra 的生命值和伤害系统基于游戏能力系统 (GAS)。即使你使用Lyra，在其他工程中使用GAS给角色处理生命并、伤害或治疗，这个做法也会与Lyra中的做法非常相似。
 
@@ -16,11 +16,11 @@ breadcrumb_name: "Health and Damage"
 
 虽然从技术上讲`LyraCombatSet`是可选的并且默认为零值，但如果参与者没有明确具有`LyraCombatSet`，Lyra 将输出警告日志。因此，除了可以消灭警告消息，实际上也需要`LyraCombatSet`。
 
-因此，`LyraCombatSet`` 实际上是必需的，即使只是为了消除警告消息。（如果您复制/重构了 Lyra 伤害/治疗计算，您可以删除对战斗集的需要）。
-hus, a `LyraCombatSet` is practically required as well, if for no reason other than to
+因此，`LyraCombatSet`` 实际上是必需的，即使只是为了消除警告消息。（如果您复制/重构了 Lyra 伤害/治疗计算，您可以删除对战斗集的需要）。  
+<i>{hus, a `LyraCombatSet` is practically required as well, if for no reason other than to
 squelch the warning messages. (If you duplicate/refactor the Lyra Damage/Heal Calculations, you can remove the requirement for a combat set if you prefer).
 
-Therefore by default in Lyra, to give an actor/pawn/character health, so you can damage or heal it, your actor must have:
+Therefore by default in Lyra, to give an actor/pawn/character health, so you can damage or heal it, your actor must have:}</i> 
 因此，在 Lyra 中默认情况下要给予角色(actor/pawn/character)生命值，以便你可以伤害或治疗它，你的角色必须具备：
 
 - Lyra ASC (`ULyraAbilitySystemComponent`)  
