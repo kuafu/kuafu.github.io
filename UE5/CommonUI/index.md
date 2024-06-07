@@ -52,7 +52,7 @@ Widget 输入通过以下方式配置：
   - 可能还有其他
 
 
-### 项目设置：通用输入
+### 1.3.1 项目设置：通用输入
 
 - 将自定义`CommonUIInputData` 对象分配给`Input`。`Input Data`下拉菜单
 - 根据需要配置平台和输入设备设置
@@ -62,7 +62,7 @@ Widget 输入通过以下方式配置：
 - 等等
 
 
-#### 更好地了解通用 UI 的输入和项目设置的资源
+### 1.3.2 更好地了解通用 UI 的输入和项目设置的资源
 
 - [Epic 的官方通用 UI 快速入门指南](https://docs.unrealengine.com/5.0/en-US/common-ui-quickstart-guide-for-unreal-engine/) (文本 +屏幕截图文档)
 - Volkiller Games：[虚幻引擎 5 中的通用 UI 输入系统](https://youtu.be/q05jmFyeb0c)（5 分钟视频）
@@ -70,7 +70,7 @@ Widget 输入通过以下方式配置：
 
 
 
-## 共享样式资产
+## 1.4 共享样式资产
 Common UI 允许您创建样式资产，然后轻松应用于小部件、按钮等。
 
 这样，您只需更新一种样式，游戏中的所有小部件都将根据该样式更改进行更新。
@@ -78,14 +78,14 @@ Common UI 允许您创建样式资产，然后轻松应用于小部件、按钮�
 为此，请根据需要从基本样式类派生并配置您的小部件以使用适当的样式。
 
 
-### Base Style C++ Classes:
+### 1.4.1 Base Style C++ Classes:
 - `CommonBorderStyle`
 - `CommonButtonStyle`
 - `CommonTextStyle`
 - others?
 
 
-## 调试 通用 UI
+## 105 调试 通用 UI
 
 ###### 控制台命令：`CommonUI.DumpActivatableTree`
 
@@ -94,7 +94,7 @@ Common UI 允许您创建样式资产，然后轻松应用于小部件、按钮�
 <a id="Annotations"></a>
 <a id="Annotations_EpicGames"></a>
 
-## 来自 Epic Games 视频源的注释
+## 1.6 来自 Epic Games 视频源的注释
 - [Lyra 跨平台 UI 开发](./Annotations/EpicGames-Lyra-Cross-Platform-UI-Development) (45 分钟)
   - 如何在 LyraStarterGame 中实现 CommonUI
   - 对 CommonUI 实现的良好总体概述
@@ -108,7 +108,7 @@ Common UI 允许您创建样式资产，然后轻松应用于小部件、按钮�
 <a id="Annotations_Other"></a>
 
 
-## 外部参考资料
+## 1.7 外部参考资料
 
 有关 Common 的更多见解UI，我推荐：
 
