@@ -6,85 +6,77 @@ breadcrumb_name: "Common UI"
 ---
 
 
-# Common UI Plugin
+# 1 Common UI Plugin
 
-The Common UI plugin allows the automation of a lot of platform-specific behavior in the UI.
-For example, buttons can be automatically shown/hidden depending on the platform
-type, and it is very easy to test different platforms in the Editor.
-
-[Lyra Input Overview](/UE5/LyraStarterGame/Input/) gives a good big picture look
-at a possible way Common UI can be implemented.
-
-## Key Concepts
-
-- [Common UI Action Router](./ActionRouter)
-  - Manages the Input Mode
-- [Activatable Widget](./ActivatableWidget)
-  - Base for most Lyra widgets
+Common UI 插件允许在 UI 中自动执行许多特定于平台的行为。例如，可以根据平台类型自动显示/隐藏按钮，并且在编辑器中测试不同平台非常容易。
 
 
-## Example Usage in Lyra
+[Lyra 输入概述](/UE5/LyraStarterGame/Input/) 很好地概述了 Common UI 的可能实现方式。
 
-- [Lyra UI Policy](/UE5/LyraStarterGame/Input/UIPolicy) defines a prioritized, tagged layers of
-  [Activatable Widgets](./ActivatableWidget)
+## 1.1 关键概念
+
+- [通用 UI 动作路由器](./ActionRouter)
+- 管理输入模式
+- [可激活小部件](./ActivatableWidget)
+- 大多数 Lyra 小部件的基础
+
+## 1.2 Lyra 中的示例用法
+
+- [Lyra UI 策略](/UE5/LyraStarterGame/Input/UIPolicy) 定义了优先级的标记层
+[可激活小部件](./ActivatableWidget)
+
+### 1.2.1 示例：Lyra 通用 UI 层
+
+按优先级升序，Lyra 将这些通用 UI 层定义为具有相关游戏标记的堆栈：
+
+- `UI.Layer.Game` - 与游戏直接相关的 UI
+- `UI.Layer.GameMenu` - 例如：库存 UI
+- `UI.Layer.Menu` - 主菜单层
+- `UI.Layer.Modal` - 提示/确认对话框层
 
 
-### Example: Lyra Common UI Layers
+## 1.3 输入处理
 
-In ascending priority, Lyra defines these Common UI Layers as stacks with associated Gameplay Tags:
+通用 UI 会随时将输入定向到当前具有焦点的小部件（默认情况下，位于最高优先级可见层顶部的小部件）。
 
-- `UI.Layer.Game` - UI relating directly to gameplay
-- `UI.Layer.GameMenu` - For example: Inventory UI
-- `UI.Layer.Menu` - Main Menu layer
-- `UI.Layer.Modal` - Prompt/Confirmation Dialog layer
-
-
-## Input Handling
-
-Input is directed by Common UI to the Widget that currently has focus
-(by default the one at the top of the highest priority visible layer)
-at any given time.
-
-Widget inputs are configured via:
+Widget 输入通过以下方式配置：
 
 - `DataTable` with row type `CommonInputActionDataBase`
 - One or more `CommonInputBaseControllerData`-derived `ControllerData` assets
   - These reference the input action `DataTable`
 - Custom `CommonUIInputData`-derived BP/Object
   - This references the input action `DataTable`
-  - Configures Universal Input Actions, like:
-    - Continue
-    - Back/Cancel
-    - possibly others
+- 配置通用输入操作，例如：
+  - 继续
+  - 返回/取消
+  - 可能还有其他
 
 
-### Project Settings: Common Input
+### 项目设置：通用输入
 
-- Assign your custom `CommonUIInputData` object to `Input`.`Input Data` dropdown
-- Configure Platform & Input Device Settings as needed
-  - Windows
-    - MKB
-    - Gamepad
-  - Etc
-
-
-#### Resources to Better Understand Input & Project Setup for Common UI
-
-- [Epic's Official Common UI Quickstart Guide](https://docs.unrealengine.com/5.0/en-US/common-ui-quickstart-guide-for-unreal-engine/) (text + screenshot doc)
-- Volkiller Games: [Common UI Input system in Unreal Engine 5](https://youtu.be/q05jmFyeb0c) (5 minute video)
-- Epic's Inside Unreal episode: [Introduction to CommonUI](./Annotations/EpicGames-Introduction-to-CommonUI) (2.5 hour video)
+- 将自定义`CommonUIInputData` 对象分配给`Input`。`Input Data`下拉菜单
+- 根据需要配置平台和输入设备设置
+- Windows
+  - MKB
+  - 游戏手柄
+- 等等
 
 
-## Shared Style Assets
+#### 更好地了解通用 UI 的输入和项目设置的资源
 
-Common UI allows you to create style assets that are then easily applied to widgets,
-buttons, etc.
+- [Epic 的官方通用 UI 快速入门指南](https://docs.unrealengine.com/5.0/en-US/common-ui-quickstart-guide-for-unreal-engine/) (文本 +屏幕截图文档)
+- Volkiller Games：[虚幻引擎 5 中的通用 UI 输入系统](https://youtu.be/q05jmFyeb0c)（5 分钟视频）
+- Epic 的 Inside Unreal 剧集：[CommonUI 简介](./Annotations/EpicGames-Introduction-to-CommonUI)（2.5 小时视频）
 
-In this way you only need to update the one style and all widgets in the game will be
-updated based on that style change.
 
-To accomplish this, derive from the base style classes as needed and configure your
-widgets to use the appropriate style.
+
+## 共享样式资产
+Common UI 允许您创建样式资产，然后轻松应用于小部件、按钮等。
+
+这样，您只需更新一种样式，游戏中的所有小部件都将根据该样式更改进行更新。
+
+为此，请根据需要从基本样式类派生并配置您的小部件以使用适当的样式。
+
 
 ### Base Style C++ Classes:
 - `CommonBorderStyle`
@@ -93,40 +85,37 @@ widgets to use the appropriate style.
 - others?
 
 
-## Debugging Common UI
+## 调试 通用 UI
 
-###### Console command: `CommonUI.DumpActivatableTree`
+###### 控制台命令：`CommonUI.DumpActivatableTree`
 
-If you enter the above console command you will get an output log dump of debug information
-that can be helpful to understand what the current Common UI display stack looks like.
-
+如果您输入上述控制台命令，您将获得调试信息的输出日志转储,这有助于了解当前通用 UI 显示堆栈的样子。
 
 <a id="Annotations"></a>
 <a id="Annotations_EpicGames"></a>
-## Annotations from Epic Games video sources
 
-- [Lyra Cross-Platform UI Development](./Annotations/EpicGames-Lyra-Cross-Platform-UI-Development) (45m)
-  - How CommonUI was implemented in LyraStarterGame
-  - Good big picture overview of a CommonUI implementation
-- [Introduction to CommonUI](./Annotations/EpicGames-Introduction-to-CommonUI) (2h 41m)
-  - Effectively a 2.5 hour brain dump
-  - How to add CommonUI to a new project
-  - Show off some common styling options
-  - Full Blueprint implementation, with numerous notes to "do not actually do it this way"
-    - Intended really only as an example
-
+## 来自 Epic Games 视频源的注释
+- [Lyra 跨平台 UI 开发](./Annotations/EpicGames-Lyra-Cross-Platform-UI-Development) (45 分钟)
+  - 如何在 LyraStarterGame 中实现 CommonUI
+  - 对 CommonUI 实现的良好总体概述
+- [CommonUI 简介](./Annotations/EpicGames-Introduction-to-CommonUI) (2 小时 41 分钟)
+  - 实际上是 2.5 小时的头脑风暴
+  - 如何将 CommonUI 添加到新项目中
+  - 展示一些常见的样式选项
+  - 完整的蓝图实现，并附有多个注释“实际上不要这样做”
+    - 仅作为示例
 
 <a id="Annotations_Other"></a>
 
 
-## External References
+## 外部参考资料
 
-For more insight into Common UI, I recommend:
+有关 Common 的更多见解UI，我推荐：
 
-- [benui's Common UI Intro](https://benui.ca/unreal/common-ui-intro/)
-- [benui's Deep Dive into Common UI Buttons](https://benui.ca/unreal/common-ui-button/)
-  - Insight into Common UI Buttons, how to design and use them
-- [Volkiller Games: Common UI Input system in Unreal Engine 5](https://youtu.be/q05jmFyeb0c) (6m)
-  - This video primarily details the initial project setup
-  - Also shows off Controller-specific button icons
-- [Volkiller Games: Common Button and Common Activatable widget Unreal Engine 5](https://youtu.be/HUGtsOqTIp8) (6m)
+- [benui 的通用 UI 简介](https://benui.ca/unreal/common-ui-intro/)
+- [benui 的通用 UI 按钮深度解析](https://benui.ca/unreal/common-ui-button/)
+- 深入了解通用 UI 按钮，了解如何设计和使用它们
+- [Volkiller Games：虚幻引擎 5 中的通用 UI 输入系统](https://youtu.be/q05jmFyeb0c) (6 分钟)
+- 本视频主要详细介绍了初始项目设置
+- 还展示了特定于控制器的按钮图标
+- [Volkiller Games：虚幻引擎 5 中的通用按钮和通用可激活小部件](https://youtu.be/HUGtsOqTIp8) (6 分钟)
