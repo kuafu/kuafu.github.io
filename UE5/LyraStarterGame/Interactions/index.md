@@ -21,7 +21,7 @@ Lyra 自带了一个部分实现的原型库存系统。这个库存系统基于
 
 如果您想跳到前面并自己体验 Epic 的库存原型，请查看 如何体验 Epic 的库存原型[How to Experience Epic's Inventory Prototype](#How_to_Experience_Epics_Inventory_Prototype) 部分。
 
-### 完全实现：自动邻近交互(utomatic Proximity Interaction)
+### 完全实现：自动邻近交互(Automatic Proximity Interaction)
 
 截至 UE 5.0.2，Epic 完全实现的唯一类型的交互是，玩家和对象之间只有一种可能的交互，并且该交互是基于玩家与对象的邻近触发的。
 
