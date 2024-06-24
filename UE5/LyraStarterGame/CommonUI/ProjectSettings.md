@@ -6,15 +6,11 @@ breadcrumb_name: Project Settings
 ---
 
 
-# Lyra Project Settings related to Common UI
+# 1. 与CommonUI相关的 Lyra 项目设置
 
-This is part of [How Common UI is Setup in LyraStarterGame](./).
-Read that as well for more info.
+## 2. 项目设置: Gameplay Tags
 
-
-# Project Settings: Gameplay Tags
-
-#### `DefaultGameplayTags.ini`
+`DefaultGameplayTags.ini`
 
 ```ini
 [/Script/GameplayTags.GameplayTagsSettings]
@@ -26,7 +22,7 @@ Read that as well for more info.
 ```
 
 
-# Project Settings: `Plugins` / `Common UI Input Settings`
+## 3. 项目设置: `Plugins` / `Common UI Input Settings`
 
 `UI.Action.Escape` Action Tag assigned to:
 
@@ -34,23 +30,20 @@ Read that as well for more info.
 - Gamepad `Special Right` button
 
 
-# Project Settings: `Game` / `Common Input Settings`
+## 4. 项目设置: `Game` / `Common Input Settings`
 
-Assign Project-wide UI Input Mappings:
+分配项目范围的 UI 输入映射：
 
 `Input`.`Input Data` = `B_CommonInputData`
 
-There is a lot of platform-specific input configuration in this section, for
-`Android`, `HoloLens`, `IOS`, `Linux`, `LinuxArm64`, `Mac`, `TVOS` and `Windows`,
-including both MKB and Gamepad input configs as appropriate.
+本节中有很多针对平台的输入配置，适用于`Android`, `HoloLens`, `IOS`, `Linux`, `LinuxArm64`, `Mac`, `TVOS` and `Windows`。
 
-For more details about how each platform is configured, see the
-`Game` / `Common Input Settings`
-section in `Project Settings`.
+有关如何配置每个平台的更多详细信息，请参阅`Project Settings`中的`Game` / `Common Input Settings`。
 
 
-# Common Input Data
-### `B_CommonInputData` : public `UCommonUIInputData` from `CommonUI`
+## 5. 通用输入数据(Common Input Data)
+
+`B_CommonInputData` : public `UCommonUIInputData` from `CommonUI`
 
 | ID                   | Data Table            | Data Key         | Windows Default | Xbox Default | PS Default |
 |----------------------|-----------------------|------------------|-----------------|--------------|------------|
@@ -61,20 +54,19 @@ section in `Project Settings`.
 Consider changing Default Click Action for MKB = ENTER key
 
 
-# Universal Actions Data Table
-### `DT_UniversalActions` : public `CommonInputActionDataBase` from `CommonUI`
+## 6. 通用操作数据表(Universal Actions Data Table)
+`DT_UniversalActions` : public `CommonInputActionDataBase` from `CommonUI`
 
-This Data Table lists input actions that Common UI will react to.
+此数据表列出了 Common UI 将对其作出反应的输入操作。
 
-There are some things defined here that I'm not sure why they're here.
-Maybe they're used, maybe not.  Need to deep dive Lyra to find out.
+*(这里定义了一些东西，我不确定它们为什么在这里。也许它们被使用，也许没有。需要深入研究 Lyra 才能找出答案。)*
 
 The two that are **definitely** used are `DefaultForward` and `DefaultBack`.
 
 
-# Project Settings: `Plugins` / `Common UI Editor`
+## 7 项目设置: `Plugins` / `Common UI Editor`
 
-There are a few settings here to configure the default Text, Button and Border style for the project.
+这里有一些设置可以配置项目的默认文本、按钮和边框样式。
 
 | Default Style | Asset                                                 |
 |---------------|-------------------------------------------------------|
