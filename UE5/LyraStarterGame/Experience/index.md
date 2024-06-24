@@ -13,23 +13,13 @@ Lyra Experience 是一种定制、可配置的游戏模式/状态。在Lyra项�
 
 Lyra Experience 的定义配置了默认的 Lyra Pawn 数据和要加载并执行的体验动作集（运行时组件注入、HUD 小部件扩展等）。
 
-需要注意的是，在 Lyra 中，“BeginPlay”具有不同的含义。在其他游戏中，“BeginPlay”可能字面上意味着“游戏已经开始”，但在 Lyra 中，它只表示关卡已经加载并且（可能相当缓慢的）异步加载过程已经开始。在 Lyra 中，游戏实际上不应该开始进行直到“On Experience Loaded”事件触发，这通常发生在“BeginPlay”之后的某个时间点。您可以通过设置一些控制台变量来测试延迟的体验加载，例如模拟计算机性能较差或网络延迟。这些信息可以在 LyraStarterGame 的官方文档中找到。
+需要注意的是，在 Lyra 中，`BeginPlay` 具有不同的含义。在其他游戏中，`BeginPlay`可能字面上意味着“游戏已经开始”，但在 Lyra 中，它只表示关卡已经加载并且（可能相当缓慢的）异步加载过程已经开始。在 Lyra 中，游戏实际上不应该开始进行直到 [On Experience Loaded](#OnExperienceLoaded)事件触发，这通常发生在`BeginPlay`之后的某个时间点。您可以通过设置一些控制台变量 [console variables](#CVars)来测试延迟的体验加载，例如模拟计算机性能较差或网络延迟。这些信息可以在 LyraStarterGame 的官方文档中找到。
 
 ![ULyraExperienceDefinition](./screenshots/ULyraExperienceDefinition.png)
 
 
-<hr/>
-[Loading a Lyra Experience](#ExperienceLoadingProcedure) is asynchronous.  Content is expected to be placed into Game Feature Plugins([GFPs](/UE5/GameFeatures/)) which are dynamically loaded only when actually needed. Your project is expected to use the [On Experience Loaded](#OnExperienceLoaded) event to initiate gameplay, it fires when the async loading completes.
-
-The [Experience Definition](#LyraExperienceDefinition) configures the default [Lyra Pawn Data](#LyraPawnData) and a list of [Experience Action Sets](#LyraExperienceActionSet) to load and execute.
-*(Runtime component injection, HUD widget extension, etc.)*
-
-Note that `BeginPlay` has a different meaning in Lyra.  Whereas in other games Begin Play might literally mean in some cases "game play has begun", in Lyra it just means the Level has been loaded and the (perhaps quite slow) async loading process has begun. In Lyra, the game shouldn't actually start playing until the [On Experience Loaded](#OnExperienceLoaded) event fires, sometime **well after** `BeginPlay`. You can test delayed Experience loading (e.g. to simulate slow computers/networks) by setting some [console variables](#CVars).
-
-
-## 1.1 定义Experience的资源
-`Primary Data Assets Defining an Experience`
-
+## 1.1 定义体验Experience的资源
+`定义体验Experience的主要数据资产`
   - [Lyra Experience Definition](#LyraExperienceDefinition)
   - [Lyra Experience Action Set](#LyraExperienceActionSet)
   - [Lyra Pawn Data](#LyraPawnData)
@@ -37,7 +27,6 @@ Note that `BeginPlay` has a different meaning in Lyra.  Whereas in other games B
   - [Game Feature Action](#GameFeatureAction)
 
 ## 1.2  虚幻设置
-
   - [Lyra Game Mode](#LyraGameMode)
   - [Lyra Game State](#LyraGameState)
     - [Lyra Experience Manager Component](#LyraExperienceManagerComponent)
@@ -48,8 +37,6 @@ Note that `BeginPlay` has a different meaning in Lyra.  Whereas in other games B
 - [Console Variables](#CVars)
 
 ## 1.3 如何初始化Experience的Gameplay
-How to Initiate Gameplay in a Lyra Experience
-
 - [Event: `OnExperienceLoaded`](#OnExperienceLoaded)
   - [Usage Examples](#OnExperienceLoadedExamples)
     - [Example BP Hook Code](#ExampleHookBP)
@@ -59,34 +46,22 @@ How to Initiate Gameplay in a Lyra Experience
 
 
 ### 1.4 调试Tips
-
-Execute these console commands to enable Verbose logging for these modules:
-
+执行以下控制台命令来为这些模块启用详细日志记录：
 - `Log LogLyraExperience Verbose`
 - `Log LogGameFeatures Verbose`
 
-Execute `ModularGameplay.DumpGameFrameworkComponentManagers` in the console to dump
-debugging info to help understand which components are being injected into which actors.
-
-See [Console Variables](#CVars), they are helpful for debugging.
+在控制台中执行`ModularGameplay.DumpGameFrameworkComponentManagers`以转储调试信息，以帮助了解哪些组件被注入到哪些参与者中。请参阅[控制台变量](#CVars)，它们有助于调试。
 
 
 <a id='PrimaryDataAssets'></a>
-
-# 2 主要数据资产
-`Primary Data Assets`
-
-This section describes the major Primary Data Assets that are required to define
-a Lyra Experience.
-
+# 2 主要数据资产`Primary Data Assets`
+本节介绍定义 Lyra Experience 所需的主要主要数据资产。
 
 <a id='LyraExperienceDefinition'></a>
-
-## 2.1 Lyra Experience Definition
+## 2.1 体验定义(Lyra Experience Definition)
 
 « Primary Data Asset »
 这是一个 Const 数据资产。它明确的地定义了一个Experience。
-
 - Default [Lyra Pawn Data](#LyraPawnData)
 - List of Instanced [Game Feature Actions](#GameFeatureAction)
 - List of [Lyra Experience Action Sets](#LyraExperienceActionSet)
@@ -94,19 +69,17 @@ a Lyra Experience.
 
 
 <a id='LyraExperienceActionSet'></a>
-## 2.2 Lyra Experience Action Set
+## 2.2 体验操作集(Lyra Experience Action Set)
 
 « Primary Data Asset »
-
 - Array of [Game Feature Actions](#GameFeatureAction)
 - Array of Game Feature Plugin ([GFP](/UE5/GameFeatures/)) dependencies used by this Action Set
 
 
 <a id='LyraPawnData'></a>
-## 2.3 Lyra Pawn Data
+## 2.3 Pawn数据(Lyra Pawn Data)
 
 « Primary Data Asset »
-
 - Pawn (Subclass)
 - Lyra Ability Sets (Array)
 - Lyra Ability Tag Relationship Mapping
@@ -115,10 +88,9 @@ a Lyra Experience.
 
 
 <a id='LyraInputConfig'></a>
-## 2.4 Lyra Input Config
+## 2.4 输入配置(Lyra Input Config)
 
 « Const Data Asset »
-
 - Native Lyra Input Actions (Array)
 - Ability Lyra Input Actions (Array)
 
@@ -126,20 +98,17 @@ a Lyra Experience.
 <a id='GameFeatureAction'></a>
 ## 2.5 Game Feature Action
 
-An Action to be taken when a Game Feature is activated.
-Part of the experimental `GameFeatures` plugin.
+激活`Game Feature`时采取的操作。这是实验性`GameFeatures`插件的一部分。
 
-An Instanced Game Feature Action handles
-[Game Features](/UE5/GameFeatures/)
-asset loading and unloading.  Events include:
+实例化`Game Feature`操作处理 [游戏功能](/UE5/GameFeatures/) 资源的加载和卸载。事件包括：
+- 注册- Registering
+- 取消注册- Registering
+- 加载- Loading
+- 激活- Activating
+- 停用- Deactivating
 
-- Registering
-- Unregistering
-- Loading
-- Activating
-- Deactivating
 
-### CUGameFeatureAction	继承关系
+**CUGameFeatureAction	继承关系**
  - CUApplyFrontendPerfSettingsAction	
  - CUGameFeatureAction_AddGameplayCuePath	
  - CUGameFeatureAction_WorldActionBase	
@@ -151,56 +120,43 @@ asset loading and unloading.  Events include:
 
 <a id='EngineSetup'></a>
 # 3 设置UE的Lyra Experience
-
-This section describes how Lyra sets up Unreal Engine to support a Lyra Experience.
-
+本节介绍 Lyra 如何设置虚幻引擎以支持 Lyra Experience体验。
 
 <a id='LyraGameMode'></a>
-## 3.1 Lyra Game Mode
+## 3.1 游戏模式（Lyra Game Mode）
 
-Lyra Game Mode is the required base Game Mode providing Lyra Experience support.
+Lyra 游戏模式提供 Lyra 体验支持的必需基础游戏模式。
 
-- Uses a [Lyra Game State](#LyraGameState)
-- In `Init Game`:
-  - On Server, call `ServerSetCurrentExperience` via `OnMatchAssignmentGiven`
-- Adds support for loading an Experience on PIE start by simulating a match assignment
-- Delay initial player spawn until `OnExperienceLoaded`
-  - Lots of other player start related logic
+- 使用 [Lyra 游戏状态](#LyraGameState)
+- 在 `Init Game` 中：
+  - 在服务器上，通过 `OnMatchAssignmentGiven` 调用 `ServerSetCurrentExperience`
+- 通过模拟比赛分配添加在 PIE 启动时加载体验的支持
+- 将初始玩家生成延迟到 `OnExperienceLoaded`
+  - 许多其他玩家启动相关逻辑
 
-[Initialization of the Game Mode](/UE5/LyraStarterGame/InitGame/)
-is discussed separately.
+[游戏模式的初始化](/UE5/LyraStarterGame/InitGame/)将单独讨论。
 
 
 <a id='LyraGameState'></a>
-## 3.2 Lyra Game State
-
-The Lyra Game State is key to the functionality of Lyra Experiences.
-
-The Lyra Game State itself is relatively simple, but it does initialize
-and activate two very important components that enable Experiences:
-
+## 3.2 游戏状态（Lyra Game State）
+Lyra 游戏状态是 Lyra Experiences 功能的关键。Lyra 游戏状态本身相对简单，但它确实初始化并激活了两个非常重要的组件，从而实现了Experiences：
 - Ability System Component
+- Lyra Experience Manager Component
+
+### 3.2.1 Ability System Component
 - [Lyra Experience Manager Component](#LyraExperienceManagerComponent)
 
 
 <a id='LyraExperienceManagerComponent'></a>
-### Lyra Experience Manager Component
-
-The `ULyraExperienceManagerComponent`
-does the heavy lifting related to loading and unloading,
-activating and deactivating Experiences.
+### 3.2.1 Lyra Experience Manager Component
+`ULyraExperienceManagerComponent`负责加载和卸载、激活和停用Experiences相关的繁重工作。
 
 
 <a id='ExperienceLoadingProcedure'></a>
-#### Experience Loading Procedure: `StartExperienceLoad`
+#### 3.2.1.1 Experience加载过程（Experience Loading Procedure: `StartExperienceLoad`）在服务器和所有客户端上，必须调用 `StartExperienceLoad` (*在服务器上明确调用，并通过客户端上的复制调用*)，这将开始此过程：
+- 设置状态 = `Loading`
 
-On the server and on all clients, `StartExperienceLoad` must be called
-*(explicitly on the server and via replication on the clients)*,
-which begins this process:
-
-- Set state = `Loading`
-
-##### State: Loading
+##### 状态: Loading
 - Async Load assets via [Lyra Asset Manager](#LyraAssetManager)
     - Primary Experience Asset ID
     - Experience Action Sets
@@ -208,26 +164,25 @@ which begins this process:
 - On async load complete:
   - Set state = `LoadingGameFeatures`
 
-##### State: Loading Game Features
+##### 状态: Loading Game Features
 - Async Load and Activate any/all required GFPs
 - After all GFPs finish async loading:
     - Optionally delay loading for debugging purposes based on CVar settings
     - Set state = `ExecutingActions`
 
-##### State: Executing Actions
+##### 状态: Executing Actions
 - Execute all [Game Feature Actions](#GameFeatureAction) defined by the experience and its action sets
 - Set state = `Loaded`
 
-##### State: Loaded
+##### 状态: Loaded
 - Broadcast [`OnExperienceLoaded`](#OnExperienceLoaded)
 
 
 <a id='LyraWorldSettings'></a>
 ## 3.3 Lyra World Settings
-
-- Adds `Default Gameplay Experience` setting to `ULevel` assets
-- In PIE, load the default experience during `InitGame`
-- This is what allows you to specify the Lyra Experience for a level to use
+- 为`ULevel`资产添加默认游戏体验`Default Gameplay Experience`设置
+- 在 PIE 中，在 `InitGame` 期间加载默认体验
+- 这可以让你指定某个Level要使用的 Lyra Experience
 
 `Config/DefaultEngine.ini` configures the use of Lyra World Settings:
 
@@ -236,11 +191,11 @@ which begins this process:
 WorldSettingsClassName=/Script/LyraGame.LyraWorldSettings
 ```
 
-
 <a id='LyraAssetManager'></a>
-## 3.4 Lyra Asset Manager
+## 3.4 资产管理器(Lyra Asset Manager)
 
-- Game-specific implementation of Asset Manager to handle loading assets
+- Game-specific 实现 Asset Manager 来处理资产加载
+  - 允许在配置中使用软对象指针(Soft Object Pointers)来延迟加载资产，直到真正需要它们为止
   - Allows using Soft Object Pointers in configs to delay loading of assets until they are really needed
     - Supposedly a significant performance boost as compared to *not* using Soft Object Pointers
 
@@ -253,81 +208,69 @@ AssetManagerClassName=/Script/LyraGame.LyraAssetManager
 
 
 <a id='LyraExperienceManager'></a>
-## 3.5 Lyra Experience Manager
+## 3.5 Lyra 体验管理器(Lyra Experience Manager)
 
 « Engine Subsystem »
 
-- This is required for PIE but otherwise doesn't do anything for the game
+- 这是 PIE 所必需的，但除此之外对游戏没有任何作用
 
 
 <a id='CVars'></a>
-## 3.6 Console Variables
+## 3.6 控制台变量(Console Variables)
 
-For testing purposes, you can add a delay to the Lyra Experience Loading process
-to simulate slow computers and/or networks.
+为了测试目的，您可以为 Lyra Experience 加载过程添加延迟以模拟运行缓慢的计算机和/或网络。
 
 - `lyra.chaos.ExperienceDelayLoad.MinSecs` (minimum delay)
 - `lyra.chaos.ExperienceDelayLoad.RandomSecs` (maximum time added to `MinSecs`)
 
 
-# Lyra Gameplay Initiation
+# 4 Lyra Gameplay 初始化
 
-This section discusses the intended way to initiate actual gameplay in a Lyra Experience.
-TLDR **do not** use `BeginPlay` to start gameplay, instead in `BeginPlay` you need to wait for
-`OnExperienceLoaded`.
+本节讨论了在 Lyra Experience 中启动实际游戏的预期方式。
+TLDR **不要**使用 `BeginPlay` 来启动游戏，而是在 `BeginPlay` 中您需要等待`OnExperienceLoaded`。
+
 
 
 <a id='OnExperienceLoaded'></a>
-## 3.7 On Experience Loaded
+## 4.1 体验加载(On Experience Loaded)
 
-The [Lyra Experience Manager Component](#LyraExperienceManagerComponent)
-will broadcast the `OnExperienceLoaded` event after the asynchronous experience loading
-process has completed.
+[Lyra Experience Manager Component](#LyraExperienceManagerComponent)将在异步体验加载过程完成后广播 `OnExperienceLoaded` 事件。
 
-Your game needs to be diligent about using this event to initiate game play, and **not** use
-`BeginPlay` for that purpose.  Using `BeginPlay` to initiate game play will result in intermittent
-errors.
+您的游戏需要谨慎使用此事件来启动游戏，并且**不要**为此使用`BeginPlay`。使用`BeginPlay`启动游戏将导致间歇性错误。
 
-Lyra also provides `AsyncAction_OnExperienceLoaded` which is an asynchronous BP action, so that
-you can easily wait for `OnExperienceLoaded` in BPs.  Lyra does this when it initializes its
-Shooter Mannequin character, for example.
+Lyra 还提供了`AsyncAction_OnExperienceLoaded`，这是一个异步 BP 操作，因此您可以轻松地在 BP 中等待`OnExperienceLoaded`。例如，Lyra 在初始化其
+Shooter Mannequin 角色时会执行此操作。
 
-### Three Levels of Priority
 
-The `OnExperienceLoaded` event is fired with three different levels of priority
-to allow you to have some handlers that are dependent on other higher priority handlers.
+### 4.1.1 三个优先级
 
+`OnExperienceLoaded` 事件以三种不同的优先级触发，以便您可以拥有一些依赖于其他更高优先级处理程序的处理程序。
 - High (`OnExperienceLoaded_HighPriority`)
 - Normal (`OnExperienceLoaded`)
 - Low (`OnExperienceLoaded_LowPriority`)
 
-The system is minimal.
-For complex interdependencies you will need to devise your own solution,
-and understand that the callbacks are executed in random order.
-
+该系统非常精简。对于复杂的相互依赖关系，您需要设计自己的解决方案，并了解回调是按随机顺序执行的。
 
 <a id='OnExperienceLoadedExamples'></a>
-### Examples of `OnExperienceLoaded` in C++ and BP
+### 4.1.2 C++ 和 BP 中的 `OnExperienceLoaded` 示例
 
-There are many examples of how to use `OnExperienceLoaded` in Lyra.
-`CTRL`+`SHIFT`+`F` in Rider to see many interesting C++ snippets.
-Some examples of particular interest are discussed below.
+有很多关于如何在 Lyra 中使用 `OnExperienceLoaded` 的示例。在 Rider 中按 `CTRL`+`SHIFT`+`F` 可查看许多有趣的 C++ 代码片段。下面讨论了一些特别有趣的示例。
 
-#### High Priority Examples
+#### 示例1: High Priority Examples
 - Lyra Team Creation Component :: Begin Play
   - `OnExperienceLoaded` THEN Create Teams
 - [Lyra Frontend State Component](#LyraFrontendStateComponent) :: Begin Play
   - `OnExperienceLoaded` THEN Start a multistep async process to show the Frontend Game Menu as soon as possible
 
-#### Normal Priority Examples
+#### 示例2: Normal Priority Examples
 - Lyra Player State :: Post Initialize Components
   - `OnExperienceLoaded` THEN Set Player Pawn Data
-    - This grants Ability Sets to the Player State based on the Default Pawn Data config
+    - 这将根据默认 Pawn 数据配置向玩家状态授予能力集
 - [Lyra Game Mode](#LyraGameMode) :: Init Game State
   - `OnExperienceLoaded` THEN Restart all players who don't yet have Pawns
-    - This effectively assigns each player/bot the Default Pawn Data
+    - 这有效地为每个玩家/机器人分配了默认的 Pawn 数据
 
-#### Low Priority Examples
+#### 示例3: Low Priority Examples
 - Lyra Bot Creation Component :: Begin Play
   - `OnExperienceLoaded` THEN Create Bots
     - Depends on the (high priority) Lyra Team Creation Component having created the teams
@@ -335,15 +278,15 @@ Some examples of particular interest are discussed below.
 
 
 <a id='ExampleHookBP'></a>
-#### Example BP Hooking into `OnExperienceLoaded`
+#### BP Hook至“OnExperienceLoaded”的示例
 
 ![Example BP Hook](./screenshots/ExampleHookBP.png)
 
 
 <a id='ExampleHookCPP'></a>
-#### Example C++ Hooking into `OnExperienceLoaded`
+#### C++ Hook至“OnExperienceLoaded”的示例
 
-In this C++ example, you'd set `BeginPlay` as follows:
+在这个 C++ 示例中，你可以按如下方式设置“BeginPlay”：
 
 ```c++
 void AMyExampleActor::BeginPlay()
@@ -360,8 +303,7 @@ void AMyExampleActor::BeginPlay()
 }
 ```
 
-You must also create an `OnExperienceLoaded` handler in `AMyExampleActor`
-to receive the event:
+您还必须在`AMyExampleActor`中创建一个`OnExperienceLoaded`处理程序来接收事件：
 
 ```c++
 // Called by Lyra Experience Manager
@@ -372,46 +314,27 @@ void AMyExampleActor::OnExperienceLoaded(const ULyraExperienceDefinition* Experi
 ```
 
 <a id='LoadingADefaultExperience'></a>
-# 4 加载默认的 Default Experience
+# 5 加默认游戏体验(Default Experience)
 
-Lyra loads the Frontend Experience as the default by injecting the
-[Lyra Frontend State Component](#LyraFrontendStateComponent)
-into the [Lyra Game State](#LyraGameState)
-from a [Lyra Experience Definition](#LyraExperienceDefinition).
+Lyra 通过将[Lyra Frontend State Component](#LyraFrontendStateComponent)从 [Lyra Experience Definition](#LyraExperienceDefinition)
+注入到 [Lyra Game State](#LyraGameState)来将前端体验加载为默认体验。
 
-For example, the map Lyra uses by default to start the game is `L_LyraFrontEnd`,
-which uses `B_LyraFrontEnd_Experience` as the `Default Gameplay Experience`.
+例如，Lyra 默认用于启动游戏的地图是 `L_LyraFrontEnd`，它使用 `B_LyraFrontEnd_Experience` 作为 `默认游戏体验`。
 
-An `AddComponents`
-[Game Feature Action](#GameFeatureAction)
-in `B_LyraFrontEnd_Experience`
-injects `B_LyraFrontendStateComponent`
-into the `LyraGameState`,
-which causes the Lyra FrontEnd Experience to load on Game start.
+`B_LyraFrontEnd_Experience` 中的 `AddComponents`[Game Feature Action](#GameFeatureAction)将 `B_LyraFrontendStateComponent`注入到 `LyraGameState`，这会导致 Lyra FrontEnd 体验在游戏启动时加载。
 
 
 <a id='LyraFrontendStateComponent'></a>
-## 4.1 Lyra Frontend State Component
+## 5.1 前端状态组件(Lyra Frontend State Component)
 
-The `B_LyraFrontendStateComponent` is a simple BP configuration of
-Lyra Frontend State Component,
-defining the menu widgets used by the project.
+`B_LyraFrontendStateComponent` 是 Lyra Frontend State Component 的简单 BP 配置，定义项目使用的菜单小部件(menu widgets)。
 
-This component is expected to be injected into a
-[Lyra Game State](#LyraGameState).
-It registers a high priority `OnExperienceLoaded` callback that initiates the
-asynchronous process of showing the frontend menu system to the user.
+预计此组件将被注入到[Lyra Game State](#LyraGameState)。它注册了一个高优先级的 `OnExperienceLoaded` 回调，该回调初始化向用户显示前端菜单系统的异步过程。它与[distributed with Lyra](/UE5/LyraStarterGame/Plugins/) 的 `CommonLoadingScreen` 插件交互。这样，无论加载 Lyra Experience 需要多长时间，加载屏幕都可以显示。
 
-This interfaces with the `CommonLoadingScreen` plugin that is 
-[distributed with Lyra](/UE5/LyraStarterGame/Plugins/).
-That allows the loading screen to be visible for however long it takes to load the
-Lyra Experience.
+一旦 Experience 加载完毕，玩家就可以查看菜单，加载屏幕将被禁用，菜单系统将显示。
 
-Once the Experience has loaded and the player is ready to see the menu, the loading
-screen is disabled and the menu system is displayed.
-
-- Generally you'll need to make a BP version of this to configure the menu widgets
-- Consider this an example component that loads a default experience even if you do not want to use Lyra's FrontEnd
+- 通常，您需要制作一个 BP 版本来配置菜单小部件
+- 即使您不想使用 Lyra 的 FrontEnd，也可以将其视为加载默认体验的示例组件
 
 
 <br/>
