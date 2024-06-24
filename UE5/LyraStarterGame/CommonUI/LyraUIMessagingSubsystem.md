@@ -6,28 +6,20 @@ breadcrumb_name: Lyra UI Messaging Subsystem
 ---
 
 
-# Lyra UI Messaging Subsystem
+# Lyra消息子系统（Lyra UI Messaging Subsystem）
 
-This is part of [How Common UI is Setup in LyraStarterGame](./).
-Read that as well for more info.
+## 1. Lyra UI Messaging Subsystem
 
+`LyraUIMessagingSubsystem` : public `CommonMessagingSubsystem` from `CommonGame`
 
-## Lyra UI Messaging Subsystem
+Lyra消息子系统管理UI布局的`UI.Layer.Modal`层。此子系统提供以下通用功能：
+- 显示确认对话框
+- 显示错误对话框
 
-### `LyraUIMessagingSubsystem` : public `CommonMessagingSubsystem` from `CommonGame`
+要使用的窗口小部件类由 INI 设置定义。它们**必须**是`CommonGameDialog`的派生类，而它本身就是一个`CommonActivatableWidget`。
 
-The Lyra UI Messaging Subsystem manages the `UI.Layer.Modal` layer of the UI Layout.
+*`DefaultGame.ini` Settings for Lyra UI Messaging Subsystem*
 
-This subsystem provides these common capabilities:
-
-- Show Confirmation Dialog
-- Show Error Dialog
-
-The widget classes to use are defined by INI settings.
-They **must** be derivatives of `CommonGameDialog`, which is itself a `CommonActivatableWidget`.
-
-
-### `DefaultGame.ini` Settings for Lyra UI Messaging Subsystem
 ```ini
 [/Script/LyraGame.LyraUIMessaging]
 ConfirmationDialogClass=/Game/UI/Foundation/Dialogs/W_ConfirmationDefault.W_ConfirmationDefault_C
