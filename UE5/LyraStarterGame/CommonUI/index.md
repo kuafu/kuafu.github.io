@@ -41,8 +41,8 @@ breadcrumb_name: Common UI
 - Widgets get pushed to this layer by the `UI.Layer.Game` base class [`LyraHUDLayout`](#LyraHUDLayout)
 
 ### `UI.Layer.Modal`
-- Confirmation dialogs, error dialogs.
-- Managed by [Lyra UI Messaging Subsystem](./LyraUIMessagingSubsystem)
+- 确认对话框、错误对话框。
+- 有消息子系统管理[Lyra UI Messaging Subsystem](./LyraUIMessagingSubsystem)
 
 
 <a id="LyraHUDLayout"></a>
