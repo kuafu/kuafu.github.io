@@ -146,20 +146,16 @@ It's an array of widgets that comprise the reticle for a given weapon.
 我认为这个组件就是实际的库存本身。Lyra 希望您将这个组件放在 `AController` 上。
 
 方法包括以下内容：
-- 添加项目
-- 删除项目
-- 查找项目
-- 获取项目数量
-- 消耗项目
+- 添加物品
+- 删除物品
+- 查找物品
+- 获取物品数量
+- 消耗物品
 
 <a id="IPickupable"></a>
 ## 1.5 `IPickupable` 接口
-
-In order for an item to be able to be picked up, it must support this pure virtual interface.
-
-`GetPickupInventory` must be implemented by your item, which tells the base code how to add
-the item to an inventory.
-
+为了使物品能够被拾取，它必须支持这个纯虚拟接口。您的物品必须实现 `GetPickupInventory`，它会告诉基本代码如何将
+物品添加到库存中。
 
 <a id="ConstructiveCriticism"></a>
 # 2 建设性的批评(Constructive Criticism)
