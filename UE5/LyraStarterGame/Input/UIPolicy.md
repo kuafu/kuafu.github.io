@@ -5,24 +5,21 @@ breadcrumb_path: "UE5/LyraStarterGame/Input"
 breadcrumb_name: "UI Policy"
 ---
 
-# Lyra UI Policy Overview
+# 1 Lyra UI 策略概述
+UI 策略：`B_LyraUIPolicy`*（在`DefaultGame.ini`中定义）*
 
-UI Policy: `B_LyraUIPolicy` *(defined in `DefaultGame.ini`)*
+基本 C++：主要游戏布局：`UPrimaryGameLayout`
+- 基于通用用户小部件（[Common UI](/UE5/CommonUI/))
 
-Base C++: Primary Game Layout: `UPrimaryGameLayout`
-- based on Common User Widget ([Common UI](/UE5/CommonUI/))
-
-Sets Overall UI Layout Class = `W_OverallUILayout`
+设置整体 UI 布局类 = `W_OverallUILayout`
 
 
 <a id='W_OverallUILayout'></a>
-## Overall UI Layout: `W_OverallUILayout`
+## 1.1 整体 UI 布局：`W_OverallUILayout`
+将 HUD 定义为由按优先级命名的 [可激活小部件](/UE5/CommonUI/ActivatableWidget) 层组成。
 
-Defines the HUD as being comprised of prioritized, named layers of
-[Activatable Widgets](/UE5/CommonUI/ActivatableWidget).
-
-- The highest priority layer with active widgets gets the input
-- If no layer claims the input, input flows to the Game via [Enhanced Input](/UE5/EnhancedInput/)
+- 具有活动小部件的最高优先级层获取输入
+- 如果没有层认领输入，则输入通过 [增强输入](/UE5/EnhancedInput/) 流向游戏
 
 | Priority | Layer Name          | Notes                                         |
 |----------|---------------------|-----------------------------------------------|
@@ -32,19 +29,13 @@ Defines the HUD as being comprised of prioritized, named layers of
 | 4        | `UI.Layer.Modal`    |                                               |
 
 
-### Note about GameplayTags
+### 关于 GameplayTags 的说明
 
-The names are GameplayTags defined in `LyraProject:/Source/LyraGame/LyraGameplayTags.h`
+名称是 `LyraProject:/Source/LyraGame/LyraGameplayTags.h` 中定义的 GameplayTags
 
-In Lyra 5.2 and later, the tags have been refactored into the `LyraGameplayTags` namespace,
-and they are now all exported by default.
+在 Lyra 5.2 及更高版本中，标签已重构到 `LyraGameplayTags` 命名空间中，并且现在默认情况下它们全部导出。
 
-In Lyra 5.1 and earlier, to be able to use these tags in your own C++ module,
-export `FLyraGameplayTags` using `LYRAGAME_API`.
+在 Lyra 5.1 及更早版本中，为了能够在您自己的 C++ 模块中使用这些标签，请使用 `LYRAGAME_API` 导出 `FLyraGameplayTags`。
 
-
-## Detailed Common UI setup details
-
-For more detailed info, see
-[Lyra Default UI Policy Details](/UE5/LyraStarterGame/CommonUI/DefaultUIPolicy).
-
+## 1.2 详细的通用 UI 设置详情
+有关更多详细信息，请参阅 [Lyra 默认 UI 策略详情](/UE5/LyraStarterGame/CommonUI/DefaultUIPolicy)。

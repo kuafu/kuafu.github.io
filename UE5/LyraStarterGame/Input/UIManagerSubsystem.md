@@ -7,8 +7,7 @@ breadcrumb_name: "UI Manager Subsystem"
 
 # Lyra UI Manager Subsystem
 
-The Lyra UI Manager Subsystem is based on the [Common Game](/UE5/CommonGame/) plugin's
-[`UGameUIManagerSubsystem`](/UE5/CommonGame/UGameUIManagerSubsystem).
+The Lyra UI Manager Subsystem is based on the [Common Game](/UE5/CommonGame/) plugin's [`UGameUIManagerSubsystem`](/UE5/CommonGame/UGameUIManagerSubsystem).
 
 <TODO>TODO</TODO>
 
