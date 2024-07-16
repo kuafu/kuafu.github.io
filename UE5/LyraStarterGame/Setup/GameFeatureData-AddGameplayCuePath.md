@@ -15,8 +15,7 @@ In order to use your own GameplayCues, you need to tell Lyra where to find them.
 
 Open `Plugins/YourGame/Content/YourGame.uasset` (your plugin's primary Data Asset file).
 
-In the `Actions` section, add a new element `Add Gameplay Cue Path` and add the path(s)
-where you'd like to store your GameplayCues.
+In the `Actions` section, add a new element `Add Gameplay Cue Path` and add the path(s) where you'd like to store your GameplayCues.
 
 For example in my `XistGame` project, I'm using `/XistGame/GameplayCues` as the path.
 
