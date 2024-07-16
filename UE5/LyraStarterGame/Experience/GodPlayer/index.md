@@ -31,20 +31,22 @@ with the world through their influence on AI Pawns.
 
 Inheritance: `AXCLGodPlayerCharacter` « `AXCLCharacter` « `ALyraCharacter`
 
-##### Class Defaults
+##### 类默认值
 
-- Capsule:
-  - Collision Disabled
-  - Disable obstruction of Navigation
-  - Shadow Disabled
-- Skeletal Mesh:
-  - Disable obstruction of Navigation
-  - Gravity Disabled
-- Character Movement Component:
-  - Set Mode = Flying
-  - Gravity Disabled
-  - Define desired max movement speed & acceleration
-  - Define desired controller rotation rate
+- 胶囊（Capsule）：
+  - 碰撞已禁用
+  - 禁用导航障碍
+  - 阴影已禁用
+
+- 骨架网格体（Skeletal Mesh）：
+  - 禁用导航障碍
+  - 重力已禁用
+
+- 角色移动组件：
+  - 设置模式 = 飞行
+  - 重力已禁用
+  - 定义所需的最大移动速度和加速度
+  - 定义所需的控制器旋转速率
 
 
 ## Camera Mode: `UXCLTopDownCameraMode`
