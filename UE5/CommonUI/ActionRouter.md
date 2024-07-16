@@ -5,7 +5,7 @@ breadcrumb_path: "UE5/CommonUI"
 breadcrumb_name: "Action Router"
 ---
 
-# Common UI Action Router
+# 1 通用 UI 操作路由器(Common UI Action Router)
 
 The Common UI Action Router is the place to route all requests to set the input mode.
 
@@ -17,41 +17,38 @@ See my [Tutorial: How to Take Control of the Mouse in Lyra](/UE5/LyraStarterGame
 for more information about how to make the input modes in your Lyra-based game
 work exactly the way you want them to.
 
+通用 UI 操作路由器是路由所有设置输入模式的请求的地方。
 
-## How to Override the Base UI Action Router
+**请勿**尝试在您自己的代码中规避这一点。
 
-To override `UCommonUIActionRouterBase` you simply need to derive your own child
-class from it.
+相反，让您的代码创建通用 UI `FUIInputConfig` 设置并将它们发送到通用 UI 以实际执行输入模式更改。
 
-The existence of your derived class will suppress the base subsystem from being
-initialized, and your derived class will be used in your project rather than the base.
+有关如何使基于 Lyra 的游戏中输入模式按照您希望的方式工作的更多信息，请参阅我的 [教程：如何在 Lyra 中控制鼠标](/UE5/LyraStarterGame/Tutorials/How-to-Take-Control-of-the-Mouse)。
 
-This is a bit of Unreal Engine shenanigans.
-To see how and why this works, see `UCommonUIActionRouterBase::ShouldCreateSubsystem`
-and search for invocations of that method.
+## 1.1 如何覆盖（override）基本 UI 操作路由器
+要覆盖 `UCommonUIActionRouterBase`，您只需从中派生自己的子类。
+
+您的派生类的存在将阻止初始化基本子系统，并且您的派生类将在您的项目中使用，而不是基本类。
+
+这是虚幻引擎的一个小把戏。要了解其工作原理和原因，请参阅`UCommonUIActionRouterBase::ShouldCreateSubsystem`并搜索该方法的调用。
 
 
-## Set Active UI Input Config
+## 1.2 设置活动 UI 输入配置
 
 ```c++
 void SetActiveUIInputConfig(const FUIInputConfig& NewConfig);
 ```
 
-This method is Public.
+此方法是公共的，从游戏代码中调用此方法可将通用 UI 输入配置更改为您的首选值。
 
-Call this from Game code to change the Common UI Input Config to your preferred value.
-
-
-## Apply UI Input Config
+## 1.3 应用 UI 输入配置
 
 ```c++
 virtual void ApplyUIInputConfig(const FUIInputConfig& NewConfig, bool bForceRefresh);
 ```
 
-To change how input works in the game, 
-you must override this method.  This is effectively the setter for
-the `ActiveInputConfig` member variable.
+要更改游戏中输入的工作方式，您必须重写此方法。这实际上是`ActiveInputConfig`成员变量的设置器。
 
-Your override **must not** call the base class.  Instead, completely override it.
+您的重写**不得**调用基类。相反，请完全重写它。
 
-That being done, you can then set up the inputs any way you want them to work in your game.
+完成后，您可以按照自己希望的方式设置输入，使其在您的游戏中发挥作用。

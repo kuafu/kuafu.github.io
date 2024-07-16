@@ -7,7 +7,9 @@ breadcrumb_name: "Input"
 
 # 1 Lyra 输入概述
 
-Lyra 将不同的UE5系统和插件组合在一起，以协调一个一致的输入策略。有关5分钟的高层次概念概述，请查YouTube视频：[UE5 Lyra Input Overview](https://youtu.be/mEIQDcW65qs)
+Lyra 将不同的UE5系统和插件组合在一起，以协调一个一致的输入策略。
+
+有关5分钟的高层次概念概述，请查YouTube视频：[UE5 Lyra Input Overview](https://youtu.be/mEIQDcW65qs)
 
 
 <a id='KeyConcepts'></a>
@@ -21,7 +23,7 @@ Lyra 将不同的UE5系统和插件组合在一起，以协调一个一致的输
   - 定义 UI 层 `UI.Layer.*` 优先用于输入捕获
 
 - [Lyra HUD Layout](/UE5/LyraStarterGame/Input/HUDLayout) 实现 `UI.Layer.Game` 游戏HUD
-- 默认情况下, 游戏功能操作（Game Feature Actions）例如 [`LAS_ShooterGame_StandardHUD`](./LAS_ShooterGame_StandardHUD) 定义:
+- 默认情况下, 游戏功能操作（Game Feature Actions）--- 例如 [`LAS_ShooterGame_StandardHUD`](./LAS_ShooterGame_StandardHUD) ---定义:
   - 使用哪个 HUD 布局类
   - 为每个 UI 扩展点(UI Extension Point)实例化哪些可激活小部件类(Activatable Widget classes)
 
@@ -40,9 +42,7 @@ Lyra 使用 [通用 UI](/UE5/CommonUI/) 和 [增强输入](/UE5/EnhancedInput/) 
 
 [通用 UI](/UE5/CommonUI/)控制输入是否、何时以及如何进入游戏。如果/当您想在游戏中明确更改输入模式时，您必须使用 [通用 UI 操作路由器](/UE5/CommonUI/ActionRouter) 来执行此操作。
 
-当 [可激活小部件](/UE5/CommonUI/ActivatableWidget) 激活和停用时，它们可以选择更改输入模式和/或将自身聚焦于输入以支持 MKB、游戏手柄、VR 控制器等。所有设置都可通过输入设备和平台自定义。
-
-特别是，它们应该就“获取所需输入配置”的值达成一致，希望通过共享实现。
+当 [可激活小部件](/UE5/CommonUI/ActivatableWidget) 激活和停用时，它们可以选择更改输入模式和/或将自身聚焦于输入以支持 MKB、游戏手柄、VR 控制器等。所有设置都可通过输入设备和平台自定义。特别的，它们应该就“获取所需输入配置”的值达成一致，希望通过共享实现。
 
 当没有可激活小部件修改输入模式时，输入将通过 [增强输入](/UE5/EnhancedInput/) 流向游戏本身，由游戏时间给定点的任何活动 [输入映射上下文](/UE5/EnhancedInput/InputMappingContext) 触发。
 
