@@ -5,7 +5,7 @@ breadcrumb_path: "UE5/LyraStarterGame/CharacterParts"
 breadcrumb_name: "Pawn Component"
 ---
 
-# Lyra Character Parts Pawn Component ("Pawn Customizer")
+# 1 Lyra 角色部件 Pawn 组件 ("Pawn Customizer")
 
 C++ Class: `ULyraPawnComponent_CharacterParts`
 ( Lyra 5.2
@@ -14,93 +14,69 @@ C++ Class: `ULyraPawnComponent_CharacterParts`
  [cpp](https://github.com/EpicGames/UnrealEngine/blob/5.2/Samples/Games/Lyra/Source/LyraGame/Cosmetics/LyraPawnComponent_CharacterParts.cpp)
 )
 
-This is one part of the [Lyra Character Parts](/UE5/LyraStarterGame/CharacterParts/) system,
-see that page for an overview.
+这是 [Lyra 角色部件](/UE5/LyraStarterGame/CharacterParts/) 系统的一部分，请参阅该页面了解概述。
 
+## 1.1 概念概述
 
-## Conceptual Overview
+角色部件 Pawn 组件通常称为“Pawn Customizer”。
 
-The Character Parts Pawn Component is generally referred to as the "Pawn Customizer".
+它由相关的 [Controller Component](./ControllerComponent)用于处理从服务器到远程客户端的复制。
 
-It is used by the related [Controller Component](./ControllerComponent)
-to handle replication to remote clients from the server.
+Pawn Customizer 实现了 `On Character Parts Changed` 事件，您必须在角色中挂接该事件以查找要添加或删除的部件。例如，请参阅下面的 [Character Integration](#CharacterIntegration)
+部分。
 
-The Pawn Customizer implements the `On Character Parts Changed` event,
-which you must hook into in your Character to look for parts being added or removed.
-For example see the [Character Integration](#CharacterIntegration)
-section below.
+**任何给定的 Pawn 上只能有一个 Pawn Customizer 组件。**
 
-**There must be only one Pawn Customizer Component on any given Pawn.**
+### 角色部件 Actor 不会在专用服务器上生成
 
+为了提高服务器效率，纯装饰 Actor（角色部件）**不会在专用服务器上生成**。
 
-### Character Part Actors are NOT Spawned on Dedicated Servers
+专用服务器完全没有理由生成和管理一堆没人会看到的装饰 Actor。所以它没有完成。
 
-For server efficiency, purely cosmetic actors (Character Parts)
-**are NOT spawned on dedicated servers**.
+执行此操作的代码是 `FLyraCharacterPartList::SpawnActorForEntry`，如果你想通读它。它明确拒绝在专用服务器上生成角色部分cosmetic。
 
-There is exactly zero reason for a dedicated server to spawn and manage
-a bunch of cosmetic actors that nobody will ever see.  So it is not done.
+如果您尝试在调用 `GetCharacterPartActors` 后迭代cosmetic actor，这可能会造成混淆。在客户端上，这将返回一个演员数组。在服务器上，这将返回一个空数组，因为专用服务器上没有cosmetic actor。
 
-The code that enforces this is `FLyraCharacterPartList::SpawnActorForEntry`
-in case you want to read through it.  It explicitly refuses to spawn
-Character Part cosmetics on a dedicated server.
-
-This may cause confusion if you are trying for example to iterate
-the cosmetic actors after a call to `GetCharacterPartActors`.
-On clients this will return an array of actors.
-On servers this will return an empty array,
-because there are no cosmetic actors on a dedicated server.
-
-
-### How Lyra Sets This Up
+### Lyra 如何实现这一点
 
 - The `B_MannequinPawnCosmetics` Blueprint is based on the `ULyraPawnComponent_CharacterParts` C++ class
     - `B_Hero_ShooterMannequin` adds a `B_MannequinPawnCosmetics` component named `PawnCosmeticsComponent`
 
-Thus, every Lyra character based on `B_Hero_ShooterMannequin` has a Pawn Customizer Component.
+因此，每个基于“B_Hero_ShooterMannequin”的 Lyra 角色都有一个 Pawn Customizer 组件。
 
+## 1.2 快速浏览：`B_MannequinPawnCosmetics`
 
-## Quick Look: `B_MannequinPawnCosmetics`
+Lyra 在蓝图中实现了一个 Pawn Customizer 组件：`B_MannequinPawnCosmetics`
 
-Lyra implements a Pawn Customizer Component in Blueprint: `B_MannequinPawnCosmetics`
+然后他们将这个 `B_MannequinPawnCosmetics` 组件添加到 `B_Hero_ShooterMannequin` Character 类。
 
-They then add this `B_MannequinPawnCosmetics` component to the `B_Hero_ShooterMannequin`
-Character class.
-
-Here you can see the interesting (non-default) part of `B_MannequinPawnCosmetics`,
-where the two default Lyra body types are defined:
+在这里你可以看到 `B_MannequinPawnCosmetics` 中有趣的（非默认）部分，其中定义了两个默认的 Lyra 体型：
 
 [![B_MannequinPawnCosmetics](./screenshots/B_MannequinPawnCosmetics.png)](./screenshots/B_MannequinPawnCosmetics.png)
 
+## 1.3 您可以制作自己的组件
 
-## You can make your own component
+您可以制作自己的 Pawn Customizer 组件来定义要使用的设置。
 
-You can make your own Pawn Customizer Component that defines the settings you want to use.
-You don't necessarily have to use the Lyra defaults.
+您不一定非要使用 Lyra 默认值。
 
-Just make sure that you add your own Pawn Component to your Character,
-replacing the Lyra default `B_MannequinPawnCosmetics`.
-
+只需确保将自己的 Pawn 组件添加到您的角色中，替换 Lyra 默认的`B_MannequinPawnCosmetics`。
 
 <a id='CharacterIntegration'></a>
-### Make sure you Integrate with your Character
+### 确保您与角色集成
 
-If you do make your own component, make sure you integrate it with your Character.
+如果您制作自己的组件，请确保将其与您的角色集成。
 
-For example, see this Blueprint snippet, where the default `B_Hero_ShooterMannequin` blueprint
-hooks into the default `B_MannequinPawnCosmetics` event `OnCharacterPartsChanged`.
+例如，请参阅此蓝图片段，其中默认的`B_Hero_ShooterMannequin`蓝图挂接到默认的`B_MannequinPawnCosmetics`事件`OnCharacterPartsChanged`。
 
-You will want to hook into your own custom component rather than the default Lyra component
-if you replace the Lyra default with a custom version.
+如果您用自定义版本替换 Lyra 默认版本，您将需要挂接到自己的自定义组件，而不是默认的 Lyra 组件。
 
-#### `B_Hero_ShooterMannequin` hook into `On Character Parts Changed`
+#### `B_Hero_ShooterMannequin` 钩子插入 `On Character Parts Changed`
 
 [![OnCharacterPartsChanged](./screenshots/B_Hero_ShooterMannequin__OnCharacterPartsChanged.png)](./screenshots/B_Hero_ShooterMannequin__OnCharacterPartsChanged.png)
 
+## 1.4 实现细节：`FLyraCharacterPartList`
 
-## Implementation Detail: `FLyraCharacterPartList`
+Pawn Customizer 组件中的许多工作实际上被转移到一个名为`FLyraCharacterPartList`的专用 C++ 结构。
 
-A lot of the work in the Pawn Customizer Component is actually offloaded to a
-dedicated C++ struct called `FLyraCharacterPartList`.
-
-The main purpose of splitting out this struct is to implement network replication.
+分离出此结构的主要目的是实现网络复制。
