@@ -4,73 +4,42 @@ description: "Details the Controller-specific Component that drives the Lyra Cha
 breadcrumb_path: "UE5/LyraStarterGame/CharacterParts"
 breadcrumb_name: "Controller Component"
 ---
+## 1.1 概念概述
 
-# Lyra Character Parts Controller Component
+角色部件控制器组件负责选择将哪些角色部件添加到任何给定的 Pawn。
 
-C++ Class: `ULyraControllerComponent_CharacterParts`
-( Lyra 5.2
- [header](https://github.com/EpicGames/UnrealEngine/blob/5.2/Samples/Games/Lyra/Source/LyraGame/Cosmetics/LyraControllerComponent_CharacterParts.h)
-|
- [cpp](https://github.com/EpicGames/UnrealEngine/blob/5.2/Samples/Games/Lyra/Source/LyraGame/Cosmetics/LyraControllerComponent_CharacterParts.cpp)
-)
+当控制器组件启动时（在“BeginPlay”中），它应该初始化其将哪些角色部件放到这个 Pawn 上的想法。在 Lyra 中，这部分由蓝图处理。
 
-This is one part of the [Lyra Character Parts](/UE5/LyraStarterGame/CharacterParts/) system,
-see that page for an overview.
+然后，底层 C++ 将确保每当控制器拥有新的 Pawn 时，这些部件都会添加到新的 Pawn（通过相关的 [Pawn 组件](./PawnComponent)），并且它们会从旧 Pawn 中移除（如果有）。
 
+### Lyra 如何设置
 
-## Conceptual Overview
+- `B_PickRandomCharacter` 资产是角色部件控制器组件
+- 它通过体验定义注入到 **所有** `Controller` 角色中（因此它会影响玩家和机器人）
+- 例如，请参阅 `B_ShooterGame_Elimination`
 
-The Character Parts Controller Component is responsible for choosing which
-Character Parts to add to any given Pawn.
+## 1.2 `B_PickRandomCharacter` 控制器组件
 
-When the Controller Component starts up (in `BeginPlay`), it should initialize its idea of
-which Character Parts will go onto this Pawn.  In Lyra, this piece is handled in Blueprint.
+默认情况下，Lyra 5.2 中只有 2 个装饰组件：Manny 和 Quinn。
 
-The underlying C++ will then ensure that any time the Controller possesses a new Pawn,
-these parts get added to the new Pawn (via the related [Pawn Component](./PawnComponent)),
-and they are removed from the old Pawn, if any.
+Lyra 在 Manny 或 Quinn 之间随机选择并在服务器端生成该组件；它被复制到所有客户端。
 
-
-### How Lyra Sets This Up
-
-- The `B_PickRandomCharacter` asset is a Character Parts Controller Component
-  - It gets injected into **all** `Controller` actors by the Experience Definition (thus it affects both Players and Bots)
-    - For example see `B_ShooterGame_Elimination`
-
-
-## `B_PickRandomCharacter` Controller Component
-
-By default in Lyra 5.2 there are only 2 cosmetic components: Manny and Quinn.
-
-Lyra chooses randomly between Manny or Quinn and spawns that component on the server side;
-it is replicated to all clients.
-
-You can see this in action in the `B_PickRandomCharacter` blueprint.
-Here in the Controller component's `BeginPlay`, it chooses randomly between the Manny or Quinn
-character parts:
+您可以在 `B_PickRandomCharacter` 蓝图中看到这一点。在 Controller 组件的 `BeginPlay` 中，它会在 Manny 或 Quinn 角色部件之间随机选择：
 
 [![B_PickRandomCharacter](./screenshots/B_PickRandomCharacter.png)](./screenshots/B_PickRandomCharacter.png)
 
+## 1.3 备用装饰组件
 
-## Alternate Cosmetic Component
+对于此示例，我创建了一个备用装饰组件，如下所示。
 
-For this example, I created an alternate cosmetic component, shown below.
+如果您想使用它，此蓝图类应**替换** Experience 注入中的默认 Lyra `B_PickRandomCharacter` 组件。
 
-This Blueprint Class should **replace** the default Lyra `B_PickRandomCharacter` component
-in the Experience injection if you want to use it.
-
-In this example, all Bots use the `B_Manny` cosmetic, while all Players
-will use a modular character with multiple cosmetic parts,
-and a randomly chosen head accessory.
+在此示例中，所有机器人都使用 `B_Manny` 装饰品，而所有玩家都将使用具有多个装饰部件的模块化角色，以及随机选择的头部配饰。
 
 [![Alternate Cosmetic Component](./screenshots/AlternateCosmeticComponent.png)](./screenshots/AlternateCosmeticComponent.png)
 
+### 根据需要自定义
 
-### Customize this as you like
+您可能希望在游戏中拥有一个非常复杂的角色化妆品系统，在这种情况下，您需要扩展它以使用所有选项来确定构成任何给定角色的化妆品。
 
-You may want to have a very complex character cosmetic system in your game,
-in which case you'd want to extend this to use all of your options for what
-cosmetics make up any given character.
-
-The Controller Component is the one that decides what parts should exist,
-so this is where to put that logic.
+控制器组件决定了哪些部分应该存在，所以这就是放置逻辑的地方。
