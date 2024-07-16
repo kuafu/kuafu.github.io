@@ -13,39 +13,38 @@ Lyra 将不同的UE5系统和插件组合在一起，以协调一个一致的输
 <a id='KeyConcepts'></a>
 ## 1.1 关键概念
 
-- [Common UI](/UE5/CommonUI/) manages input mode changes during gameplay via [Common UI Action Router](/UE5/CommonUI/ActionRouter)
+- [Common UI](/UE5/CommonUI/) 通过 [Common UI Action Router](/UE5/CommonUI/ActionRouter)管理游戏过程中的输入模式变化
 
-- [Enhanced Input](/UE5/EnhancedInput/) receives all input that is directed to the game, filtered by active [Input Mapping Contexts](/UE5/EnhancedInput/InputMappingContext)
+- [Enhanced Input](/UE5/EnhancedInput/) 接收所有直接进入游戏的输入, filtered by active [Input Mapping Contexts](/UE5/EnhancedInput/InputMappingContext)
   
-- [UI Manager Subsystem](/UE5/LyraStarterGame/Input/UIManagerSubsystem) manages the [Lyra UI Policy](/UE5/LyraStarterGame/Input/UIPolicy)
-  - defines UI Layers `UI.Layer.*` prioritized for input capture
+- [UI Manager Subsystem](/UE5/LyraStarterGame/Input/UIManagerSubsystem) 由 [Lyra UI Policy](/UE5/LyraStarterGame/Input/UIPolicy)管理
+  - 定义 UI 层 `UI.Layer.*` 优先用于输入捕获
 
-- [Lyra HUD Layout](/UE5/LyraStarterGame/Input/HUDLayout) implements `UI.Layer.Game`, the Game HUD
-- By default, Game Feature Actions like [`LAS_ShooterGame_StandardHUD`](./LAS_ShooterGame_StandardHUD) define:
-  - which HUD Layout class to use
-  - which Activatable Widget classes to instantiate for each UI Extension Point
+- [Lyra HUD Layout](/UE5/LyraStarterGame/Input/HUDLayout) 实现 `UI.Layer.Game` 游戏HUD
+- 默认情况下, 游戏功能操作（Game Feature Actions）例如 [`LAS_ShooterGame_StandardHUD`](./LAS_ShooterGame_StandardHUD) 定义:
+  - 使用哪个 HUD 布局类
+  - 为每个 UI 扩展点(UI Extension Point)实例化哪些可激活小部件类(Activatable Widget classes)
 
-- You can manage the addition/removal of other HUD Layouts and/or widgets during Gameplay
-- You can override Native Player Input handling by [deriving from `ULyraHeroComponent`](#LyraHeroComponent)
+- 您可以在游戏过程中管理其他 HUD 布局和/或小部件的添加/删除
+- 您可以通过从 [deriving from `ULyraHeroComponent`](#LyraHeroComponent) 派生来覆盖本机玩家输入处理
 
 
 <a id='InputHandlingOverview'></a>
-## 1.2 Input Handling Overview
+## 1.2 输入处理概述
 
-Lyra uses [Common UI](/UE5/CommonUI/) together with [Enhanced Input](/UE5/EnhancedInput/) to manage Player Input. Be familiar with both.
+Lyra 使用 [通用 UI](/UE5/CommonUI/) 和 [增强输入](/UE5/EnhancedInput/) 来管理玩家输入。请熟悉两者。
 
-These UE5 plugins are integrated via the [Lyra UI Policy](/UE5/LyraStarterGame/Input/UIPolicy), which defines a HUD as being comprised of prioritized layers of [Activatable Widgets](/UE5/CommonUI/ActivatableWidget).
+这些 UE5 插件通过 [Lyra UI 策略](/UE5/LyraStarterGame/Input/UIPolicy) 集成，该策略将 HUD 定义为由 [可激活小部件](/UE5/CommonUI/ActivatableWidget) 的优先级层组成。
 
-The `Escape` key (the "back" button) activates the Game Menu widget, which suspends Player Game Input while the menu is open, for example.
+例如，`Escape` 键（“后退”按钮）可激活游戏菜单小部件，当菜单打开时，它会暂停玩家游戏输入。
 
-[Common UI](/UE5/CommonUI/)
-controls if, when and how input makes it to the Game. If/when you want to explicitly change input modes in your Game, you must use the [Common UI Action Router](/UE5/CommonUI/ActionRouter) to do so.
+[通用 UI](/UE5/CommonUI/)控制输入是否、何时以及如何进入游戏。如果/当您想在游戏中明确更改输入模式时，您必须使用 [通用 UI 操作路由器](/UE5/CommonUI/ActionRouter) 来执行此操作。
 
-When [Activatable Widgets](/UE5/CommonUI/ActivatableWidget) activate and deactivate, they can optionally change the input mode and/or focus themselves for input to support MKB, Gamepad, VR controllers, etc. The settings are all customizable by input device and platform.
+当 [可激活小部件](/UE5/CommonUI/ActivatableWidget) 激活和停用时，它们可以选择更改输入模式和/或将自身聚焦于输入以支持 MKB、游戏手柄、VR 控制器等。所有设置都可通过输入设备和平台自定义。
 
-In particular, they should agree on the value of `Get Desired Input Config`, hopefully via a shared implementation.
+特别是，它们应该就“获取所需输入配置”的值达成一致，希望通过共享实现。
 
-When no Activatable Widget is modifying the input mode, the input flows to the Game itself via [Enhanced Input](/UE5/EnhancedInput/), as triggered by any active [Input Mapping Contexts](/UE5/EnhancedInput/InputMappingContext) at the given point in Playtime.
+当没有可激活小部件修改输入模式时，输入将通过 [增强输入](/UE5/EnhancedInput/) 流向游戏本身，由游戏时间给定点的任何活动 [输入映射上下文](/UE5/EnhancedInput/InputMappingContext) 触发。
 
 
 <a id='IMC'></a>
@@ -57,31 +56,31 @@ Lyra 使用游戏特性操作来初始化默认 IMC，并且您可以添加自�
 
 <a id='LyraHeroComponent'></a>
 ## 1.3 Lyra Hero Component 管理玩家输入
-
-- If you want custom input handling, you **must** derive from `ULyraHeroComponent`
+- 如果您想要自定义输入处理，您**必须**从`ULyraHeroComponent`派生
 
 The Lyra Hero Component activates the Native & Ability Input Actions for the Player Pawn.
+Lyra Hero 组件为玩家 Pawn 激活本机和能力的输入操作，见`ULyraHeroComponent::InitializePlayerInput`。
 
-- For a pawn to receive player input, it **must** have a `ULyraHeroComponent` component
-  - `ULyraHeroComponent` as a base class is required by Lyra, including but not limited to:
+- 为了让 pawn 接收玩家输入，它**必须**有一个 `ULyraHeroComponent` 组件
+  - Lyra 需要 `ULyraHeroComponent` 作为基类，包括但不限于：
     - `ULyraGameplayAbility`
-      - To manage ability camera modes
-      - Also exposes the Hero Component to BPs that may use it for other reasons
-    - Game Feature Actions having to do with input management:
+      - 管理能力相机模式
+      - 还将 Hero 组件公开给可能出于其他原因使用它的 BP 
+    - 与输入管理有关的游戏功能操作：
       - `GameFeatureAction_AddInputBinding`
       - `GameFeatureAction_AddInputConfig`
       - `GameFeatureAction_AddInputContextMapping`
-- `ULyraHeroComponent` works in conjunction with `ULyraPawnExtensionComponent` to activate the inputs on the pawn
-  - Thus, the pawn must also have a `ULyraPawnExtensionComponent` and fully support the `IGameFrameworkInitStateInterface`
-  - See `ULyraHeroComponent`::`InitializePlayerInput` for implementation details
-    - This gets called during the pawn initialization process while transitioning to `InitState.DataInitialized`
-  - This requires the player to be using `ULyraInputComponent` for input, which is configured in the [Project Settings](#ProjectSettings)
 
+- `ULyraHeroComponent` 与 `ULyraPawnExtensionComponent` 配合使用以激活 pawn 上的输入
+  - 因此，pawn 还必须有一个 `ULyraPawnExtensionComponent` 并完全支持 `IGameFrameworkInitStateInterface`
+  - 参见`ULyraHeroComponent`::`InitializePlayerInput` 了解实现细节
+    - 在转换到 `InitState.DataInitialized` 时，在 pawn 初始化过程中调用此方法
+  - 这要求玩家使用 `ULyraInputComponent` 进行输入，该输入在 [项目设置](#ProjectSettings) 中配置
 
 <a id='References'></a>
 # References
 
-- [Official Epic Lyra Input Docs](https://docs.unrealengine.com/5.1/en-US/lyra-input-settings-in-unreal-engine/)
+- [官方 Epic Lyra 输入文档](https://docs.unrealengine.com/5.1/en-US/lyra-input-settings-in-unreal-engine/)
 - [ULyraSettingsLocal](/UE5/LyraStarterGame/ULyraSettingsLocal)
 
 
