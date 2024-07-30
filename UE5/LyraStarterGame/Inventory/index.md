@@ -6,12 +6,10 @@ breadcrumb_name: "Inventory System"
 ---
 
 
-# 1 Lyra 物品系统(Inventory System) 
-
+# 1 Lyra 库存（物品）系统(Inventory System) 
 库存系统是构建[Lyra 装备系统](/UE5/LyraStarterGame/Equipment/) 和[Lyra 武器系统](/UE5/LyraStarterGame/Weapons/) 的基础。
 
 这里有很多代码（包括装备和武器系统），而且在大多数情况下，它似乎对 Lyra 的用例来说运行得相当好。这是一个很好的起点，应该可以让您大致了解 Epic 对库存实施的想法。还有一些改进的空间，我将在下面讨论。
-
 - [建设性批评(Constructive Criticism)](#ConstructiveCriticism) - 您可能无法按原样使用此系统的原因
 - [复制并扩展(Duplicate to Extend)](#DuplicateToExtend) - 如何复制此代码以自己实现它*（大约需要 2 个小时，节省更多时间）*
 
@@ -21,11 +19,10 @@ breadcrumb_name: "Inventory System"
 - 官方文档：[Lyra物品栏和装备](https://dev.epicgames.com/documentation/zh-cn/unreal-engine/lyra-inventory-and-equipment-in-unreal-engine)  
 - 网络视频：[参考视频](https://youtu.be/MMiDMn0fJRU)
 
-## 名词解释
+## 1.1 名词解释
 官方文档将Inventory 翻译为`物品栏`，Google翻译为库存，而有的地方也叫背包。Inventory一般与Equipment关联，两者也是不同范畴的概念，Inventory表示角色的背包，Inventory Item表示背包中的物品，而这个物品如果装配到角色身上时才会创建Equipment实例，卸载下来就被销毁。具体两者对比参考官方文档[Lyra物品栏和装备](https://dev.epicgames.com/documentation/zh-cn/unreal-engine/
 
-## 1.1 物品栏(Inventory)概念
-
+## 1.2 库存(物品)(Inventory)概念
 - [物品定义(Item Definition)](#ItemDefinition) (常量)
   - 由一个或多个 [物品碎片](#ItemFragments) 组成，例如：
     - `EquippableItem`（如何创建物品“类别”的示例，在本例中为玩家可以装备的物品）
@@ -50,21 +47,18 @@ Lyra 5.1 中的网络代码发生了变化。不是复制库存列表数组，�
 
 
 <a id="ItemDefinition"></a>
-## 1.2 物品定义(Item Definition)
+## 1.3 物品定义(Item Definition)
 
 为了将物品存储在库存中，该物品必须具有物品定义。这本质上是一个简单的常量配置。`ULyraInventoryItemDefinition` 几乎没有任何功能，它只是数据。从本质上讲，物品定义只不过是玩家的显示名称，以及实际定义物品的物品碎片数组。
 
 
 <a id="ItemFragments"></a>
-### 物品片段(Item Fragments)
-
-
+### 1.3.1 物品碎片(Item Fragments)
 商品片段包含商品定义的一部分。这本质上就是商品定义实现模块化的方式。您可以通过从“ULyraInventoryItemFragment”派生来创建自己的片段。
 
 示例代码很好地说明了模块化和可重用性，但它的性能肯定不高。有很多可以优化的组件搜索和循环，但同样，总的来说，这是一个与库存相关的“什么”的好例子，即使不是最好的“如何”。
 
 官方文档《Lyra物品栏和装备》中有各种物品片段的说明。
-	
   
 	  
 	  
@@ -76,62 +70,37 @@ Lyra 5.1 中的网络代码发生了变化。不是复制库存列表数组，�
 | InventoryFragment_QuickbarIcon    | 确定用于占据玩家快速栏UI中插槽的物品的HUD图标。            |
 | InventoryFragment_ReticleConfig   | 指定在配备此物品栏物品时要实例化的替代HUD准星类。          |
 
-#### Fragment: Equippable Item
+#### 碎片(Fragment)：可装备的物品
+`UInventoryFragment_EquippableItem` 保存对[装备定义](/UE5/LyraStarterGame/Equipment/#EquipmentDefinition)(`ULyraEquipmentDefinition`) 的引用。
 
-`UInventoryFragment_EquippableItem` holds a reference to an
-[Equipment Definition](/UE5/LyraStarterGame/Equipment/#EquipmentDefinition)
-(`ULyraEquipmentDefinition`).
+此片段允许库存物品成为[装备系统](/UE5/LyraStarterGame/Equipment/) 的一部分。物品必须具有此类型的片段，玩家才能装备它。缺少此片段的物品仍可存储在库存中，但无法装备。
 
-This fragment allows an Inventory Item to be a part of the
-[Equipment System](/UE5/LyraStarterGame/Equipment/).
-An item must have a fragment of this type for the player to be able to equip it.
-Items that lack this fragment can still be stored in inventory, but cannot be equipped.
-
-Think of this kind of like an interface.  When the user is trying to equip an item,
-the C++ searches for an Item Definition Fragment of type `EquippableItem`.  If it exists
-then the Equipment Definition reference is retrieved to perform equipment operations on.
+将其视为一种界面。当用户尝试装备物品时，C++ 会搜索类型为 `EquippableItem` 的物品定义片段。如果存在，则检索装备定义引用以对其执行装备操作。
 
 
 <a id="Fragment_SetStats"></a>
-#### Fragment: Set Stats
 
-`UInventoryFragment_SetStats` is a numeric attribute set in the form of
-a map of Gameplay Tags to integers.
+#### 碎片：设置统计数据
+`UInventoryFragment_SetStats` 是一个数字属性集，以游戏标记到整数的映射形式设置。例如，在 `ShooterCore` 中有一个 `ID_Rifle` 项目定义，它定义了步枪武器。
 
-For example in `ShooterCore` there is an `ID_Rifle` Item Definition that defines the Rifle weapon.
-
-The `ID_Rifle` Item Definition includes a `SetStats` fragment with the following mappings:
-
+`ID_Rifle` 项目定义包括一个 `SetStats` 片段，具有以下映射：
 | GameplayTag                            | Value |
 |----------------------------------------|-------|
 | `Lyra.ShooterGame.Weapon.MagazineSize` | 30    |
 | `Lyra.ShooterGame.Weapon.MagazineAmmo` | 30    |
 | `Lyra.ShooterGame.Weapon.SpareAmmo`    | 60    |
 
+#### 碎片: 拾取图标
+`UInventoryFragment_PickupIcon` 特定于设备生成板，并定义在板上显示的网格、项目的显示名称和板的颜色。
 
-#### Fragment: Pickup Icon
+#### 碎片: 快捷栏图标
+`UInventoryFragment_QuickBarIcon` 特定于显示在玩家屏幕右下角的 QuickBar。它定义在 QuickBar 中显示的图标以表示物品及其弹药。
 
-`UInventoryFragment_PickupIcon` is specific to the Equipment Spawning Pads, and defines
-the mesh to display at the pad, the display name of the item and the color for the pad.
-
-
-#### Fragment: QuickBar Icon
-
-`UInventoryFragment_QuickBarIcon` is specific to the QuickBar that displays on the bottom
-right of the player's screen.
-
-It defines the icons to display in the QuickBar to represent the item and its ammo.
-
-
-#### Fragment: Reticle Config
-
-`UInventoryFragment_ReticleConfig` is actually a part of the [Lyra Weapon System](/UE5/LyraStarterGame/Weapons/).
-
-It's an array of widgets that comprise the reticle for a given weapon.
-
+#### 碎片: 准心(Reticle)配置
+`UInventoryFragment_ReticleConfig` 实际上是 [Lyra 武器系统](/UE5/LyraStarterGame/Weapons/) 的一部分。它是一个小部件数组，组成了给定武器的瞄准线。
 
 <a id="ItemInstance"></a>
-## 1.3 物品实例(Item Instance)
+## 1.4 物品实例(Item Instance)
 
 这是物品定义的“实例”。当玩家获得物品时，他们实际上会收到一个物品实例。
 
@@ -142,7 +111,7 @@ It's an array of widgets that comprise the reticle for a given weapon.
 
 
 <a id="InventoryManager"></a>
-## 1.4 物品栏管理器(Inventory Manager)
+## 1.5 物品栏管理器(Inventory Manager)
 我认为这个组件就是实际的库存本身。Lyra 希望您将这个组件放在 `AController` 上。
 
 方法包括以下内容：
@@ -153,11 +122,12 @@ It's an array of widgets that comprise the reticle for a given weapon.
 - 消耗物品
 
 <a id="IPickupable"></a>
-## 1.5 `IPickupable` 接口
+## 1.6 `IPickupable` 接口
 为了使物品能够被拾取，它必须支持这个纯虚拟接口。您的物品必须实现 `GetPickupInventory`，它会告诉基本代码如何将
 物品添加到库存中。
 
 <a id="ConstructiveCriticism"></a>
+
 # 2 建设性的批评(Constructive Criticism)
 就我而言，需要对基础 Lyra 库存系统进行一些根本性的更改以支持我的游戏要求。
 

@@ -29,11 +29,15 @@ Lyra武器是一种基于[Lyra装备系统](/UE5/LyraStarterGame/Equipment/)的�
 
 
 ## 1.2 相关 Gameplay Abilities
-- [Melee Attack Ability](#MeleeAttackAbility)
-  - 用于所有近战攻击，无论武器类型如何
+
+-[MeleeWeapon Ability](#MeleeWeaponAbility)
+    - 武器类近战能力基础
+
 - [Ranged Weapon Base Ability](#RangedWeaponBaseAbility)
   - 所有远程武器的基础能力
 
+- [Melee Attack Ability](#LyraGA_Melee)
+  - Lyra中用于表示“肉搏”类近战，考虑不扩展和使用
 
 <a id="WeaponInstance"></a>
 ## 1.3 武器实例(Weapon Instance)
@@ -43,12 +47,12 @@ Lyra武器是一种基于[Lyra装备系统](/UE5/LyraStarterGame/Equipment/)的�
 - `B_WeaponInstance_Shotgun`
 - `B_WeaponInstance_NetShooter` (原型)
 
-武器实例有一个 `Tick()` 方法，**如果/当** Pawn 装备武器时，该方法会在每个 tick 执行。这个Tick是由 Pawn Controller 的 [武器状态组件](#WeaponStateComponent) 管理的。
+武器实例有一个 `Tick()` 方法，**如果/当** Pawn 装备武器时，该方法会在每个 Tick 执行。这个Tick由 Pawn Controller 的 [武器状态组件](#WeaponStateComponent) 管理。
 
 
 <a id="RangedWeaponInstance"></a>
 ## 1.4 远程武器实例
-远程武器实例源自武器实例，并实现 `ILyraAbilitySourceInterface`。它添加了子弹、射击精度和散布等概念。
+远程武器实例源自武器实例，并实现 `ILyraAbilitySourceInterface`。它添加了子弹、射击精度和散射等概念。
 
 
 <a id="WeaponStateComponent"></a>
@@ -84,13 +88,13 @@ Lyra武器是一种基于[Lyra装备系统](/UE5/LyraStarterGame/Equipment/)的�
 
 
 
-<a id="MeleeAttackAbility"></a>
-## 1.8  近战攻击 Ability
+<a id="LyraGA_Melee"></a>
+## 1.8  Lyra原生近战攻击技能(GA_Melee)
 `GA_Melee`是近战攻击能力，继承自 `GA_AbilityWithWidget`，其本身基于 `ULyraGameplayAbility`。它的实现使得无论装备的武器类型如何都可以执行，只要该武器源自`B_WeaponInstance_Base` （BP约束）。
 
 请注意，此Ability**不是**继承自基础装备Ability ( `ULyraGameplayAbility_FromEquipment`)。虽然这是有道理的，因为近战不一定需要装备（Pawn 有拳头、脚、头等），但这也意味着在当前的实现中，没有办法让武士刀近战超过拳头。这似乎是一个重大的实施缺陷。如果你想要有趣的近战游戏，你绝对应该改变这一点。
 
-所以，GA_Melee 近战非武器近战，而是相当“肉搏”的的能力，例如用刀或枪去砸东西。
+所以，GA_Melee 不是武器类的近战，而是相当“肉搏”的的能力，例如用刀或枪去砸东西。为了避免与刀剑类近战混淆，不在维护Lyra的近战（GA_Melee），其他地方提到的近战一般指刀剑的武器近程攻击，为此实现UXGameplayAbility_MeleeWeapon(继承自ULyraGameplayAbility_FromEquipment)，用于刀剑近战。
 
 GA_Melee近战攻击时的逻辑：
 - 播放近战攻击动画蒙太奇*（每个武器均可配置）*
@@ -105,9 +109,12 @@ GA_Melee近战攻击时的逻辑：
         - 对攻击者执行 GameplayCue：`GameplayCue.Weapon.Melee.Hit`
         - 在世界冲击位置播放近战冲击声音
 
+<a id="MeleeWeaponAbility"></a>
+## 1.9 近战武器 Ability
+UXGameplayAbility_MeleeWeapon(继承自`ULyraGameplayAbility_FromEquipment`)，用于刀剑近战能力。
 
 <a id="RangedWeaponBaseAbility"></a>
-## 1.9 远程武器 Ability
+## 1.10 远程武器 Ability
 `ULyraGameplayAbility_RangedWeapon` 继承自自装备系统的[装备能力](/UE5/LyraStarterGame/Equipment/#EquipmentAbility)(`ULyraGameplayAbility_FromEquipment`)，使其能够轻松访问负责授予玩家能力的特定武器，该武器将在能力激活时装备。这是所有 Lyra 远程武器的基类，由以下类实现：
 - `GA_Weapon_Fire`
     - `GA_Weapon_Fire_Pistol`
@@ -133,8 +140,8 @@ Lyra 游戏能力的标准似乎是如此，C++ 中实现的内容很少，大�
 
 此外，远程武器将监听“武器射击失败”游戏事件(`Ability.PlayMontageOnActivateFail.Message`)，并播放动画蒙太奇，帮助玩家直观地了解失败的能力激活。该游戏消息由基础`ULyraGameplayAbility`::`NativeOnAbilityFailedToActivate`广播。
 
+------
 2024/7/30整理
-
 <br/>
 <hr/>
 <div class="container">
