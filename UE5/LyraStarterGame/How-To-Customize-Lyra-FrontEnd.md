@@ -8,98 +8,79 @@ back_links:
     name: LyraStarterGame
 ---
 
+# 1 自定义 Lyra 前端
 
-# Customizing the Lyra Front-end
+## 1.1 资产管理器更新
 
-## Asset Manager update
+在此过程进行得更深入之前，我们需要修改 AssetManager，以便它知道在哪里找到我们要添加的新内容。在这里，我假设您一直在关注我的教程，因此您的设置与我的相同。
 
-Before we go to far in this process, we need to modify AssetManager so it knows where to find the new stuff we're going to add.
+### `XistGame.uasset` 资产管理器增量
 
-Here I'm assuming you've been following along in my tutorial so your settings are the same as mine.
+- 修改现有的：
+  - `Map` 添加目录 `/XistGame/FrontEnd/Maps`
+- 添加新的：
+  - `LyraLobbyBackground` 添加目录 `/XistGame/FrontEnd`
 
-### `XistGame.uasset` Asset Manager deltas
-
-- Modify existing:
-  - `Map` add dir `/XistGame/FrontEnd/Maps`
-- Add new:
-  - `LyraLobbyBackground` add dir `/XistGame/FrontEnd`
-
-Here is the entire `Primary Asset Types to Scan` setup for `XistGame` if you just want to replace what you have with this:
+如果您只想用以下内容替换现有内容，以下是 `XistGame` 的完整 `主要资产类型扫描` 设置：
 
 ```text
 ((PrimaryAssetType="LyraExperienceDefinition",AssetBaseClass="/Script/LyraGame.LyraExperienceDefinition",bHasBlueprintClasses=True,Directories=((Path="/XistGame/Experiences"))),(PrimaryAssetType="LyraExperienceActionSet",AssetBaseClass="/Script/LyraGame.LyraExperienceActionSet",Directories=((Path="/XistGame/Experiences"))),(PrimaryAssetType="Map",AssetBaseClass="/Script/Engine.World",Directories=((Path="/XistGame/Maps"),(Path="/XistGame/FrontEnd/Maps"))),(PrimaryAssetType="PlayerMappableInputConfig",AssetBaseClass="/Script/EnhancedInput.PlayerMappableInputConfig",Directories=((Path="/XistGame/Input/Configs"),(Path="/Game/Input/Configs"))),(PrimaryAssetType="LyraLobbyBackground",AssetBaseClass="/Script/LyraGame.LyraLobbyBackground",Directories=((Path="/XistGame/FrontEnd"))),(PrimaryAssetType="LyraUserFacingExperienceDefinition",AssetBaseClass="/Script/LyraGame.LyraUserFacingExperienceDefinition",Directories=((Path="/XistGame/Experiences/Playlists"))))
 ```
+   
+#### 必须重新启动编辑器以使 Asset Manager 更改生效！！
 
+进行上述更改后，**必须**重新启动 UE5 编辑器以使这些更改生效。
 
-#### MUST RESTART EDITOR for Asset Manager changes to take effect !!
+## 1.2 创建大厅背景
 
-After making the above changes, you **must** restart the UE5 editor for these changes to take effect.
+### 脚本用于随机加载我们自己的背景地图之一
 
+默认的 Lyra 代码将随机加载可能位于代码中*任何地方*的*任何*背景地图，这不是我们想要的。我们只希望加载我们自己的背景。这里我们复制 Lyra 实现并将其更改为仅选择我们自己的背景：
 
-## Create a Lobby Background
-
-### Script to randomly load one of our own background maps
-
-The default Lyra code will randomly load *ANY* background map that might be *anywhere* in the code, which is not what we want.  We only want our own backgrounds to be loaded.
-
-Here we copy the Lyra implementation and change it to only select our own backgrounds:
-
-- Duplicate `Lyra.Environments/B_LoadRandomLobbyBackground`
+- 复制 `Lyra.Environments/B_LoadRandomLobbyBackground`
   - `XistGame.FrontEnd/B_XG_LoadRandomLobbyBackground`
-    - Modify `BeginPlay` event such that it filters out lobby backgrounds whose names start with anything other than `DA_XG_`
-      - In my version I added new function `IsRelevantLobbyBackground` that returns boolean
-
-### Create LobbyBackground1, the first of potentially more
-
-This is the map that you'll see as the background of your menu.
-
-- Create `XistGame.FrontEnd/Maps/L_XG_LobbyBackground1`
-  - This is the map that will show in the background on the menu pages
-  - Bare minimum setup:
-    - Something to look at
-    - Cinematic Camera
-    - LevelSequence actor that forces the view to to the cinematic camera
-  - My setup is just a small green-lit arena with 3 balls rolling around
-
-- Create `LyraLobbyBackground` data asset `XistGame.FrontEnd/DA_XG_LobbyBackground1`
-  - Set reference to `L_XG_LobbyBackground1`
+    - 修改 `BeginPlay` 事件，以便过滤掉名称以除 `DA_XG_` 以外的任何内容开头的大厅背景
+      - 在我的版本中，我添加了返回布尔值的新函数 `IsRelevantLobbyBackground`
 
 
-### Create more if you want!
+### 创建 LobbyBackground1，可能还有更多
 
-You can create more lobby backgrounds if you want.  The solution above will search for any/all lobby backgrounds named `DA_XG_*` and will randomly display one of those as your background menu.
+这是您将看到的作为菜单背景的地图。
 
-Creating more to cycle through is much easier than the work you did above.  Just make a new `L_XG_LobbyBackgroundN` map (increment N!) and then create a `DA_XG_LobbyBackgroundN` asset to point to it.
+- 创建 `XistGame.FrontEnd/Maps/L_XG_LobbyBackground1`
+  - 这是将在菜单页面的背景中显示的地图
+  - 最低限度的设置：
+    - 需要查看的内容
+    - 电影摄影机
+    - 强制将视图移到电影摄影机的 LevelSequence 演员
+  - 我的设置只是一个小小的绿灯竞技场，里面有 3 个球在滚动
 
+- 创建 `LyraLobbyBackground` 数据资产 `XistGame.FrontEnd/DA_XG_LobbyBackground1`
+  - 设置对 `L_XG_LobbyBackground1` 的引用
 
-## Create a Lobby Experience
+### 如果需要，可以创建更多！
 
-Create the experience definition:
+如果需要，您可以创建更多大厅背景。上面的解决方案将搜索名为 `DA_XG_*` 的任何/所有大厅背景，并随机显示其中一个作为背景菜单。创建更多循环比您上面的工作要容易得多。只需制作一个新的“L_XG_LobbyBackgroundN”地图（增加 N！），然后创建一个“DA_XG_LobbyBackgroundN”资产来指向它。
 
-- Duplicate `Lyra.System/FrontEnd/B_LyraFrontEnd_Experience`
+## 1.3 创建大厅体验
+
+创建体验定义：
+- 复制 `Lyra.System/FrontEnd/B_LyraFrontEnd_Experience`
   - `XistGame.Experiences/B_XG_Experience_FrontEnd`
 
-Create the map that will activate the experience:
+创建将激活体验的地图：
 
-- Duplicate `Lyra.System/FrontEnd/Maps/L_LyraFrontEnd`
+- 复制 `Lyra.System/FrontEnd/Maps/L_LyraFrontEnd`
   - `XistGame.FrontEnd/Maps/L_XG_FrontEnd`
-    - Replace random lobby background logic
-      - Delete the vanilla Lyra `B_LoadRandomLobbyBackground` actor
-      - Add a `B_XG_LoadRandomLobbyBackground` actor
-    - Set `WorldSettings`.`Game Mode`.`Default Gameplay Experience` = `B_XG_Experience_FrontEnd`
+    - 替换随机大厅背景逻辑
+      - 删除原版 Lyra(vanilla Lyra) `B_LoadRandomLobbyBackground` actor
+      - 新增一个 `B_XG_LoadRandomLobbyBackground` 角色
+    - 设置 `WorldSettings`.`Game Mode`.`Default Gameplay Experience` = `B_XG_Experience_FrontEnd`
 
-Change project settings to load this experience by default:
-
+更改项目设置以默认加载此体验：
 - Maps & Modes > Default Maps > Game Default Map = `L_XG_FrontEnd`
 
 
-## Customize the menu itself
-
+## 1.4 自定义菜单本身
 TODO
-
-Also there is quite a lot more TODO here, but the above will hopefully
-help get you started.  If you've followed along so far, you should
-have enough insight to continue on your own from here.
-
-I hope to come back to this at some point once I've actually built a
-game that requires a menu for players to use.  `:)`
+此外，这里还有很多 TODO，但希望以上内容能帮助您入门。如果您到目前为止一直关注，您应该有足够的洞察力从这里继续自己。我希望在实际构建了一个需要玩家使用菜单的游戏后，在某个时候回到这一点。

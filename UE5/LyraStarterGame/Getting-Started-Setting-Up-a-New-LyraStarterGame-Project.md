@@ -9,51 +9,43 @@ back_links:
 back_link_title: Create New LyraStarterGame Project
 ---
 
+# 入门：设置新的 LyraStarterGame 项目
 
-# Getting Started: Setting Up a New LyraStarterGame Project
+在使用 LyraStarterGame 进行大量操作之前，您首先需要创建一个新的 UE5 LyraStarterGame 项目并自行定制。
 
-Before you can do much with LyraStarterGame, you first need to create a new UE5 LyraStarterGame project and customize
-it for yourself.
+# 步骤 1：创建 GameFeature 插件
 
+UE5+Lyra 的设置使您永远无需接触基础代码。Michael Noland 说“将 Lyra 视为引擎代码。”
 
-# Step 1: Create a GameFeature Plugin
+然后，我们为 Lyra 制作“GameFeature 插件”来创建新游戏。它不是传统意义上的插件，更像是模组。
 
-UE5+Lyra is set up such that you should never touch the base code.  Michael Noland says "think of Lyra like it's engine code."
+通过将我们所有的工作都包含在我们自己的插件中，我们确保尽可能轻松地集成 Epic 在基础 Lyra 框架上生成的未来升级、错误修复等。
 
-What we do then to create a new game is we make a "GameFeature Plugin" for Lyra.  It's less of a plugin in the
-traditional sense and more like a mod.
+[如何创建 GameFeature 插件](./How-To-Create-a-GameFeature-Plugin)
 
-By containing all of our work in our own plugin, we ensure it will be as easy as possible to integrate future upgrades,
-bug fixes, etc that Epic produces on the base Lyra framework.
+# 步骤 2：配置游戏功能数据
 
-[How To Create a GameFeature Plugin](./How-To-Create-a-GameFeature-Plugin)
+有了插件后，您需要告诉 Lyra 的 Asset Manager 在哪里可以找到插件的文件。
 
+[如何为 GameFeature 插件配置 Asset Manager](./Setup/GameFeatureData-AssetManager)
 
-# Step 2: Configure Game Feature Data
+您还需要添加 Gameplay Cue 路径，以便制作自定义提示：
 
-Once you have a plugin, you need to tell Lyra's Asset Manager where to find files for your plugin.
+[将 GameplayCue 路径添加到 GameFeatureData](./Setup/GameFeatureData-AddGameplayCuePath)
 
-[How to Configure Asset Manager for GameFeature Plugins](./Setup/GameFeatureData-AssetManager)
+# 步骤 3：创建您的开发体验
 
-You'll also need to add a Gameplay Cue path so you can make custom Cues:
+Lyra 中的“体验”本质上是某种形式的用户交互。它是一张地图，以及一组输入和
+控件，可能会或可能不会与其他地图或其他体验共享。
 
-[Add GameplayCue Path to GameFeatureData](./Setup/GameFeatureData-AddGameplayCuePath)
+您设置的第一个体验是最难的，需要为您的 mod 完成一些样板工作。
 
+因此，我们将设置一个纯粹以开发为中心的体验，以便我们有一个基本的起点。
 
-# Step 3: Create Your Dev Experience
+[如何创建您的开发体验](./How-To-Create-New-GameFeature-Dev-Experience)
 
-An "Experience" in Lyra is essentially some form of user interaction.  It's a map along with a set of inputs and
-controls that may or may not be shared with other maps or other experiences.
+# 恭喜
 
-The first experience you set up is the hardest, there is some boilerplate stuff that needs to be done for your mod.
+您现在拥有一个属于您自己的 LyraStarterGame 项目！
 
-For that reason we'll set up a purely development focussed experience so we'll have a basic starting point.
-
-[How to Create Your Dev Experience](./How-To-Create-New-GameFeature-Dev-Experience)
-
-
-# Congratulations
-
-You now have a LyraStarterGame project that is your very own!
-
-Time to [learn more about LyraStarterGame](/UE5/LyraStarterGame/) and build your game!
+是时候[了解有关 LyraStarterGame 的更多信息](/UE5/LyraStarterGame/) 并构建您的游戏了！

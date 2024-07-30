@@ -257,46 +257,40 @@ Configure this asset:
         - *replace existing bugged `B_PickRandomCharacter`*
         - Server only
 
-Note that `B_PickRandomCharacter` is being added to the base `AController` class.
 
-It goes to `AController` specifically so that both Bots (`AAIController`) and Players
-(`APlayerController`) will get the functionality of randomly spawning as either Manny or Quinn.
+请注意，`B_PickRandomCharacter` 已添加到基础 `AController` 类中。
 
-Though `AController` does not support modular gameplay itself, we're still able to inject components into classes
-that derive from it, including the modular derivatives that Lyra uses.
+它专门用于 `AController`，以便机器人 (`AAIController`) 和玩家(`APlayerController`) 都可以获得随机生成 Manny 或 Quinn 的功能。
+
+虽然 `AController` 本身不支持模块化游戏玩法，但我们仍然能够将组件注入从其派生的类中，包括 Lyra 使用的模块化派生类。
 
 
-## World: Dev Map
+## 世界：开发地图
 
 | Data Asset | Base Class |
 | --- | --- |
 | `Maps/L_XG_DevMap` | C++ `World` |
 
-Configure this asset (its `World Settings`):
+配置此资产（其“世界设置”）：
 
-- Game Mode
-  - Default Gameplay Experience: `B_XG_Experience_Dev` (mod custom)
+- 游戏模式
+- 默认游戏体验：“B_XG_Experience_Dev”（mod 自定义）
 
-You don't need much here right now.  A plane, a light and a C++ `LyraPlayerStart` actor should do it.
-
-
-### Update Project Settings
-
-Now you should update your project settings to use `L_XG_DevMap` as the default, if that is your desired setup.
+现在你不需要太多东西。一架飞机、一盏灯和一个 C++ `LyraPlayerStart` 演员就可以了。
 
 
-### Thank you
+### 更新项目设置
 
-Quick shout-out to `braheem`@github who identified
-[an error](https://github.com/x157/x157.github.io/issues/1)
-in the process that has now been fixed above.  Thank you!
+现在您应该更新项目设置以使用 `L_XG_DevMap` 作为默认设置，如果这是您想要的设置。
 
+### 谢谢
 
-# Process Complete
+快速向 `braheem`@github 致谢，他发现[错误](https://github.com/x157/x157.github.io/issues/1)在上述过程中现已修复。谢谢！
 
-You now have your own experience that you can modify to suit your needs.  All of its dependencies are in your own
-project so you can change those as well.
+# 流程完成
 
-[Back to LyraStarterGame](/UE5/LyraStarterGame/)
+您现在拥有自己的体验，您可以根据自己的需要进行修改。它的所有依赖项都在您自己的项目中，因此您也可以更改它们。
+
+[返回 LyraStarterGame](/UE5/LyraStarterGame/)
 
 
