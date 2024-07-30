@@ -5,15 +5,11 @@ breadcrumb_path: "UE5/LyraStarterGame"
 breadcrumb_name: "Weapon System"
 ---
 
-
-# 1. LyraStarterGame 武器系统
-
-Lyra武器是一种基于[Lyra装备系统](/UE5/LyraStarterGame/Equipment/)的特殊装备 ，而Lyra装备系统本身又基于[Lyra库存系统](/UE5/LyraStarterGame/Inventory/)。 
-
-'武器 --> 装备 --> 库存'
+# 1. Lyra 武器系统
+Lyra武器是一种基于[Lyra装备系统](/UE5/LyraStarterGame/Equipment/)的特殊装备 ，而Lyra装备系统本身又基于[Lyra库存(物品)系统](/UE5/LyraStarterGame/Inventory/)。 
+从而有这种层次关系：'武器 --> 装备 --> 库存'。武器属于装备的一种，装备属于库存的一种特殊形式。
 
 ## 1.1 武器概念
-
 - [武器实例](#WeaponInstance)
   - 继承自装备实例 [Equipment Instance](/UE5/LyraStarterGame/Equipment/#EquipmentInstance)
   - 添加装备/未装备的动画集
@@ -31,163 +27,113 @@ Lyra武器是一种基于[Lyra装备系统](/UE5/LyraStarterGame/Equipment/)的�
 - [武器生成器 Weapon Spawner](#WeaponSpawner) (Actor)
   - Spawn Weapons at dedicated spawning pads in the world
 
-## 1.2 相关 Gameplay Abilities
 
+## 1.2 相关 Gameplay Abilities
 - [Melee Attack Ability](#MeleeAttackAbility)
-  - Used for all melee attacks regardless of the weapon type
+  - 用于所有近战攻击，无论武器类型如何
 - [Ranged Weapon Base Ability](#RangedWeaponBaseAbility)
-  - Base ability for all ranged weapons
+  - 所有远程武器的基础能力
 
 
 <a id="WeaponInstance"></a>
 ## 1.3 武器实例(Weapon Instance)
-
-A Weapon Instance (`ULyraWeaponInstance`) is an [Equipment Instance](/UE5/LyraStarterGame/Equipment/#EquipmentInstance) that also has equipped and unequipped animation sets associated with it.
-
-It also keeps track of how long it has been since the player last interacted with it.
-
-Most of the implementation is in the BP `B_WeaponInstance_Base`, from which all other Lyra Weapon Instances are derived:
-
+武器实例 (`ULyraWeaponInstance`) 是一个 [装备实例](/UE5/LyraStarterGame/Equipment/#EquipmentInstance)，它还具有与之关联的装备和未装备动画集。它还会跟踪玩家上次与其交互的时间。大部分实现都在 BP `B_WeaponInstance_Base` 中，所有其他 Lyra 武器实例均从中派生：
 - `B_WeaponInstance_Pistol`
 - `B_WeaponInstance_Rifle`
 - `B_WeaponInstance_Shotgun`
-- `B_WeaponInstance_NetShooter` (prototype)
+- `B_WeaponInstance_NetShooter` (原型)
 
-The Weapon Instance has a `Tick()` method, which is executed every tick **if/when** the weapon is equipped by the Pawn.  This ticking is managed by the Pawn Controller's [Weapon State Component](#WeaponStateComponent).
+武器实例有一个 `Tick()` 方法，**如果/当** Pawn 装备武器时，该方法会在每个 tick 执行。这个Tick是由 Pawn Controller 的 [武器状态组件](#WeaponStateComponent) 管理的。
 
 
 <a id="RangedWeaponInstance"></a>
 ## 1.4 远程武器实例
-
-A Ranged Weapon Instance is derived from Weapon Instance and implements `ILyraAbilitySourceInterface`.
-
-It adds the concept of bullets, shot accuracy and spread, etc.
+远程武器实例源自武器实例，并实现 `ILyraAbilitySourceInterface`。它添加了子弹、射击精度和散布等概念。
 
 
 <a id="WeaponStateComponent"></a>
-## 1.5 Weapon State Component
-
-`ULyraWeaponStateComponent` goes on the Pawn Controller.
-
-This component:
-
-- Is responsible for making the Pawn's currently equipped weapon `Tick()`
-- During Targeting:
-  - Keeps track of weapon "hit markers" for the local player
-    - e.g. so you can see bullets actually hit their targets (if they do hit something)
-- When server processes TargetData:
-  - Remembers the "hit markers" that actually resulted in valid hits
-    - Makes these available to `SHitMarkerConfirmationWidget` to draw the hit markers on the player's screen
+## 1.5 武器状态组件
+`ULyraWeaponStateComponent` 位于 Pawn 控制器上。此组件主要功能包括：
+- 负责使 Pawn 当前装备的武器 `Tick()`
+- 瞄准期间：
+    - 跟踪本地玩家的武器“命中标记”
+        - 例如，这样您就可以看到子弹确实击中了目标（如果它们确实击中了某物）
+- 当服务器处理 TargetData 时：
+    - 记住实际导致有效命中的“命中标记”
+      - 将这些提供给 `SHitMarkerConfirmationWidget` 以在玩家的屏幕上绘制命中标记
 
 
 <a id="WeaponDebugSettings"></a>
 ## 1.6 武器调试设置
+`ULyraWeaponDebugSettings`是 UE5 新实现的功能，`UDeveloperSettingsBackedByCVars`。
 
-ULyraWeaponDebugSettings是 UE5 新功能的实现UDeveloperSettingsBackedByCVars。
-
-如果您想在游戏中拥有类似的功能，请务必阅读此类，我建议您这样做，因为这使游戏调试变得更加容易。
-
-Lyra 支持编译武器调试的选项，有利于生产。在开发远程武器时，您绝对应该打开这些调试功能，除非您想不必要地浪费自己的时间。
-
-------
-`ULyraWeaponDebugSettings` is an implementation of a new UE5 feature, `UDeveloperSettingsBackedByCVars`.
-
-Definitely read this class if you want to have similar functionality in your game, which I recommend
-since this makes gameplay debugging significantly easier.
-
-Lyra supports the option to compile out weapon debugging, good for production.  When developing a ranged weapon you should absolutely turn these debugging features on unless you like to needlessly waste your own time.
+如果您想在游戏中拥有类似的功能，请务必阅读此类，我建议您这样做，因为这使游戏调试变得更加容易。Lyra 支持编译武器调试的选项，有利于生产。在开发远程武器时，您绝对应该打开这些调试功能，除非您想不必要地浪费自己的时间。
 
 
 <a id="WeaponSpawner"></a>
 ## 1.7 武器生成器(WeaponSpawner)
+这是一个具有固定位置的垫板，可根据您为其配置的武器定义生成武器。您可以设置冷却时间、显示将被拾取的武器网格等。
 
-This is a pad with a fixed position that spawns weapons based on the Weapon Definition you configure it for.  You can set Cooldown time, the mesh of the weapon to show that will be picked up, etc.
-
-This C++ class is implemented such that the core functionality of actually giving the weapon to the pawn **MUST** be implemented in Blueprints.  There are 2 BP implementations:
+此功能由C++类实现，实际使用时需要在实现对应的蓝图，将武器赋予 pawn 的核心功能**必须**在蓝图中实现。有 2 个 BP 实现：
 
 - `B_WeaponSpawner`
-  - ShooterCore pads that give weapons and health pickups
+    - 提供武器和生命拾取的 ShooterCore 垫板
 - `B_AbilitySpawner`
-  - ShooterCore proximity HOT/DOT pads
-  - Based on `B_WeaponSpawner` but doesn't actually grant weapons
+    - ShooterCore 接近 HOT/DOT 垫子
+    - 基于 `B_WeaponSpawner`，但实际上不授予武器
+
 
 
 <a id="MeleeAttackAbility"></a>
 ## 1.8  近战攻击 Ability
+`GA_Melee`是近战攻击能力，继承自 `GA_AbilityWithWidget`，其本身基于 `ULyraGameplayAbility`。它的实现使得无论装备的武器类型如何都可以执行，只要该武器源自`B_WeaponInstance_Base` （BP约束）。
 
-`GA_Melee`是近战攻击能力，继承自 `GA_AbilityWithWidget`，其本身基于 `ULyraGameplayAbility`。
+请注意，此Ability**不是**继承自基础装备Ability ( `ULyraGameplayAbility_FromEquipment`)。虽然这是有道理的，因为近战不一定需要装备（Pawn 有拳头、脚、头等），但这也意味着在当前的实现中，没有办法让武士刀近战超过拳头。这似乎是一个重大的实施缺陷。如果你想要有趣的近战游戏，你绝对应该改变这一点。
 
-它的实现使得无论装备的武器类型如何都可以执行，只要该武器源自`B_WeaponInstance_Base` （BP约束）。
+所以，GA_Melee 近战非武器近战，而是相当“肉搏”的的能力，例如用刀或枪去砸东西。
 
-请注意，此ability**不是**继承自基础装备ability ( `ULyraGameplayAbility_FromEquipment`)。虽然这是有道理的，因为近战不一定需要装备（Pawn 有拳头、脚、头等），但这也意味着在当前的实现中，没有办法让武士刀近战超过拳头。这似乎是一个重大的实施缺陷。如果你想要有趣的近战游戏，你绝对应该改变这一点。
-
-------
-`GA_Melee` is the Melee Attack Ability, derived from `GA_AbilityWithWidget`, which itself is based on `ULyraGameplayAbility`.
-
-It is implemented such that it can be executed regardless of the type of weapon equipped, provided that weapon derives from `B_WeaponInstance_Base` *(BP constraint)*.
-
-Note that this ability is **not derived** from
-the base Equipment Ability (`ULyraGameplayAbility_FromEquipment`).  While this makes sense in that equipment isn't necessarily required to melee (Pawns have fists, feet, heads, etc), it also means that in the current implementation there is no way to make a Katana melee for more than a fist.  This seems like a significant implementation flaw.  You should absolutely change this if you want interesting melee gameplay.
-
-On Melee Attack:
-
-- Play Melee Attack Animation Montage *(configurable per weapon)*
-- If Authority:
-  - If all of these conditions are true:
-    - If a Pawn in front of the Attacker was hit *(limited by BP to 1 hit maximum)*
-    - If the hit Pawn is on a different team than the Attacker *(BP constraint)*
-    - If the hit Pawn is not behind a wall or other obstacle
-  - Then:
-    - Apply additive Root Motion Force in the Attacker's forward direction based on `Strength` parameter of Melee attack *(constant regardless of weapon)*
-    - Add Gameplay Effect to hit Pawn: `GE_Damage_Melee` *(constant regardless of weapon)*
-    - Execute GameplayCue on Attacker: `GameplayCue.Weapon.Melee.Hit`
-    - Play Melee Impact sound at world impact location
+GA_Melee近战攻击时的逻辑：
+- 播放近战攻击动画蒙太奇*（每个武器均可配置）*
+- 如果由授权：
+    - 如果所有这些条件都为真：
+        - 如果攻击者前方的 Pawn 被击中*（BP 限制为最多 1 次击中）*
+        - 如果被击中的 Pawn 与攻击者属于不同的队伍*（BP 约束）*
+        - 如果被击中的 Pawn 不在墙或其他障碍物后面
+    - 然后：
+        - 根据近战攻击的“强度”参数在攻击者的向前方向应用附加根运动力*（无论武器如何都是常数）*
+        - 添加游戏效果以击中 Pawn：`GE_Damage_Melee`*（无论武器如何都是常数）*
+        - 对攻击者执行 GameplayCue：`GameplayCue.Weapon.Melee.Hit`
+        - 在世界冲击位置播放近战冲击声音
 
 
 <a id="RangedWeaponBaseAbility"></a>
 ## 1.9 远程武器 Ability
-
-`ULyraGameplayAbility_RangedWeapon` derives from the Equipment System's
-[Equipment Ability](/UE5/LyraStarterGame/Equipment/#EquipmentAbility)
-(`ULyraGameplayAbility_FromEquipment`), giving it easy access to the specific weapon that
-is responsible for granting the ability to the player, which will be equipped at the time
-of ability activation.
-
-This is the base class for all Lyra Ranged Weapons, and is implemented by:
-
+`ULyraGameplayAbility_RangedWeapon` 继承自自装备系统的[装备能力](/UE5/LyraStarterGame/Equipment/#EquipmentAbility)(`ULyraGameplayAbility_FromEquipment`)，使其能够轻松访问负责授予玩家能力的特定武器，该武器将在能力激活时装备。这是所有 Lyra 远程武器的基类，由以下类实现：
 - `GA_Weapon_Fire`
-  - `GA_Weapon_Fire_Pistol`
-  - `GA_Weapon_Fire_Rifle_Auto`
-  - `GA_Weapon_Fire_Shotgun`
-  - `GA_WeaponNetShooter` (prototype)
+    - `GA_Weapon_Fire_Pistol`
+    - `GA_Weapon_Fire_Rifle_Auto`
+    - `GA_Weapon_Fire_Shotgun`
+    - `GA_WeaponNetShooter`（原型）
 
-As seems to be the standard for Lyra Gameplay Abilities, very little is done in C++ and
-most of the implementation is in the BP, in this case `GA_Weapon_Fire` which is the base
-BP for ranged weapons.
+Lyra 游戏能力的标准似乎是如此，C++ 中实现的内容很少，大多数实现都在 BP 中，在本例中为 `GA_Weapon_Fire`，它是远程武器的基础 BP。如果您对 Lyra 中武器的工作原理感兴趣，请务必研究 `GA_Weapon_Fire` 的事件图，了解其工作原理。
 
-If you're interested in how weapons work in Lyra, definitely study the event graph of
-`GA_Weapon_Fire` to see how it works.
+激活能力时（开火）的逻辑表现：
+- 如果是本地控制的 pawn：
+    - 根据武器瞄准的位置生成 TargetData
+        - 参见 `ULyraGameplayAbility_RangedWeapon`::`PerformLocalTargeting`
+    - 如果是远程客户端：
+        - 将 TargetData RPC 发送到服务器
+- 播放武器开火动画
+- 向武器所有者发送游戏提示：`GameplayCue.Weapon.Rifle.Fire`
+- 向每个目标命中发送游戏提示：`GameplayCue.Weapon.Rifle.Impact`
+- 如果有授权：
+    - 在每个目标命中处生成物理场 actor*（如果武器配置了物理场影响）*
+    - 为每个目标命中添加游戏效果
+        - 效果因武器而异，例如：`GE_Damage_Pistol`
 
-On Ability Activation (on firing the weapon):
+此外，远程武器将监听“武器射击失败”游戏事件(`Ability.PlayMontageOnActivateFail.Message`)，并播放动画蒙太奇，帮助玩家直观地了解失败的能力激活。该游戏消息由基础`ULyraGameplayAbility`::`NativeOnAbilityFailedToActivate`广播。
 
-- If locally controlled pawn:
-  - Generate TargetData based on where the weapon is aiming
-    - See `ULyraGameplayAbility_RangedWeapon`::`PerformLocalTargeting`
-  - If remote client:
-    - Send TargetData RPC to server
-- Play weapon firing animation
-- Send Gameplay Cue to weapon owner: `GameplayCue.Weapon.Rifle.Fire`
-- Send Gameplay Cue to each target hit: `GameplayCue.Weapon.Rifle.Impact`
-- If Authority:
-  - Spawn physics field actor at each target hit *(if the weapon has physics field impact configured)*
-  - Add Gameplay Effect to each target hit
-    - The effect varies by weapon, for example: `GE_Damage_Pistol`
-
-Additionally, ranged weapons will listen for "failed to fire weapon" Gameplay Events
-(`Ability.PlayMontageOnActivateFail.Message`)
-and play an animation montage to help the player visualize the failed ability activation.
-That Gameplay Message is broadcast by the base `ULyraGameplayAbility`::`NativeOnAbilityFailedToActivate`.
-
+2024/7/30整理
 
 <br/>
 <hr/>
