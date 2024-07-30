@@ -6,18 +6,15 @@ breadcrumb_name: "Equipment System"
 ---
 
 
-# 1 LyraStarterGame Equipment System
+# 1 Lyra Equipment System
 这是 [LyraStarterGame](/UE5/LyraStarterGame/) 中装备系统的概述。
 
-一个 Lyra 中的装备是一个具有特定 Item Definition Fragment 的库存项目，该片段将其标识为装备。因此，该系统基于 Lyra 库存系统 [Lyra Inventory System](/UE5/LyraStarterGame/Inventory/)，请确保您也熟悉该系统。
-
-Lyra 装备系统是 Lyra 武器系统[Lyra Weapon System](/UE5/LyraStarterGame/Weapons/)的基础。
+Lyra 中的一个装备是一个具有特定 Item Definition Fragment 的库存项目，该碎片将其标识为装备。因此，该系统基于 Lyra 库存系统 [Lyra Inventory System](/UE5/LyraStarterGame/Inventory/)，请确保您也熟悉该系统。Lyra 装备系统是 Lyra 武器系统[Lyra Weapon System](/UE5/LyraStarterGame/Weapons/)的基础。
 
 请注意，尽管装备定义和装备实例与库存定义和库存实例共享命名约定，**但对象之间的关系是不同的**。这可能会引起混淆，因此请注意。
 
 
-## 1.1 Equipment Concepts
-
+## 1.1 装备相关概念
 - [Equipment Definition](#EquipmentDefinition) (constant)
   - 将一个装备实例与其赋予的能力相关联
   - 确定装备如何以及在何处附着到 Pawn
@@ -38,36 +35,31 @@ Lyra 装备系统是 Lyra 武器系统[Lyra Weapon System](/UE5/LyraStarterGame/
   - 控制 Pawn 在任何给定时间内装备的装备是哪一件
 
 ## 1.2 相关的游戏玩法能力（Gameplay Abilities）
-
 - [Equipment Ability](#EquipmentAbility)
   - 装备相关的游戏能力
 
-
 <a id="EquipmentDefinition"></a>
-## 1.3 Equipment Definition
 
-This is a simple constant config.  There is no functionality associated with a `ULyraEquipmentDefinition`, it's just data.
+## 1.3 装备定义
+这是一个简单的常量配置。`ULyraEquipmentDefinition` 不具有任何功能，它只是数据。
 
-An Equipment Definition consists of:
-
-- Type of Equipment (subclass of `ULyraEquipmentInstance`)
-- Array of Ability Sets to grant on equip
-  - The abilities don't necessarily have to be based on `ULyraGameplayAbility_FromEquipment`
-- Array of Actors to spawn on equip, including:
-  - Which socket to attach each to
-  - Attachment transform
+装备定义包括：
+- 装备类型（`ULyraEquipmentInstance` 的子类）
+- 装备时授予的能力集数组
+    - 能力不一定必须基于 `ULyraGameplayAbility_FromEquipment`
+- 装备时生成的 Actor 数组，包括：
+    - 将每个 Actor 连接到哪个插槽
+    - 附件变换
 
 
 <a id="EquipmentInstance"></a>
 ## 1.4 装备实例
-
-`ULyraEquipmentInstance` handles spawning and destroying the equipment actors as needed for a given piece of equipment.
+`ULyraEquipmentInstance` 负责根据装备碎片的需要生成和销毁装备Actor。
 
 请注意，与物品实例不同，装备实例子类实际上是装备定义的一个必需部分。因此，它不仅是装备定义的实例，而且还是它的一个依赖项，这有点奇怪。
 
 <a id="EquipmentManager"></a>
 ## 1.5 装备管理器
-
 `ULyraEquipmentManagerComponent` 是一个 Pawn 组件。它必须附加到一个 Pawn 上。
 
 装备管理器跟踪此 Pawn 当前可用的装备，并允许 Pawn 装备或卸下任何给定的装备。它使用 `FLyraEquipmentList` 来实现这一点。`FLyraEquipmentList` 的所有者是装备管理器本身。
@@ -79,7 +71,6 @@ An Equipment Definition consists of:
 
 <a id="PickupDefinition"></a>
 ## 1.6 拾取定义
-
 这有点奇怪，因为他们在相同的地方实现了基础的库存项目拾取和武器拾取。
 
 无论如何，拾取定义定义了以下内容：
@@ -89,8 +80,7 @@ An Equipment Definition consists of:
 
 
 <a id="QuickBarComponent"></a>
-## 1.7 QuickBar Component
-
+## 1.7 快捷栏组件(QuickBar Component)
 控制 Pawn 装备了哪个物品。
 - 根据插槽数量限制库存中可用的可装备物品数量
 - 通过 Equipment Manager 管理装备了哪个物品
@@ -105,27 +95,24 @@ QuickBar Component 对于 AI Bot 几乎没有用途，但每个 Bot 都被强制
 
 
 <a id="EquipmentAbility"></a>
-## 1.3 Equipment Ability
 
-`ULyraGameplayAbility_FromEquipment`作为与装备相关的能力的基础能力类，提供的关键功能包括：
+## 1.3 装备(型)能力
+这里指装备提供的能力。`ULyraGameplayAbility_FromEquipment`作为与装备相关的能力的基础能力类，提供的关键功能包括：
+- 获取**关联装备**
+    - 当前能力规范`SourceObject`转换为装备实例（`ULyraEquipmentInstance`）
+- 获取**关联物品**
+    - 关联装备发起者转换为物品实例（`ULyraInventoryItemInstance`）
 
-- Get **Associated Equipment**
-  - Current Ability Spec `SourceObject` cast to Equipment Instance (`ULyraEquipmentInstance`)
-- Get **Associated Item**
-  - Associated Equipment Instigator cast to Item Instance (`ULyraInventoryItemInstance`)
+关联装备`SourceObject`值由[`FLyraEquipmentList`::`AddEntry`](#EquipmentList_AddEntry)在装备实例构建过程中分配。
 
-The Associated Equipment `SourceObject` value is assigned by [`FLyraEquipmentList`::`AddEntry`](#EquipmentList_AddEntry) during the construction of the Equipment Instance.
+因此，任何从此基础派生（或实现类似功能）的能力都可以轻松访问底层武器实例及其基础物品实例。
 
-Thus any Ability deriving from this base (or implementing similar functionality) can easily access the underlying Weapon Instance and its base Item Instance.
+每当 Pawn 选择装备某件装备作为底层库存物品实例时，`ULyraQuickBarComponent`::`EquipItemInSlot` 就会分配相关装备 `Instigator` 值。
 
-The Associated Equipment `Instigator` value is assigned by `ULyraQuickBarComponent`::`EquipItemInSlot` whenever a piece of equipment is chosen to be equipped by the Pawn to be the underlying Inventory Item Instance.
 
 
 # 2 重点考虑的代码
-
-特别是如果您打算自己实现类似的系统，以下是一些重要的代码，有助于支持装备/武器能力。
-
-您应该考虑阅读这些代码，以了解它是如何在整个系统中提供支持的。
+特别是如果您打算自己实现类似的系统，以下是一些重要的代码，有助于支持装备/武器能力。您应该考虑阅读这些代码，以了解它是如何在整个系统中提供支持的。
 
 <a id="EquipmentManagerComponent"></a>
 ### `ULyraEquipmentManagerComponent`::`EquipItem`
@@ -143,12 +130,13 @@ ULyraEquipmentInstance* EquipItem (TSubclassOf<ULyraEquipmentDefinition> Equipme
 ULyraEquipmentInstance* AddEntry (TSubclassOf<ULyraEquipmentDefinition> EquipmentDefinition);
 ```
 
-- Creates a new Equipment Instance (`ULyraEquipmentInstance`)
-  based on the Equipment Definition (`ULyraEquipmentDefinition`)
-  - Equipment Instance Owner = The Equipment Manager's Owner Actor
-- Adds the equipment's ability sets to the Equipment Manager Owner's ASC
-  - Sets `SourceObject` for each ability to the Equipment Instance
-- Spawns the equipment actors
+- 根据设备定义 (`ULyraEquipmentDefinition`) 创建新的设备实例 (`ULyraEquipmentInstance`)
+    - 设备实例所有者 = 设备管理器的所有者 Actor
+- 将设备的能力集添加到设备管理器所有者的 ASC
+    - 将每个能力的 `SourceObject` 设置为设备实例
+- 生成设备 Actor
+
+
 
 <br/>
 <hr/>

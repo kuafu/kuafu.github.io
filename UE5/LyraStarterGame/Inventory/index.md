@@ -20,9 +20,9 @@ breadcrumb_name: "Inventory System"
 - 网络视频：[参考视频](https://youtu.be/MMiDMn0fJRU)
 
 ## 1.1 名词解释
-官方文档将Inventory 翻译为`物品栏`，Google翻译为库存，而有的地方也叫背包。Inventory一般与Equipment关联，两者也是不同范畴的概念，Inventory表示角色的背包，Inventory Item表示背包中的物品，而这个物品如果装配到角色身上时才会创建Equipment实例，卸载下来就被销毁。具体两者对比参考官方文档[Lyra物品栏和装备](https://dev.epicgames.com/documentation/zh-cn/unreal-engine/
+官方文档将Inventory 翻译为`物品栏`，Google翻译为库存，而有的地方也叫背包。Inventory一般与Equipment关联，两者也是不同范畴的概念，Inventory表示角色的背包，Inventory Item表示背包中的物品，而这个物品如果装配到角色身上时才会创建Equipment实例，卸载下来就被销毁。具体两者对比参考官方文档[Lyra物品栏和装备](https://dev.epicgames.com/documentation/zh-cn/unreal-engine/)
 
-## 1.2 库存(物品)(Inventory)概念
+## 1.2 库存/物品(Inventory)概念
 - [物品定义(Item Definition)](#ItemDefinition) (常量)
   - 由一个或多个 [物品碎片](#ItemFragments) 组成，例如：
     - `EquippableItem`（如何创建物品“类别”的示例，在本例中为玩家可以装备的物品）
@@ -38,7 +38,6 @@ breadcrumb_name: "Inventory System"
   - 定义当物品被拾取时实际进入库存的东西
 
 #### Lyra 5.1 更新点
-
 Lyra 5.1 中的网络代码发生了变化。不是复制库存列表数组，数组中的每个条目都被视为库存管理器组件的子对象。
 通常，这是相同的想法，只是实现不同。这是一个小小的效率提升。当我从 Lyra 5.0 升级到 Lyra 5.1 时，我还需要更改此代码以匹配新的
 子对象实现。可能是 UE 5.1 中的某些更改导致了这种变化，否则也许我只是有一个糟糕的 5.1 开发版本，具有破坏的向后兼容性。
@@ -48,7 +47,6 @@ Lyra 5.1 中的网络代码发生了变化。不是复制库存列表数组，�
 
 <a id="ItemDefinition"></a>
 ## 1.3 物品定义(Item Definition)
-
 为了将物品存储在库存中，该物品必须具有物品定义。这本质上是一个简单的常量配置。`ULyraInventoryItemDefinition` 几乎没有任何功能，它只是数据。从本质上讲，物品定义只不过是玩家的显示名称，以及实际定义物品的物品碎片数组。
 
 
