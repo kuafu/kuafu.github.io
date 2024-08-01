@@ -7,12 +7,11 @@ breadcrumb_name: "Equipment System"
 
 
 # 1 Lyra Equipment System
-这是 [LyraStarterGame](/UE5/LyraStarterGame/) 中装备系统的概述。
 
-Lyra 中的一个装备是一个具有特定 Item Definition Fragment 的库存项目，该碎片将其标识为装备。因此，该系统基于 Lyra 库存系统 [Lyra Inventory System](/UE5/LyraStarterGame/Inventory/)，请确保您也熟悉该系统。Lyra 装备系统是 Lyra 武器系统[Lyra Weapon System](/UE5/LyraStarterGame/Weapons/)的基础。
+## 1.0 [LyraStarterGame](/UE5/LyraStarterGame/) 中装备系统概述。
+Lyra 中的一件装备是一个具有特定 Item Definition Fragment 的库存项目，该碎片将其标识为装备。因此，该系统基于 Lyra 库存系统 [Lyra Inventory System](/UE5/LyraStarterGame/Inventory/)，请确保您也熟悉该系统。Lyra 装备系统是 Lyra 武器系统[Lyra Weapon System](/UE5/LyraStarterGame/Weapons/)的基础。
 
 请注意，尽管装备定义和装备实例与库存定义和库存实例共享命名约定，**但对象之间的关系是不同的**。这可能会引起混淆，因此请注意。
-
 
 ## 1.1 装备相关概念
 - [Equipment Definition](#EquipmentDefinition) (constant)
