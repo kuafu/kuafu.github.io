@@ -1,4 +1,15 @@
-# GameplayPrediction.h 注释翻译
+---
+title: "游戏能力预测 GameplayPrediction.h 注释翻译"
+description: 
+back_links:
+  - link: /UE5/
+    name: UE5
+  - link: /UE5/GameplayAbilitySystem/GameplayAbilityPrediction/OverviewofGameplayAbilityPrediction
+    name: OverviewofGameplayAbilityPrediction
+back_link_title: 游戏能力预测 GameplayPrediction.h 注释翻译
+---
+
+# 游戏能力预测 GameplayPrediction.h 注释翻译
 
 ## 1. 概述
 
