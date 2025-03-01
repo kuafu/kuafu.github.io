@@ -22,6 +22,9 @@ more sense to you and you'll be able to understand it in less time than I had to
 The information here specifically relates to the Gameplay Ability System as implemented in UE5's LyraStarterGame.
 That is my use case and the only context in which I've used UE5 GAS.
 
+#Gameplay Ability Prediction(游戏能力预测)
+
+[游戏能力预测概述](/UE5/GameplayAbilitySystem/GameplayAbilityPrediction/OverviewofGameplayAbilityPrediction)
 
 # Ability Lifecycle
 
