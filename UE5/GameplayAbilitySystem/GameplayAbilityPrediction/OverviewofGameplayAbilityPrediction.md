@@ -1,10 +1,10 @@
 # GameplayPrediction.h 注释翻译
 
-## 概述
+## 1. 概述
 
-### 游戏能力预测概述
+### 1.1 游戏能力预测概述
 
-#### 高层次目标
+#### 1.1.1 高层次目标
 
 在 GameplayAbility 层面（实现能力）上，预测是透明的。一个能力说“执行 X->Y->Z”，我们会自动预测其中可以预测的部分。我们希望避免在能力本身中出现“如果是 Authority：执行 X。否则：执行 X 的预测版本”这样的逻辑。
 
@@ -12,7 +12,7 @@
 
 当我们说“客户端预测”时，我们实际上是指客户端预测游戏模拟状态。某些事情仍然可以“完全在客户端”进行，而无需在预测系统中工作。例如，脚步声完全在客户端处理，从不与此系统交互。但客户端预测他们在施放法术时法力值从 100 变为 90 是“客户端预测”。
 
-#### 我们目前预测什么？
+#### 1.1.2 我们目前预测什么？
 
 - 初始 GameplayAbility 激活（以及有条件的链式激活）
 - 触发事件
@@ -23,12 +23,12 @@
 - 动作
 - 移动（内置于 UE UCharacterMovement 中）
 
-#### 我们不预测的一些事情（大多数这些我们可能可以预测，但目前没有）：
+#### 1.1.3 我们不预测的一些事情（大多数这些我们可能可以预测，但目前没有）：
 
 - GameplayEffect 移除
 - GameplayEffect 周期性效果（如持续伤害）
 
-#### 我们试图解决的问题：
+#### 1.1.4 我们试图解决的问题：
 
 1. “我能做这个吗？”预测的基本协议。
 2. “撤销”如何在预测失败时撤销副作用。
@@ -37,15 +37,15 @@
 5. “依赖性”如何管理依赖预测和预测事件链。
 6. “覆盖”如何预测性地覆盖由服务器复制/拥有的状态。
 
-## 实现细节
+## 2. 实现细节
 
-### PredictionKey
+### 2.1 PredictionKey
 
 该系统中的一个基本概念是预测键（FPredictionKey）。预测键本身只是一个在客户端生成的唯一 ID。客户端将其预测键发送到服务器，并将预测动作和副作用与此键关联。服务器可以响应接受/拒绝预测键，并且还会将服务器端创建的副作用与此预测键关联。
 
 （重要）FPredictionKey 始终从客户端 -> 服务器复制，但在从服务器 -> 客户端复制时，它们*仅*复制到最初将预测键发送到服务器的客户端。这发生在 FPredictionKey::NetSerialize 中。当从客户端发送的预测键通过复制属性复制回下来的时候，所有其他客户端将收到一个无效（0）的预测键。
 
-### 能力激活
+### 2.2 能力激活
 
 能力激活是一个一等预测动作——它生成一个初始预测键。每当客户端预测性地激活一个能力时，它会显式地请求服务器，服务器会显式地响应。一旦能力被预测性地激活（但请求尚未发送），客户端就有一个有效的“预测窗口”，在此期间可以发生预测副作用，而无需显式“询问”。（例如，我们不会显式询问“我可以减少法力值吗，我可以将此能力置于冷却状态吗”。这些动作被认为是与激活能力逻辑上原子的）。你可以将此预测窗口视为 ActivateAbility 的初始调用栈。一旦 ActivateAbility 结束，你的预测窗口（因此你的预测键）就不再有效。这很重要，因为许多事情可以使你的预测窗口无效，例如任何计时器或蓝图中的潜在节点；我们不会跨帧预测。
 
@@ -61,7 +61,7 @@ AbilitySystemComponent 提供了一组用于在客户端和服务器之间通信
 6. 如果 ServerTryActivateAbility 成功，客户端必须等待属性复制赶上（Succeed RPC 将立即发送，属性复制将自行发生）。一旦 ReplicatedPredictionKey 赶上前面步骤中使用的键，客户端可以撤销其本地预测的副作用。
    - 请参阅 FReplicatedPredictionKeyItem::OnRep 了解 CatchUpTo 逻辑。请参阅 UAbilitySystemComponent::ReplicatedPredictionKeyMap 了解键的实际复制方式。请参阅 ~FScopedPredictionWindow 了解服务器确认键的方式。
 
-### GameplayEffect 预测
+### 2.3 GameplayEffect 预测
 
 GameplayEffects 被视为能力激活的副作用，不单独接受/拒绝。
 
@@ -78,7 +78,7 @@ GameplayEffects 被视为能力激活的副作用，不单独接受/拒绝。
 - 请参阅 FActiveGameplayEffectsContainer::ApplyGameplayEffectSpec 了解它如何注册在赶上时要做的事情（RemoveActiveGameplayEffect_NoReturn）。
 - 请参阅 FActiveGameplayEffect::PostReplicatedAdd、FActiveGameplayEffect::PreReplicatedRemove 和 FActiveGameplayCue::PostReplicatedAdd 了解 FPredictionKey 如何与 GE 和 GC 关联。
 
-### 属性预测
+### 2.4 属性预测
 
 由于属性作为标准 uproperties 复制，预测它们的修改可能会很棘手（“覆盖”问题）。瞬时修改可能更难，因为它们本质上是无状态的。（例如，如果没有修改后的记录，回滚属性修改是困难的）。这使得“撤销”和“重做”问题在这种情况下也很难。
 
@@ -93,13 +93,17 @@ GameplayEffects 被视为能力激活的副作用，不单独接受/拒绝。
 
 #### 示例
 
-void UMyHealthSetGetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const { SuperGetLifetimeReplicatedProps(OutLifetimeProps);
-DOREPLIFETIME_CONDITION_NOTIFY(UMyHealthSet, Health, COND_None, REPNOTIFY_Always);
+<pre>
+void UMyHealthSetGetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
+ { 
+    SuperGetLifetimeReplicatedProps(OutLifetimeProps);
+    DOREPLIFETIME_CONDITION_NOTIFY(UMyHealthSet, Health, COND_None, REPNOTIFY_Always);
 }
+
 void UMyHealthSet::OnRep_Health() { GAMEPLAYATTRIBUTE_REPNOTIFY(UMyHealthSet, Health); }
+</pre>
 
-
-### Gameplay Cue 事件
+### 2.5 Gameplay Cue 事件
 
 除了已经解释的 GameplayEffects，Gameplay Cues 可以单独激活。这些函数（UAbilitySystemComponent::ExecuteGameplayCue 等）考虑了网络角色和预测键。
 
@@ -108,7 +112,7 @@ void UMyHealthSet::OnRep_Health() { GAMEPLAYATTRIBUTE_REPNOTIFY(UMyHealthSet, He
 
 请记住，FPredictionKeys 仅复制到原始所有者。这是 FReplicationKey 的固有属性。
 
-### 触发数据预测
+### 2.6 触发数据预测
 
 触发数据目前用于激活能力。本质上，这一切都通过与 ActivateAbility 相同的代码路径。与从输入按下激活能力不同，它是从另一个游戏代码驱动的事件激活的。客户端能够预测性地执行这些事件，从而预测性地激活能力。
 
@@ -116,9 +120,9 @@ void UMyHealthSet::OnRep_Health() { GAMEPLAYATTRIBUTE_REPNOTIFY(UMyHealthSet, He
 
 问题是我们没有正确回滚这些操作。触发事件和复制还有待解决的工作（在结尾解释）。
 
-### 高级主题
+### 2.7 高级主题
 
-#### 依赖性
+#### 2.7.1 依赖性
 
 我们可能会遇到这样的情况：“能力 X 激活并立即触发一个事件，该事件激活能力 Y，该事件又触发另一个能力 Z”。依赖链是 X->Y->Z。每个这些能力都可能被服务器拒绝。如果 Y 被拒绝，那么 Z 也不会发生，但服务器不会显式决定“Z 不能运行”。
 
@@ -132,7 +136,7 @@ void UMyHealthSet::OnRep_Health() { GAMEPLAYATTRIBUTE_REPNOTIFY(UMyHealthSet, He
 
 但有一个问题：因为依赖关系在客户端保持，服务器实际上不知道它是否之前拒绝了一个依赖动作。你可以通过使用游戏能力中的激活标签来设计解决这个问题。例如，当预测依赖 GA_Combo1 -> GA_Combo2 时，你可以使 GA_Combo2 仅在具有 GA_Combo1 赋予的 GameplayTag 时激活。因此，GA_Combo1 的拒绝也会导致服务器拒绝 GA_Combo2 的激活。
 
-#### 能力中的额外预测窗口
+#### 2.7.2 能力中的额外预测窗口
 
 如前所述，预测键仅在单个逻辑范围内可用。一旦 ActivateAbility 返回，我们基本上就完成了该键。如果能力在等待外部事件或计时器，当我们准备继续执行时，可能已经收到了服务器的确认/拒绝。因此，初始激活后产生的任何额外副作用都不能再与原始键的生命周期相关联。
 
@@ -154,19 +158,19 @@ UAbilityTask_WaitInputRelease::OnReleaseCallback 是一个很好的示例。事�
 
 虽然在此示例中没有“尝试/失败/成功”调用，但所有副作用都是程序性分组/原子的。这解决了在服务器和客户端上运行的任何任意函数调用的“撤销”和“重做”问题。
 
-### 不支持/问题/待办事项
+### 2.8 不支持/问题/待办事项
 
 触发事件不会显式复制。例如，如果触发事件仅在服务器上运行，客户端将永远不会听到它。这也阻止我们进行跨玩家/AI 等事件。最终应添加对此的支持，并应遵循 GameplayEffect 和 GameplayCues 的相同模式（预测触发事件，带有预测键，如果有预测键，则忽略 RPC 事件）。
 
 这个系统的一个大问题：目前无法回滚任何链式激活（包括触发事件）。原因是每个 ServerTryActivateAbility 将按顺序响应。让我们将依赖 GA 链作为示例：GA_Mispredict -> GA_Predict1。在此示例中，当 GA_Mispredict 激活并在本地预测时，它会立即激活 GA_Predict1。客户端发送 ServerTryActivateAbility 用于 GA_Mispredict，服务器拒绝它（发送回 ClientActivateAbilityFailed）。如现状，我们没有任何委托来拒绝客户端上的依赖能力（服务器甚至不知道有依赖关系）。在服务器上，它也会接收 GA_Predict1 的 ServerTryActivateAbility。假设成功，客户端和服务器现在都在执行 GA_Predict1，即使 GA_Mispredict 从未发生。你可以通过使用标签系统来设计解决这个问题，以确保 GA_Mispredict 成功。
 
-### 预测“元”属性（如伤害/治疗）与“真实”属性（如健康）
+### 2.9 预测“元”属性（如伤害/治疗）与“真实”属性（如健康）
 
 我们无法预测性地应用元属性。元属性仅在 GameplayEffect 的后端（UAttributeSet 上的 Pre/Post Modify Attribute）上工作。这些事件在应用基于持续时间的 gameplay effects 时不会被调用。例如，一个修改伤害 5 秒的 GameplayEffect 没有意义。
 
 为了支持这一点，我们可能会添加一些有限的支持，用于基于持续时间的元属性，并将瞬时 gameplay effect 的转换从前端（UAbilitySystemComponent::ApplyGameplayEffectSpecToSelf）移动到后端（UAttributeSet::PostModifyAttribute）。
 
-### 预测持续的乘法 GameplayEffects
+### 2.10 预测持续的乘法 GameplayEffects
 
 在预测基于百分比的 gameplay effects 时也有一些限制。由于服务器复制下来的属性的“最终值”，而不是修改它的整个聚合链，我们可能会遇到客户端无法准确预测新 gameplay effects 的情况。
 
@@ -176,8 +180,4 @@ UAbilityTask_WaitInputRelease::OnReleaseCallback 是一个很好的示例。事�
 - 客户端有一个能力，授予额外的 10% 移动速度增益。预计将*总和*百分比乘数，最终 20% 奖励为 500 -> 600 移动速度。
 - 然而在客户端，我们只是将 10% 增益应用于 550 -> 605。
 
-这需要通过复制属性的聚合链来修复。我们已经复制了一些数据，但不是完整的修改器列表。我们需要研究如何支持这一点。
-
-### “弱预测”
-
-我们可能仍然会有一些不适合此系统的情况。有些情况下，预测键交换不可行。例如，一个能力，任何与玩家碰撞/接触的人都会收到一个减速并使其材质变蓝的 GameplayEffect。由于我们不能每次发生这种情况时都发送服务器 RPC（服务器不一定能够处理此时
+这需要通过复制属性的聚合链来修复。我们已经复制了一些数据，但不是完整的修改器列表。
