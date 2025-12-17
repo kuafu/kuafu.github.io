@@ -9,3 +9,4 @@ Gemfile.lock
 # IntelliJ Idea
 .idea
 .vscode
+/.obsidian

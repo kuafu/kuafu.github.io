@@ -7,25 +7,19 @@ breadcrumb_name: "Modular Gameplay"
 
 # `Modular Gameplay` Plugin Overview
 
-A `Modular Gameplay` Plugin is a plugin whose base classes implement the `Modular Gameplay` pattern,
-which allows [Lyra](/UE5/LyraStarterGame/) (and your project!)
-to inject components into actors at runtime.
+模块化游戏玩法(`Modular Gameplay`)插件是指其基类实现了“模块化游戏玩法”模式的插件，该模式允许游戏玩法在运行时将组件注入到 Actor 中。这种模式为 [`GameFeature` Plugins](/UE5/GameFeatures/)  提供了支持。
 
-This pattern gives the game support for
-[`GameFeature` Plugins](/UE5/GameFeatures/).
+`ModularGameplayActors` 插件是  `Modular Gameplay` 的一个特定实现，这个特性是Lyra 模块化的基础。这个插件在Lyra的项目插件中。
 
-The `ModularGameplayActors` Plugin is a specific implementation of `Modular Gameplay`,
-distributed in Lyra.
-
-You can either (like [LyraStarterGame](/UE5/LyraStarterGame/))
-actually base your classes on the `ModularGameplayActors` classes,
-or you can implement the same patterns in your own existing base classes.
-
+模块源码路径：
+UnrealEngine\Engine\Plugins\Runtime\ModularGameplay\Source\ModularGameplay
 
 <a id="GameFrameworkComponentManager"></a>
 ## Game Framework Component Manager
 
 `UGameFrameworkComponentManager` « `UGameInstanceSubsystem`
+
+GameFrameworkComponentManager 模块化Actor组件管理器，处理在 Actor 出现和消失时为其添加组件。
 
 This Game Instance Subsystem is what allows Lyra to inject components into Actors at runtime.
 
